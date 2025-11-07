@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+// PortfolioRegionCoverageForm.tsx
+import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
+import { usePortfolioRegionCoverageApi } from '../../hooks/usePortfolioRegionCoverageApi';
 
 interface Region {
   id: string;
@@ -39,119 +41,45 @@ const PortfolioRegionCoverageForm: React.FC<{
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(
     new Set(['worldwide', 'us'])
   );
+  const { data: apiData, loading, error } = usePortfolioRegionCoverageApi();
 
-  // Get portfolios for each peril
-  const portfoliosEQFF: PortfolioItem[] = data.portfoliosEQFF || [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 1',
-      checked: true,
-    },
-    {
-      id: '2',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 7',
-      checked: false,
-    },
-    {
-      id: '3',
-      database: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolio: 'Port 20',
-      checked: true,
-    },
-  ];
+  useEffect(() => {
+    if (apiData && !data.portfoliosEQFF) {
+      onChange({
+        ...data,
+        portfoliosEQFF: apiData.portfoliosEQFF,
+        portfoliosIF: apiData.portfoliosIF,
+        regionsEQFF: apiData.regionsEQFF,
+        regionsIF: apiData.regionsIF,
+        selectedCoverage: apiData.selectedCoverage,
+      });
+    }
+  }, [apiData]);
 
-  const portfoliosIF: PortfolioItem[] = data.portfoliosIF || [
-    {
-      id: '4',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 7',
-      checked: false,
-    },
-    {
-      id: '5',
-      database: 'ZH_116751_BPCS_HD_25_EDM',
-      portfolio: 'Port 15',
-      checked: false,
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">
+          Loading portfolio region coverage...
+        </div>
+      </div>
+    );
+  }
 
-  // Get regions for each peril
-  const regionsEQFF: Region[] = data.regionsEQFF || [
-    {
-      id: 'worldwide',
-      name: 'Worldwide',
-      checked: false,
-      indeterminate: true,
-      children: [
-        {
-          id: 'us',
-          name: 'United States',
-          checked: false,
-          indeterminate: true,
-          children: [
-            { id: 'california', name: 'California', checked: true },
-            { id: 'pnw', name: 'Pacific North West', checked: false },
-          ],
-        },
-        {
-          id: 'canada',
-          name: 'Canada',
-          checked: false,
-          children: [],
-        },
-      ],
-    },
-  ];
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
 
-  const regionsIF: Region[] = data.regionsIF || [
-    {
-      id: 'worldwide-if',
-      name: 'Worldwide',
-      checked: false,
-      children: [
-        {
-          id: 'europe',
-          name: 'Europe',
-          checked: false,
-          children: [
-            { id: 'germany', name: 'Germany', checked: false },
-            { id: 'france', name: 'France', checked: false },
-          ],
-        },
-      ],
-    },
-  ];
+  const portfoliosEQFF: PortfolioItem[] = data.portfoliosEQFF || [];
+  const portfoliosIF: PortfolioItem[] = data.portfoliosIF || [];
+  const regionsEQFF: Region[] = data.regionsEQFF || [];
+  const regionsIF: Region[] = data.regionsIF || [];
+  const selectedCoverage: SelectedCoverage[] = data.selectedCoverage || [];
 
-  const selectedCoverage: SelectedCoverage[] = data.selectedCoverage || [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 1',
-      peril: 'EQ/FF',
-      region: 'California',
-      includeExclude: 'Include',
-    },
-    {
-      id: '2',
-      database: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolio: 'Port 20',
-      peril: 'EQ/FF',
-      region: 'California',
-      includeExclude: 'Include',
-    },
-    {
-      id: '3',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 7',
-      peril: 'IF',
-      region: 'Germany',
-      includeExclude: 'Exclude',
-    },
-  ];
-
-  // Get current active data based on peril
   const portfolios = activePeril === 'EQ/FF' ? portfoliosEQFF : portfoliosIF;
   const regions = activePeril === 'EQ/FF' ? regionsEQFF : regionsIF;
 
@@ -369,7 +297,6 @@ const PortfolioRegionCoverageForm: React.FC<{
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">
-        {/* Left Panel - Portfolios */}
         <div className="bg-white border border-gray-300 rounded-lg">
           <div className="p-4 border-b border-gray-300 flex gap-2">
             <button
@@ -442,7 +369,6 @@ const PortfolioRegionCoverageForm: React.FC<{
           </div>
         </div>
 
-        {/* Right Panel - Regions */}
         <div className="bg-white border border-gray-300 rounded-lg">
           <div className="p-4 border-b border-gray-300">
             <h3 className="text-sm font-semibold text-gray-900 py-1">
@@ -455,7 +381,6 @@ const PortfolioRegionCoverageForm: React.FC<{
         </div>
       </div>
 
-      {/* Coverage Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
