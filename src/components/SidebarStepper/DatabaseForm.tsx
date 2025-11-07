@@ -1,14 +1,8 @@
-import React, { useState } from 'react';
+// ============= components/DatabaseForm.tsx =============
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-
-interface Database {
-  id: string;
-  name: string;
-  size: string;
-  portfolios: number;
-  treaties: number;
-  cedants: number;
-}
+import { useAllDatabases, useSearchDatabases } from '../../hooks/useDatabaseApi';
+import type { Database } from '../../api/mocks/databaseMockData';
 
 interface ValidationErrors {
   databases?: string;
@@ -21,84 +15,49 @@ const DatabaseForm: React.FC<{
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const databases: Database[] = [
-    {
-      id: '1',
-      name: 'EDM_RH_39823_AutoOwners_EQ_19',
-      size: '93 MB',
-      portfolios: 10,
-      treaties: 3,
-      cedants: 4,
-    },
-    {
-      id: '2',
-      name: 'ZH_116751_BPCS_HD_25_EDM',
-      size: '43 MB',
-      portfolios: 123,
-      treaties: 46,
-      cedants: 5,
-    },
-    {
-      id: '3',
-      name: 'ZH_117125_AXA_XL_Prop_HD_25_EDM',
-      size: '891 MB',
-      portfolios: 15,
-      treaties: 1,
-      cedants: 6,
-    },
-    {
-      id: '4',
-      name: 'RDM_RH_39823_AutoOwners_ALL_19',
-      size: '1 GB',
-      portfolios: 34,
-      treaties: 2,
-      cedants: 21,
-    },
-    {
-      id: '5',
-      name: 'ZH_117263_SVG_WS_CatXL_25_EDM',
-      size: '3 GB',
-      portfolios: 4,
-      treaties: 0,
-      cedants: 1,
-    },
-    {
-      id: '6',
-      name: 'ZH_118310_SV_Sachsen_WS_25_EDM',
-      size: '3 GB',
-      portfolios: 3,
-      treaties: 345,
-      cedants: 1,
-    },
-    {
-      id: '7',
-      name: 'ZH_117215_PZU_25_EDM',
-      size: '2 GB',
-      portfolios: 55,
-      treaties: 4,
-      cedants: 2,
-    },
-    {
-      id: '8',
-      name: 'ZH_117163_LF_HD_Broker_25_EDM',
-      size: '1 GB',
-      portfolios: 30,
-      treaties: 33,
-      cedants: 43,
-    },
-    {
-      id: '9',
-      name: 'RH_123049_AEGIS_QS_PPR_25_EDM',
-      size: '119 MB',
-      portfolios: 3,
-      treaties: 83,
-      cedants: 5,
-    },
-  ];
+  // Use hooks for API calls
+  const {
+    data: allDatabases,
+    loading: loadingAll,
+    error: errorAll,
+    fetchDatabases,
+  } = useAllDatabases();
+  console.log(allDatabases, 'allDatabases');
 
-  const filteredDatabases = databases.filter((db) =>
-    db.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const {
+    data: searchResults,
+    loading: loadingSearch,
+    error: errorSearch,
+    searchDatabases,
+    clearSearch,
+  } = useSearchDatabases();
+
+  // Fetch all databases on mount
+  useEffect(() => {
+    fetchDatabases();
+  }, [fetchDatabases]);
+
+  // Determine which databases to display
+  const displayDatabases = searchQuery.trim()
+    ? searchResults || []
+    : allDatabases || [];
+
+  const isLoading = loadingAll || loadingSearch;
+  const error = errorAll || errorSearch;
+
+  // Handle search with debouncing
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      clearSearch();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      searchDatabases(searchQuery);
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, searchDatabases, clearSearch]);
 
   const handleCheckboxChange = (database: Database) => {
     const current = data.databases || [];
@@ -107,6 +66,10 @@ const DatabaseForm: React.FC<{
       ? current.filter((db: Database) => db.id !== database.id)
       : [...current, database];
     onChange({ ...data, databases: updated });
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -125,61 +88,109 @@ const DatabaseForm: React.FC<{
             type="text"
             placeholder="Search by Database name"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
+          {isLoading && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+            </div>
+          )}
         </div>
+
+        {/* Selected count display */}
+        {data.databases && data.databases.length > 0 && (
+          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <p className="text-sm text-emerald-700">
+              <strong>{data.databases.length}</strong> database
+              {data.databases.length !== 1 ? 's' : ''} selected
+            </p>
+          </div>
+        )}
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b-2 border-gray-300">
-              <th className="text-left py-3 px-4 font-semibold text-gray-700"></th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                Name
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                Size
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                Portfolios
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                Treaties
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                Cedants
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDatabases.map((db, index) => (
-              <tr
-                key={db.id}
-                className={`border-b border-gray-200 hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-              >
-                <td className="py-3 px-4">
-                  <input
-                    type="checkbox"
-                    checked={(data.databases || []).some(
-                      (database: Database) => database.id === db.id
-                    )}
-                    onChange={() => handleCheckboxChange(db)}
-                    className="w-5 h-5 text-emerald-600 rounded border-gray-300 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                  />
-                </td>
-                <td className="py-3 px-4 text-gray-900">{db.name}</td>
-                <td className="py-3 px-4 text-gray-700">{db.size}</td>
-                <td className="py-3 px-4 text-gray-700">{db.portfolios}</td>
-                <td className="py-3 px-4 text-gray-700">{db.treaties}</td>
-                <td className="py-3 px-4 text-gray-700">{db.cedants}</td>
+      {/* Error Display */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && !displayDatabases.length && (
+        <div className="flex justify-center items-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading databases...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && displayDatabases.length === 0 && searchQuery && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg mb-2">No databases found</p>
+          <p className="text-gray-400 text-sm">
+            Try adjusting your search query
+          </p>
+        </div>
+      )}
+
+      {/* Database Table */}
+      {displayDatabases.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b-2 border-gray-300">
+                <th className="text-left py-3 px-4 font-semibold text-gray-700"></th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  Name
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  Size
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  Portfolios
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  Treaties
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  Cedants
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {displayDatabases.map((db: Database, index: number) => (
+                <tr
+                  key={db.id}
+                  className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                  }`}
+                >
+                  <td className="py-3 px-4">
+                    <input
+                      type="checkbox"
+                      checked={(data.databases || []).some(
+                        (database: Database) => database.id === db.id
+                      )}
+                      onChange={() => handleCheckboxChange(db)}
+                      className="w-5 h-5 text-emerald-600 rounded border-gray-300 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-gray-900">{db.name}</td>
+                  <td className="py-3 px-4 text-gray-700">{db.size}</td>
+                  <td className="py-3 px-4 text-gray-700">{db.portfolios}</td>
+                  <td className="py-3 px-4 text-gray-700">{db.treaties}</td>
+                  <td className="py-3 px-4 text-gray-700">{db.cedants}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
+      {/* Validation Error */}
       {errors.databases && (
         <p className="text-red-500 text-sm mt-2">{errors.databases}</p>
       )}
