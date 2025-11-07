@@ -33,7 +33,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
 }> = ({ data, onChange, errors }) => {
   const [portfolioSearch, setPortfolioSearch] = useState('');
   const [treatySearch, setTreatySearch] = useState('');
-  const [selectedDatabase, setSelectedDatabase] = useState('');
+  // const [selectedDatabase, setSelectedDatabase] = useState('');
 
   const databases = [
     'EDM_RH_39823_AutoOwners_EQ_19',
@@ -96,13 +96,13 @@ const LinkPortfoliosTreatiesForm: React.FC<{
   }, []);
 
   // Set selectedDatabase from data
-  useEffect(() => {
-    if (data.selectedDatabase) {
-      setSelectedDatabase(data.selectedDatabase);
-    } else {
-      setSelectedDatabase(databases[0]);
-    }
-  }, [data.selectedDatabase]);
+  // useEffect(() => {
+  //   if (data.selectedDatabase) {
+  //     setSelectedDatabase(data.selectedDatabase);
+  //   } else {
+  //     setSelectedDatabase(databases[0]);
+  //   }
+  // }, [data.selectedDatabase]);
 
   const filteredPortfolios = portfolios.filter((p: Portfolio) =>
     p.name.toLowerCase().includes(portfolioSearch.toLowerCase())
@@ -137,7 +137,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
   };
 
   const handleDatabaseChange = (db: string) => {
-    setSelectedDatabase(db);
+    // setSelectedDatabase(db);
     onChange({ ...data, selectedDatabase: db });
   };
 
