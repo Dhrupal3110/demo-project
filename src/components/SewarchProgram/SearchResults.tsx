@@ -23,7 +23,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         </p>
         <button
           onClick={onClear}
-          className="text-sm text-teal-600 hover:text-teal-700 font-medium"
+          className="text-sm text-teal-600 hover:text-(--color-primary-dark) font-medium"
         >
           Clear Search
         </button>

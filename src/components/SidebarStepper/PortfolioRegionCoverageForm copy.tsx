@@ -229,7 +229,7 @@ const PortfolioRegionCoverageForm: React.FC<{
               if (el) el.indeterminate = node.indeterminate || false;
             }}
             onChange={() => onCheck(node.id)}
-            className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer shrink-0"
+            className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer shrink-0"
           />
 
           <span className="text-sm text-gray-900 ml-1">{node.label}</span>
@@ -251,7 +251,7 @@ const PortfolioRegionCoverageForm: React.FC<{
           <h2 className="text-2xl font-bold text-gray-900">
             6 – Set portfolio region coverage
           </h2>
-          <button className="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700">
+          <button className="px-5 py-2 bg-(--color-primary) text-white rounded-lg text-sm font-medium hover:bg-(--color-primary-dark)">
             Add
           </button>
         </div>
@@ -266,7 +266,7 @@ const PortfolioRegionCoverageForm: React.FC<{
             placeholder="Search by EDM - Portfolio name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
           />
         </div>
       </div>
@@ -395,7 +395,7 @@ const PortfolioRegionCoverageForm: React.FC<{
                   <td className="border border-gray-300 py-2.5 px-3 text-center">
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center hover:bg-emerald-700 mx-auto"
+                      className="w-6 h-6 bg-(--color-primary) text-white rounded-full flex items-center justify-center hover:bg-(--color-primary-dark) mx-auto"
                     >
                       <Minus size={14} strokeWidth={3} />
                     </button>

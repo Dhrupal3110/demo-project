@@ -25,7 +25,7 @@ const SelectedProgram: React.FC = () => {
         </div>
         <button
           onClick={() => dispatch(clearSelectedProgram())}
-          className="text-teal-600 hover:text-teal-700"
+          className="text-teal-600 hover:text-(--color-primary-dark)"
         >
           <X className="w-5 h-5" />
         </button>

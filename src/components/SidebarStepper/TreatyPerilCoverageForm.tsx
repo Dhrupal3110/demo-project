@@ -142,7 +142,7 @@ const TreatyPerilCoverageForm: React.FC<{
               placeholder="Search database - treaty name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
         </div>
@@ -168,7 +168,7 @@ const TreatyPerilCoverageForm: React.FC<{
                       type="checkbox"
                       checked={isHeaderChecked(peril)}
                       onChange={() => handleHeaderCheckbox(peril)}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                     <span className="text-xs">{peril}</span>
                   </div>
@@ -191,7 +191,7 @@ const TreatyPerilCoverageForm: React.FC<{
                       type="checkbox"
                       checked={item.all}
                       onChange={() => handleCellClick(item.id, 'All')}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                   </div>
                 </td>
@@ -199,7 +199,9 @@ const TreatyPerilCoverageForm: React.FC<{
                   <td
                     key={peril}
                     className={`border border-gray-300 p-0 cursor-pointer ${
-                      item.coverages[peril] ? 'bg-emerald-700' : 'bg-white'
+                      item.coverages[peril]
+                        ? 'bg-(--color-primary-dark)'
+                        : 'bg-white'
                     }`}
                     onClick={() => handleCellClick(item.id, peril)}
                   >

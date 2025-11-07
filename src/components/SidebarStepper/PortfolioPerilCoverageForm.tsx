@@ -102,7 +102,7 @@ const PortfolioPerilCoverageForm: React.FC<{
   };
 
   const getCellClass = (value: boolean | 'partial') => {
-    if (value === true) return 'bg-emerald-700';
+    if (value === true) return 'bg-(--color-primary-dark)';
     if (value === 'partial') return 'bg-white bg-dotted';
     return 'bg-white';
   };
@@ -158,7 +158,7 @@ const PortfolioPerilCoverageForm: React.FC<{
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-8 bg-emerald-700 border border-gray-300 rounded"></div>
+              <div className="w-12 h-8 bg-(--color-primary-dark) border border-gray-300 rounded"></div>
               <span>
                 <strong>Green:</strong> Full coverage - Click to remove coverage
               </span>
@@ -182,7 +182,7 @@ const PortfolioPerilCoverageForm: React.FC<{
               placeholder="Search database - portfolio name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
@@ -194,7 +194,7 @@ const PortfolioPerilCoverageForm: React.FC<{
                 onChange={(e) => setSubPerils(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-(--color-primary-light) rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-(--color-primary)"></div>
             </div>
             <span className="text-sm text-gray-700">Subperils</span>
           </label>
@@ -221,7 +221,7 @@ const PortfolioPerilCoverageForm: React.FC<{
                       type="checkbox"
                       checked={isHeaderChecked(peril)}
                       onChange={() => handleHeaderCheckbox(peril)}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                     <span className="text-xs">{peril}</span>
                   </div>
@@ -244,7 +244,7 @@ const PortfolioPerilCoverageForm: React.FC<{
                       type="checkbox"
                       checked={item.all}
                       onChange={() => handleAllCheckbox(item.id, 'All')}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                   </div>
                 </td>

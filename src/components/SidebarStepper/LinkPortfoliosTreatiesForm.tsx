@@ -202,7 +202,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
               placeholder="Search by portfolio name"
               value={portfolioSearch}
               onChange={(e) => setPortfolioSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
@@ -216,13 +216,13 @@ const LinkPortfoliosTreatiesForm: React.FC<{
               placeholder="Search by treaty name"
               value={treatySearch}
               onChange={(e) => setTreatySearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
           <button
             onClick={handleAdd}
-            className="px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 ml-auto"
+            className="px-6 py-2 bg-(--color-primary) text-white rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary) ml-auto"
           >
             Add
           </button>
@@ -266,7 +266,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                     onChange={(e) =>
                       handlePortfolioHeaderCheck(e.target.checked)
                     }
-                    className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                   />
                   <span className="text-sm font-semibold text-gray-900">
                     Portfolio name
@@ -286,7 +286,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                       type="checkbox"
                       checked={portfolio.checked}
                       onChange={() => handlePortfolioCheck(portfolio.id)}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                     <span className="text-sm text-gray-700">
                       {portfolio.name}
@@ -311,7 +311,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                           someTreatiesChecked && !allTreatiesChecked;
                     }}
                     onChange={(e) => handleTreatyHeaderCheck(e.target.checked)}
-                    className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                   />
                   <span className="text-sm font-semibold text-gray-900 flex-1">
                     Treaty name
@@ -337,7 +337,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                       type="checkbox"
                       checked={treaty.checked}
                       onChange={() => handleTreatyCheck(treaty.id)}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                     <span className="text-sm text-gray-700 flex-1">
                       {treaty.name}
@@ -393,7 +393,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleRemove(item.id)}
-                    className="w-8 h-8 flex items-center justify-center bg-emerald-600 text-white rounded-full hover:bg-emerald-700"
+                    className="w-8 h-8 flex items-center justify-center bg-(--color-primary) text-white rounded-full hover:bg-(--color-primary-dark)"
                   >
                     <Minus size={16} />
                   </button>

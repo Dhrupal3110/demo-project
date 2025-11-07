@@ -243,12 +243,12 @@ const PortfolioRegionCoverageForm: React.FC<{
                 if (el) el.indeterminate = region.indeterminate || false;
               }}
               onChange={(e) => handleRegionCheck(region.id, e.target.checked)}
-              className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+              className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
             />
             {region.indeterminate && (
               <Minus
                 size={12}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-(--color-primary) pointer-events-none"
                 strokeWidth={3}
               />
             )}
@@ -284,12 +284,12 @@ const PortfolioRegionCoverageForm: React.FC<{
               placeholder="Search by EDM - Portfolio name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
           <button
             onClick={handleAdd}
-            className="px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="px-6 py-2 bg-(--color-primary) text-white rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
           >
             Add
           </button>
@@ -303,7 +303,7 @@ const PortfolioRegionCoverageForm: React.FC<{
               onClick={() => setActivePeril('EQ/FF')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                 activePeril === 'EQ/FF'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-(--color-primary) text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -313,7 +313,7 @@ const PortfolioRegionCoverageForm: React.FC<{
               onClick={() => setActivePeril('IF')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                 activePeril === 'IF'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-(--color-primary) text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -333,7 +333,7 @@ const PortfolioRegionCoverageForm: React.FC<{
                           somePortfoliosChecked && !allPortfoliosChecked;
                     }}
                     onChange={(e) => handleEDMCheck(e.target.checked)}
-                    className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                   />
                   <span className="text-sm font-semibold text-gray-900">
                     EDM
@@ -354,7 +354,7 @@ const PortfolioRegionCoverageForm: React.FC<{
                       type="checkbox"
                       checked={portfolio.checked}
                       onChange={() => handlePortfolioCheck(portfolio.id)}
-                      className="w-4 h-4 text-emerald-600 rounded border-gray-300 cursor-pointer"
+                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
                     />
                     <span className="text-sm text-gray-700">
                       {portfolio.database}
@@ -439,7 +439,7 @@ const PortfolioRegionCoverageForm: React.FC<{
                   <td className="border border-gray-300 py-2.5 px-3 text-center">
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center hover:bg-emerald-700 mx-auto"
+                      className="w-6 h-6 bg-(--color-primary) text-white rounded-full flex items-center justify-center hover:bg-(--color-primary-dark) mx-auto"
                     >
                       <Minus size={14} strokeWidth={3} />
                     </button>

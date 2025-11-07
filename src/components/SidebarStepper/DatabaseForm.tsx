@@ -91,24 +91,15 @@ const DatabaseForm: React.FC<{
             placeholder="Search by Database name"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-(--color-primary)"></div>
             </div>
           )}
         </div>
 
-        {/* Selected count display */}
-        {data.databases && data.databases.length > 0 && (
-          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <p className="text-sm text-emerald-700">
-              <strong>{data.databases.length}</strong> database
-              {data.databases.length !== 1 ? 's' : ''} selected
-            </p>
-          </div>
-        )}
       </div>
 
       {/* Error Display */}
@@ -122,7 +113,7 @@ const DatabaseForm: React.FC<{
       {isLoading && !displayDatabases.length && (
         <div className="flex justify-center items-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--color-primary) mx-auto mb-4"></div>
             <p className="text-gray-600">Loading databases...</p>
           </div>
         </div>
@@ -177,7 +168,7 @@ const DatabaseForm: React.FC<{
                         (database: Database) => database.id === db.id
                       )}
                       onChange={() => handleCheckboxChange(db)}
-                      className="w-5 h-5 text-emerald-600 rounded border-gray-300 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                      className="w-5 h-5 text-(--color-primary) rounded border-gray-300 focus:ring-2 focus:ring-(--color-primary) cursor-pointer"
                     />
                   </td>
                   <td className="py-3 px-4 text-gray-900">{db.name}</td>

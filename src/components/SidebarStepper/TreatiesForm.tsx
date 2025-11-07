@@ -34,12 +34,10 @@ const TreatiesForm: React.FC<{
   const currentTreaties = data.treaties || [];
   const activeDatabase = databases.find((db) => db.id === activeTab);
 
- const filteredTreaties: Treaty[] =
-   (activeDatabase?.treaties as Treaty[] | undefined)?.filter((treaty) =>
-     treaty.name.toLowerCase().includes(searchQuery.toLowerCase())
-   ) ?? [];
-
-
+  const filteredTreaties: Treaty[] =
+    (activeDatabase?.treaties as Treaty[] | undefined)?.filter((treaty) =>
+      treaty.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ) ?? [];
 
   const handleCheckboxChange = (treaty: Treaty) => {
     const isSelected = currentTreaties.some((t: Treaty) => t.id === treaty.id);
@@ -84,7 +82,7 @@ const TreatiesForm: React.FC<{
             placeholder="Search by Treaty name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
           />
         </div>
 
@@ -143,7 +141,7 @@ const TreatiesForm: React.FC<{
                       (t: Treaty) => t.id === treaty.id
                     )}
                     onChange={() => handleCheckboxChange(treaty)}
-                    className="w-5 h-5 text-emerald-600 rounded border-gray-300 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                    className="w-5 h-5 text-(--color-primary) rounded border-gray-300 focus:ring-2 focus:ring-(--color-primary) cursor-pointer"
                   />
                 </td>
                 <td className="py-3 px-4 text-gray-900">{treaty.name}</td>
