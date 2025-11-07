@@ -25,7 +25,6 @@ const DatabaseForm: React.FC<{
     error: errorAll,
     fetchDatabases,
   } = useAllDatabases();
-  console.log(allDatabases, 'allDatabases');
 
   const {
     data: searchResults,

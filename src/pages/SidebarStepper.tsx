@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, CheckCircle2 } from 'lucide-react';
+import { FileText, CheckCircle2, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/SidebarStepper/Sidebar';
 import SteperHeader from '../components/SidebarStepper/SteperHeader';
@@ -15,9 +15,11 @@ import TreatyRegionCoverageForm from '../components/SidebarStepper/TreatyRegionC
 import LinkPortfoliosTreatiesForm from '../components/SidebarStepper/LinkPortfoliosTreatiesForm';
 import ReviewAnalyses from '../components/SidebarStepper/ReviewAnalyses';
 import type { RootState } from '../app/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useSidebarStepperApi } from '../hooks/useSidebarStepperApi';
+import { setSelectedProgram } from '../app/slices/programSlice';
 
 interface FormData {
   [key: number]: Record<string, any>;
@@ -30,16 +32,16 @@ interface ValidationErrors {
 const SidebarStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(2);
   const [maxVisitedStep, setMaxVisitedStep] = useState<number>(2);
-  const [formData, setFormData] = useState<FormData>({});
-  console.log('formData: ', formData);
+  const [localFormData, setLocalFormData] = useState<FormData>({});
   const [currentStepData, setCurrentStepData] = useState<Record<string, any>>(
     {}
   );
-
-  const navigate = useNavigate();
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [isSaving, setIsSaving] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionId, setSubmissionId] = useState('');
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const programId = searchParams.get('id');
 
@@ -50,84 +52,145 @@ const SidebarStepper: React.FC = () => {
     (state: RootState) => state.program.allPrograms
   );
 
-  const handleNext = async (): Promise<void> => {
-    setIsSaving(true);
+  const {
+    formData: apiFormData,
+    loading,
+    error: apiError,
+    saving,
+    submitting,
+    saveStepData,
+    validateStep,
+    submitAllData,
+    resetForm,
+  } = useSidebarStepperApi();
 
-    // Simulate saving logic
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  useEffect(() => {
+    if (apiFormData && Object.keys(apiFormData).length > 0) {
+      setLocalFormData(apiFormData);
+      if (apiFormData[activeStep]) {
+        setCurrentStepData(apiFormData[activeStep]);
+      }
+    }
+  }, [apiFormData]);
 
-    // Save current step data
-    setFormData((prev) => ({
-      ...prev,
-      [activeStep]: {
-        ...currentStepData,
-        savedAt: new Date().toISOString(),
-      },
-    }));
+  useEffect(() => {
+    if (selectedProgram) {
+      setLocalFormData((prev) => ({
+        ...prev,
+        1: { program: selectedProgram },
+      }));
+      return;
+    }
 
-    // ✅ STEP 7 SPECIAL CASE: if NO treaties → jump to final page
-    if (activeStep === 7) {
-      const treaties = currentStepData?.treaties || [];
+    if (programId && allPrograms?.length > 0) {
+      const foundProgram = allPrograms.find((p) => p.id === programId);
 
-      if (treaties.length === 0) {
-        const finalStep = stepsData.length; // last step index
-
-        setActiveStep(finalStep);
-        setMaxVisitedStep((prev) => Math.max(prev, finalStep));
-        setCurrentStepData(formData[finalStep] || {});
-        setErrors({});
-        setIsSaving(false);
-        return;
+      if (foundProgram) {
+        setLocalFormData((prev) => ({
+          ...prev,
+          1: { program: foundProgram },
+        }));
+        dispatch(setSelectedProgram(foundProgram));
+      } else {
+        toast.error('Invalid program ID');
+        navigate('/');
       }
     }
 
-    // ✅ Normal next step behavior
-    if (activeStep < stepsData.length) {
-      const nextStep = activeStep + 1;
-      setActiveStep(nextStep);
-      setMaxVisitedStep((prev) => Math.max(prev, nextStep));
-      setCurrentStepData(formData[nextStep] || {});
-      setErrors({});
-    } else {
-      // Final Submit
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsSubmitted(true);
+    if (!programId) {
+      navigate('/');
     }
+  }, [selectedProgram, programId, allPrograms, navigate]);
 
-    setIsSaving(false);
+  const handleNext = async (): Promise<void> => {
+    try {
+      // Validate current step
+      const validation = await validateStep(activeStep, currentStepData);
+
+      if (!validation.valid) {
+        setErrors(validation.errors);
+        toast.error('Please fix the errors before proceeding');
+        return;
+      }
+
+      setErrors({});
+
+      // Save current step data
+      await saveStepData(activeStep, currentStepData);
+
+      // Update local state
+      setLocalFormData((prev) => ({
+        ...prev,
+        [activeStep]: currentStepData,
+      }));
+
+      // STEP 7 SPECIAL CASE: if NO treaties → jump to final page
+      if (activeStep === 7) {
+        const treaties = currentStepData?.treaties || [];
+
+        if (treaties.length === 0) {
+          const finalStep = stepsData.length;
+
+          setActiveStep(finalStep);
+          setMaxVisitedStep((prev) => Math.max(prev, finalStep));
+          setCurrentStepData(localFormData[finalStep] || {});
+          return;
+        }
+      }
+
+      // Normal next step behavior
+      if (activeStep < stepsData.length) {
+        const nextStep = activeStep + 1;
+        setActiveStep(nextStep);
+        setMaxVisitedStep((prev) => Math.max(prev, nextStep));
+        setCurrentStepData(localFormData[nextStep] || {});
+      } else {
+        // Final Submit
+        const submitResponse = await submitAllData(localFormData);
+
+        if (submitResponse.success) {
+          setSubmissionId(submitResponse.submissionId);
+          setIsSubmitted(true);
+          toast.success('Form submitted successfully!');
+        } else {
+          toast.error(submitResponse.message || 'Submission failed');
+        }
+      }
+    } catch (err) {
+      console.error('Error in handleNext:', err);
+      toast.error('An error occurred while proceeding');
+    }
   };
 
   const handlePrevious = (): void => {
-    // ✅ If user is at the first actionable step, go home
     if (activeStep === 2) {
       navigate('/');
       return;
     }
 
-    // ✅ STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
+    // STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
     if (activeStep === stepsData.length) {
-      const step7Data = formData[7] || {};
+      const step7Data = localFormData[7] || {};
       const treaties = step7Data?.treaties || [];
 
       if (treaties.length === 0) {
         const prevStep = 7;
         setActiveStep(prevStep);
-        setCurrentStepData(formData[prevStep] || {});
+        setCurrentStepData(localFormData[prevStep] || {});
         setErrors({});
         return;
       }
     }
 
-    // ✅ Normal previous step behavior
     if (activeStep > 2) {
-      setFormData((prev) => ({
+      setLocalFormData((prev) => ({
         ...prev,
         [activeStep]: currentStepData,
       }));
 
       const prevStep = activeStep - 1;
       setActiveStep(prevStep);
-      setCurrentStepData(formData[prevStep] || {});
+      setCurrentStepData(localFormData[prevStep] || {});
       setErrors({});
     }
   };
@@ -138,9 +201,9 @@ const SidebarStepper: React.FC = () => {
       navigate('/');
     }
     if (stepId <= maxVisitedStep) {
-      setFormData((prev) => ({ ...prev, [activeStep]: currentStepData }));
+      setLocalFormData((prev) => ({ ...prev, [activeStep]: currentStepData }));
       setActiveStep(stepId);
-      setCurrentStepData(formData[stepId] || {});
+      setCurrentStepData(localFormData[stepId] || {});
       setErrors({});
     }
   };
@@ -182,37 +245,50 @@ const SidebarStepper: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // ✅ If program already selected in UI
-    if (selectedProgram) {
-      setFormData((prev) => ({
-        ...prev,
-        1: { program: selectedProgram },
-      }));
-      return;
-    }
-
-    // ✅ If no selectedProgram, try finding from Redux by URL id
-    if (programId && allPrograms?.length > 0) {
-      const foundProgram = allPrograms.find((p) => p.id === programId);
-
-      if (foundProgram) {
-        setFormData((prev) => ({
-          ...prev,
-          1: { program: foundProgram },
-        }));
-      } else {
-        // ❌ ID not found in Redux → redirect
-        toast.error('Invalid program ID');
-        navigate('/');
-      }
-    }
-
-    // ❌ No programId → redirect
-    if (!programId) {
+  const handleResetAndCreateNew = async () => {
+    try {
+      await resetForm();
+      setIsSubmitted(false);
+      setActiveStep(2);
+      setMaxVisitedStep(2);
+      setLocalFormData({});
+      setCurrentStepData({});
+      setErrors({});
+      setSubmissionId('');
       navigate('/');
+      toast.success('Form reset successfully');
+    } catch (err) {
+      console.error('Error resetting form:', err);
+      toast.error('Failed to reset form');
     }
-  }, [selectedProgram, programId, allPrograms, navigate]);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="flex items-center gap-2">
+          <Loader2 className="animate-spin" size={32} />
+          <span className="text-gray-600 text-lg">Loading form data...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (apiError) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
+          <p className="text-red-600 text-center">{apiError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (
@@ -253,7 +329,7 @@ const SidebarStepper: React.FC = () => {
                     Submission ID
                   </p>
                   <p className="text-xs text-gray-600 font-mono">
-                    #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+                    #{submissionId}
                   </p>
                 </div>
                 <div
@@ -284,18 +360,11 @@ const SidebarStepper: React.FC = () => {
                 style={{ animationDelay: '0.4s' }}
               >
                 <button
-                  onClick={() => {
-                    setIsSubmitted(false);
-                    setActiveStep(2);
-                    setMaxVisitedStep(2);
-                    setFormData({});
-                    setCurrentStepData({});
-                    setErrors({});
-                    navigate('/');
-                  }}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 shadow-lg"
+                  onClick={handleResetAndCreateNew}
+                  disabled={submitting}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create New Submission
+                  {submitting ? 'Processing...' : 'Create New Submission'}
                 </button>
                 <button
                   onClick={() => setIsSubmitted(false)}
@@ -342,7 +411,7 @@ const SidebarStepper: React.FC = () => {
         activeStep={activeStep}
         maxVisitedStep={maxVisitedStep}
         stepsData={stepsData}
-        formData={formData}
+        formData={localFormData}
         handleSidebarClick={handleSidebarClick}
       />
       <main className="flex-1 flex flex-col overflow-y-auto">
@@ -350,10 +419,10 @@ const SidebarStepper: React.FC = () => {
           activeStep={activeStep}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
-          isSaving={isSaving}
+          isSaving={saving}
         />
         <div className="flex flex-col p-6 gap-4 animate-fadeIn">
-          <div className="flex-1 p-6 ">{renderStepForm()}</div>
+          <div className="flex-1 p-6">{renderStepForm()}</div>
         </div>
       </main>
       <style>{`
