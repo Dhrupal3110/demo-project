@@ -1,5 +1,8 @@
+// TreatyPerilCoverageForm.tsx
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { useTreatyPerilCoverageApi } from '../../hooks/useTreatyPerilCoverageApi';
+import { perils } from '../../api/mockData/treatyPerilCoverageMockData';
 
 interface PerilCoverage {
   [key: string]: boolean;
@@ -23,64 +26,13 @@ const TreatyPerilCoverageForm: React.FC<{
   errors?: ValidationErrors;
 }> = ({ data = {}, onChange = () => {}, errors = {} }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { treatyPerils, loading, error } = useTreatyPerilCoverageApi();
 
-  const perils = ['All', 'EQ', 'WS', 'CS', 'FL', 'WF', 'TR', 'WC'];
-
-  // Sample data matching the screenshot
-  const treatyPerils: TreatyPeril[] = [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 1',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: false,
-        CS: false,
-        FL: false,
-        WF: false,
-        TR: false,
-        WC: false,
-      },
-    },
-    {
-      id: '2',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 7',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: false,
-        CS: false,
-        FL: false,
-        WF: false,
-        TR: false,
-        WC: false,
-      },
-    },
-    {
-      id: '3',
-      database: 'RDM_RH_39823_AutoOwners_AL_19',
-      treaty: 'Treaty 20',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: false,
-        CS: false,
-        FL: false,
-        WF: false,
-        TR: false,
-        WC: false,
-      },
-    },
-  ];
-
-  // Initialize data if not present
   React.useEffect(() => {
-    if (!data.treatyPerils) {
+    if (!data.treatyPerils && treatyPerils.length > 0) {
       onChange({ ...data, treatyPerils });
     }
-  }, []);
+  }, [treatyPerils]);
 
   const currentData = data.treatyPerils || treatyPerils;
 
@@ -106,7 +58,6 @@ const TreatyPerilCoverageForm: React.FC<{
       } else {
         const newValue = !allChecked;
         const updatedCoverages = { ...item.coverages, [peril]: newValue };
-        // Update 'all' checkbox based on whether all perils are now checked
         const allPerilsChecked = perils
           .slice(1)
           .every((p) => updatedCoverages[p]);
@@ -135,7 +86,6 @@ const TreatyPerilCoverageForm: React.FC<{
             ...item.coverages,
             [peril]: !item.coverages[peril],
           };
-          // Update 'all' checkbox based on whether all perils are now checked
           const allPerilsChecked = perils
             .slice(1)
             .every((p) => updatedCoverages[p]);
@@ -158,13 +108,21 @@ const TreatyPerilCoverageForm: React.FC<{
     );
   };
 
-  const isHeaderIndeterminate = (peril: string) => {
-    if (currentData.length === 0) return false;
-    const checkedCount = currentData.filter((item: TreatyPeril) =>
-      peril === 'All' ? item.all : item.coverages[peril] === true
-    ).length;
-    return checkedCount > 0 && checkedCount < currentData.length;
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">Loading treaty peril coverage...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -190,7 +148,6 @@ const TreatyPerilCoverageForm: React.FC<{
         </div>
       </div>
 
-      {/* Coverage Grid */}
       <div className="overflow-x-auto border border-gray-300">
         <table className="w-full border-collapse bg-white">
           <thead>
