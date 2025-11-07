@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+/* === Color Variables === */
+:root {
+  /* Primary */
+  --color-primary: #34805a;
+  --color-primary-light: #4caf7d;
+  --color-primary-dark: #003b3b;
+  --color-primary-text: #ffffff;
+
+  /* Backgrounds */
+  --color-bg: #ffffff;
+  --color-surface: #f9fafb;
+  --color-secondary: #f3f3f3;
+  --color-hover: #e6f4ec;
+
+  /* Borders */
+  --color-border: #d1d5db;
+
+  /* Text */
+  --color-text: #111827;
+  --color-text-secondary: #6b7280;
+
+  /* Success, Warning, Error (for future use) */
+  --color-success: #16a34a;
+  --color-warning: #facc15;
+  --color-error: #dc2626;
+}
+
+/* === Dark Theme === */
+.dark {
+  --color-primary: #34805a;
+  --color-primary-light: #4caf7d;
+  --color-primary-dark: #003b3b;
+  --color-primary-text: #ffffff;
+
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-secondary: #1f2937;
+  --color-hover: #334155;
+
+  --color-border: #374151;
+
+  --color-text: #f9fafb;
+  --color-text-secondary: #9ca3af;
+
+  --color-success: #22c55e;
+  --color-warning: #fcd34d;
+  --color-error: #f87171;
+}
+
+/* === Base Body Styling === */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
