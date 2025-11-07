@@ -1,5 +1,7 @@
+// PortfolioForm.tsx
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { usePortfolioApi } from '../../hooks/usePortfolioApi';
 
 interface Portfolio {
   id: string;
@@ -7,12 +9,6 @@ interface Portfolio {
   portfolioNumber: string;
   date: string;
   numberOfAccounts: number;
-}
-
-interface Database {
-  id: string;
-  name: string;
-  portfolios: Portfolio[];
 }
 
 interface ValidationErrors {
@@ -26,71 +22,15 @@ const PortfolioForm: React.FC<{
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('1');
-
-  // Sample databases with portfolios
-  const databases: Database[] = [
-    {
-      id: '1',
-      name: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolios: [
-        {
-          id: 'p1',
-          portfolioName: 'Port 1',
-          portfolioNumber: 'Port 1',
-          date: '10 May 2025',
-          numberOfAccounts: 5,
-        },
-        {
-          id: 'p2',
-          portfolioName: 'Port 2',
-          portfolioNumber: 'Port 2',
-          date: '10 May 2025',
-          numberOfAccounts: 6262,
-        },
-        {
-          id: 'p3',
-          portfolioName: 'Port 4',
-          portfolioNumber: 'Port 4',
-          date: '10 May 2025',
-          numberOfAccounts: 435,
-        },
-        {
-          id: 'p4',
-          portfolioName: 'Port 7',
-          portfolioNumber: 'Port 7',
-          date: '10 May 2025',
-          numberOfAccounts: 4,
-        },
-      ],
-    },
-    {
-      id: '4',
-      name: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolios: [
-        {
-          id: 'p5',
-          portfolioName: 'Port A',
-          portfolioNumber: 'Port A',
-          date: '15 May 2025',
-          numberOfAccounts: 120,
-        },
-        {
-          id: 'p6',
-          portfolioName: 'Port B',
-          portfolioNumber: 'Port B',
-          date: '15 May 2025',
-          numberOfAccounts: 340,
-        },
-      ],
-    },
-  ];
+  const { databases, loading, error } = usePortfolioApi();
 
   const activeDatabase = databases.find((db) => db.id === activeTab);
 
-  const filteredPortfolios =
-    activeDatabase?.portfolios.filter((portfolio) =>
-      portfolio.portfolioName.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
+  const filteredPortfolios = (
+    (activeDatabase?.portfolios || []) as Portfolio[]
+  ).filter((portfolio: Portfolio) =>
+    portfolio.portfolioName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleCheckboxChange = (portfolio: Portfolio) => {
     const current = data.portfolios || [];
@@ -100,6 +40,22 @@ const PortfolioForm: React.FC<{
       : [...current, portfolio];
     onChange({ ...data, portfolios: updated });
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">Loading portfolios...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -122,7 +78,6 @@ const PortfolioForm: React.FC<{
           />
         </div>
 
-        {/* Database Tabs */}
         <div className="flex gap-2 mb-4">
           {databases.map((db) => (
             <button
@@ -140,7 +95,6 @@ const PortfolioForm: React.FC<{
         </div>
       </div>
 
-      {/* Portfolio Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
@@ -161,7 +115,7 @@ const PortfolioForm: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {filteredPortfolios.map((portfolio, index) => (
+            {filteredPortfolios.map((portfolio: Portfolio, index: number) => (
               <tr
                 key={portfolio.id}
                 className={`border-b border-gray-200 hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
