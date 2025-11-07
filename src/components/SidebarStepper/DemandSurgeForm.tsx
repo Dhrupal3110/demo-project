@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+// DemandSurgeForm.tsx
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { useDemandSurgeApi } from '../../hooks/useDemandSurgeApi';
 
 interface DemandSurgeItem {
   id: string;
@@ -20,33 +22,9 @@ const DemandSurgeForm: React.FC<{
 }> = ({ data, onChange, errors }) => {
   const [databaseSearch, setDatabaseSearch] = useState('');
   const [portfolioSearch, setPortfolioSearch] = useState('');
+  const { items, loading, error } = useDemandSurgeApi();
 
-  // Sample data based on selected portfolios
-  const demandSurgeItems: DemandSurgeItem[] = [
-    {
-      id: '1',
-      databaseName: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolioName: 'Port 1',
-      demandSurge: true,
-      justification: '',
-    },
-    {
-      id: '2',
-      databaseName: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolioName: 'Port 7',
-      demandSurge: true,
-      justification: '',
-    },
-    {
-      id: '3',
-      databaseName: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolioName: 'Port 20',
-      demandSurge: false,
-      justification: 'Auto portfolio as per submission',
-    },
-  ];
-
-  const currentItems = data.demandSurgeItems || demandSurgeItems;
+  const currentItems = data.demandSurgeItems || items;
 
   const filteredItems = currentItems.filter(
     (item: DemandSurgeItem) =>
@@ -54,12 +32,11 @@ const DemandSurgeForm: React.FC<{
       item.portfolioName.toLowerCase().includes(portfolioSearch.toLowerCase())
   );
 
-  // Initialize data if not present
-  React.useEffect(() => {
-    if (!data.demandSurgeItems) {
-      onChange({ ...data, demandSurgeItems: demandSurgeItems });
+  useEffect(() => {
+    if (!data.demandSurgeItems && items.length > 0) {
+      onChange({ ...data, demandSurgeItems: items });
     }
-  }, []);
+  }, [items]);
 
   const handleToggleChange = (itemId: string, value: boolean) => {
     const updated = currentItems.map((item: DemandSurgeItem) =>
@@ -75,6 +52,22 @@ const DemandSurgeForm: React.FC<{
     onChange({ ...data, demandSurgeItems: updated });
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">Loading demand surge items...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-6">
@@ -82,7 +75,6 @@ const DemandSurgeForm: React.FC<{
           4 – Set demand surge
         </h2>
 
-        {/* Search Filters */}
         <div className="flex gap-4 mb-6">
           <div className="relative w-64">
             <Search
@@ -114,7 +106,6 @@ const DemandSurgeForm: React.FC<{
         </div>
       </div>
 
-      {/* Demand Surge Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
