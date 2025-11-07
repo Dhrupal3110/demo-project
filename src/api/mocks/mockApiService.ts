@@ -1,6 +1,6 @@
 // ============= api/mocks/mockApiService.ts =============
 import type { Program } from '../../app/slices/programSlice';
-import { mockPrograms, simulateDelay } from './programMockData';
+import { mockPrograms, simulateDelay } from '../mockData/programMockData';
 import type { ProgramResponse, ProgramSearchParams } from '../services/programService';
 
 class MockApiService {

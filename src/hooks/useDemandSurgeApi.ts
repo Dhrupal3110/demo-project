@@ -1,6 +1,6 @@
 // useDemandSurgeApi.ts
 import { useState, useEffect } from 'react';
-import type { DemandSurgeItem } from '../api/mocks/demandSurgeMockData';
+import type { DemandSurgeItem } from '../api/mockData/demandSurgeMockData';
 import { mockDemandSurgeService } from '../api/mocks/mockDemandSurgeService';
 
 

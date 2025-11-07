@@ -1,5 +1,5 @@
 // mockDemandSurgeService.ts
-import { mockDemandSurgeItems, type DemandSurgeItem } from './demandSurgeMockData';
+import { mockDemandSurgeItems, type DemandSurgeItem } from '../mockData/demandSurgeMockData';
 
 const MOCK_DELAY = 500;
 

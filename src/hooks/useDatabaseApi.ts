@@ -1,7 +1,7 @@
 // ============= hooks/useDatabaseApi.ts =============
 import { useState, useCallback, useEffect } from 'react';
 import { unifiedDatabaseService } from '../api/services/unifiedDatabaseService';
-import type { Database } from '../api/mocks/databaseMockData';
+import type { Database } from '../api/mockData/databaseMockData';
 import type { DatabaseSearchParams } from '../api/services/databaseService';
 
 interface UseApiState<T> {

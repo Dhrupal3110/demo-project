@@ -1,6 +1,6 @@
 // usePortfolioApi.ts
 import { useState, useEffect } from 'react';
-import type { Database } from '../api/mocks/databaseMockData';
+import type { Database } from '../api/mockData/databaseMockData';
 import { mockPortfolioService } from '../api/mocks/mockPortfolioService';
 
 

@@ -1,6 +1,6 @@
 // ============= api/services/databaseService.ts =============
 import { apiClient } from '../client/apiClient';
-import type { Database } from '../mocks/databaseMockData';
+import type { Database } from '../mockData/databaseMockData';
 
 export interface DatabaseSearchParams {
   query?: string;

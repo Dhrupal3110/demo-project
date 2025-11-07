@@ -1,6 +1,6 @@
 // ============= api/mocks/mockDatabaseService.ts =============
-import type { Database } from './databaseMockData';
-import { mockDatabases, simulateDelay } from './databaseMockData';
+import type { Database } from '../mockData/databaseMockData';
+import { mockDatabases, simulateDelay } from '../mockData/databaseMockData';
 
 export interface DatabaseSearchParams {
   query?: string;

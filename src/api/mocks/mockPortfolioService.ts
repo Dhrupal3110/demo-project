@@ -1,5 +1,5 @@
 // mockPortfolioService.ts
-import { mockDatabases, type Database } from './portfolioMockData';
+import { mockDatabases, type Database } from '../mockData/portfolioMockData';
 
 const MOCK_DELAY = 500;
 

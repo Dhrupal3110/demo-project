@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+// PortfolioPerilCoverageForm.tsx
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { usePortfolioPerilCoverageApi } from '../../hooks/usePortfolioPerilCoverageApi';
 
 interface PerilCoverage {
   [key: string]: boolean | 'partial';
@@ -24,66 +26,17 @@ const PortfolioPerilCoverageForm: React.FC<{
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [subPerils, setSubPerils] = useState(false);
+  const { items, loading, error } = usePortfolioPerilCoverageApi();
 
   const perils = ['All', 'EQ', 'WS', 'CS', 'FL', 'WF', 'TR', 'WC'];
 
-  // Sample data
-  const portfolioPerils: PortfolioPeril[] = [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 1',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: false,
-        CS: false,
-        FL: false,
-        WF: 'partial',
-        TR: false,
-        WC: false,
-      },
-    },
-    {
-      id: '2',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolio: 'Port 7',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: 'partial',
-        CS: false,
-        FL: false,
-        WF: false,
-        TR: false,
-        WC: false,
-      },
-    },
-    {
-      id: '3',
-      database: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolio: 'Port 20',
-      all: false,
-      coverages: {
-        EQ: true,
-        WS: 'partial',
-        CS: 'partial',
-        FL: 'partial',
-        WF: 'partial',
-        TR: 'partial',
-        WC: 'partial',
-      },
-    },
-  ];
-
-  // Initialize data if not present
-  React.useEffect(() => {
-    if (!data.portfolioPerils) {
-      onChange({ ...data, portfolioPerils });
+  useEffect(() => {
+    if (!data.portfolioPerils && items.length > 0) {
+      onChange({ ...data, portfolioPerils: items });
     }
-  }, []);
+  }, [items]);
 
-  const currentData = data.portfolioPerils || portfolioPerils;
+  const currentData = data.portfolioPerils || items;
 
   const filteredData = currentData.filter(
     (item: PortfolioPeril) =>
@@ -154,6 +107,22 @@ const PortfolioPerilCoverageForm: React.FC<{
     return 'bg-white';
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">Loading portfolio peril coverage...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <style>{`
@@ -169,7 +138,6 @@ const PortfolioPerilCoverageForm: React.FC<{
           5 – Set portfolio peril coverage
         </h2>
 
-        {/* Info Box */}
         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <h3 className="text-sm font-semibold text-blue-900 mb-2">
             How coverage states work:
@@ -233,7 +201,6 @@ const PortfolioPerilCoverageForm: React.FC<{
         </div>
       </div>
 
-      {/* Coverage Grid */}
       <div className="overflow-x-auto border border-gray-300">
         <table className="w-full border-collapse">
           <thead>

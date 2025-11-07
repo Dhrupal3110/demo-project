@@ -2,7 +2,7 @@
 import { API_CONFIG } from '../config/apiConfig';
 import { databaseService } from './databaseService';
 import { mockDatabaseService } from '../mocks/mockDatabaseService';
-import type { Database } from '../mocks/databaseMockData';
+import type { Database } from '../mockData/databaseMockData';
 import type { DatabaseResponse, DatabaseSearchParams } from './databaseService';
 
 /**

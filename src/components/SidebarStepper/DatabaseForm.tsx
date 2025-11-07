@@ -1,8 +1,11 @@
 // ============= components/DatabaseForm.tsx =============
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { useAllDatabases, useSearchDatabases } from '../../hooks/useDatabaseApi';
-import type { Database } from '../../api/mocks/databaseMockData';
+import {
+  useAllDatabases,
+  useSearchDatabases,
+} from '../../hooks/useDatabaseApi';
+import type { Database } from '../../api/mockData/databaseMockData';
 
 interface ValidationErrors {
   databases?: string;
