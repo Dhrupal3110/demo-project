@@ -1,5 +1,7 @@
+// TreatyRegionCoverageForm.tsx
 import React, { useState } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
+import { useTreatyRegionCoverageApi } from '../../hooks/useTreatyRegionCoverageApi';
 
 interface Region {
   id: string;
@@ -40,118 +42,43 @@ const TreatyRegionCoverageForm: React.FC<{
     new Set(['worldwide', 'us'])
   );
 
-  // Get treaties for each peril
-  const treatiesEQFF: TreatyItem[] = data.treatiesEQFF || [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 1',
-      checked: true,
-    },
-    {
-      id: '2',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 7',
-      checked: false,
-    },
-    {
-      id: '3',
-      database: 'RDM_RH_39823_AutoOwners_ALL_19',
-      treaty: 'Treaty 20',
-      checked: true,
-    },
-  ];
+  const {
+    treatiesEQFF: apiTreatiesEQFF,
+    treatiesIF: apiTreatiesIF,
+    regionsEQFF: apiRegionsEQFF,
+    regionsIF: apiRegionsIF,
+    selectedRegions: apiSelectedRegions,
+    loading,
+    error,
+  } = useTreatyRegionCoverageApi();
 
-  const treatiesIF: TreatyItem[] = data.treatiesIF || [
-    {
-      id: '4',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 7',
-      checked: false,
-    },
-    {
-      id: '5',
-      database: 'ZH_116751_BPCS_HD_25_EDM',
-      treaty: 'Treaty 15',
-      checked: false,
-    },
-  ];
+  React.useEffect(() => {
+    if (!loading && !data.treatiesEQFF) {
+      onChange({
+        ...data,
+        treatiesEQFF: apiTreatiesEQFF,
+        treatiesIF: apiTreatiesIF,
+        regionsEQFF: apiRegionsEQFF,
+        regionsIF: apiRegionsIF,
+        selectedRegions: apiSelectedRegions,
+      });
+    }
+  }, [
+    loading,
+    apiTreatiesEQFF,
+    apiTreatiesIF,
+    apiRegionsEQFF,
+    apiRegionsIF,
+    apiSelectedRegions,
+  ]);
 
-  // Get regions for each peril
-  const regionsEQFF: Region[] = data.regionsEQFF || [
-    {
-      id: 'worldwide',
-      name: 'Worldwide',
-      checked: false,
-      indeterminate: true,
-      children: [
-        {
-          id: 'us',
-          name: 'United States',
-          checked: false,
-          indeterminate: true,
-          children: [
-            { id: 'california', name: 'California', checked: true },
-            { id: 'pnw', name: 'Pacific North West', checked: false },
-          ],
-        },
-        {
-          id: 'canada',
-          name: 'Canada',
-          checked: false,
-          children: [],
-        },
-      ],
-    },
-  ];
+  const treatiesEQFF: TreatyItem[] = data.treatiesEQFF || apiTreatiesEQFF;
+  const treatiesIF: TreatyItem[] = data.treatiesIF || apiTreatiesIF;
+  const regionsEQFF: Region[] = data.regionsEQFF || apiRegionsEQFF;
+  const regionsIF: Region[] = data.regionsIF || apiRegionsIF;
+  const selectedRegions: SelectedRegion[] =
+    data.selectedRegions || apiSelectedRegions;
 
-  const regionsIF: Region[] = data.regionsIF || [
-    {
-      id: 'worldwide-if',
-      name: 'Worldwide',
-      checked: false,
-      children: [
-        {
-          id: 'europe',
-          name: 'Europe',
-          checked: false,
-          children: [
-            { id: 'germany', name: 'Germany', checked: false },
-            { id: 'france', name: 'France', checked: false },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const selectedRegions: SelectedRegion[] = data.selectedRegions || [
-    {
-      id: '1',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 1',
-      peril: 'EQ/FF',
-      region: 'California',
-      includeExclude: 'Include',
-    },
-    {
-      id: '2',
-      database: 'RDM_RH_39823_AutoOwners_ALL_19',
-      treaty: 'Treaty 20',
-      peril: 'EQ/FF',
-      region: 'California',
-      includeExclude: 'Include',
-    },
-    {
-      id: '3',
-      database: 'EDM_RH_39823_AutoOwners_EQ_19',
-      treaty: 'Treaty 7',
-      peril: 'IF',
-      region: 'Germany',
-      includeExclude: 'Exclude',
-    },
-  ];
-
-  // Get current active data based on peril
   const treaties = activePeril === 'EQ/FF' ? treatiesEQFF : treatiesIF;
   const regions = activePeril === 'EQ/FF' ? regionsEQFF : regionsIF;
 
@@ -338,6 +265,22 @@ const TreatyRegionCoverageForm: React.FC<{
   const allTreatiesChecked = treaties.every((t) => t.checked);
   const someTreatiesChecked = treaties.some((t) => t.checked);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-600">Loading treaty region coverage...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="mb-6">
@@ -369,7 +312,6 @@ const TreatyRegionCoverageForm: React.FC<{
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">
-        {/* Left Panel - Treaties */}
         <div className="bg-white border border-gray-300 rounded-lg">
           <div className="p-4 border-b border-gray-300 flex gap-2">
             <button
@@ -440,7 +382,6 @@ const TreatyRegionCoverageForm: React.FC<{
           </div>
         </div>
 
-        {/* Right Panel - Regions */}
         <div className="bg-white border border-gray-300 rounded-lg">
           <div className="p-4 border-b border-gray-300">
             <h3 className="text-sm font-semibold text-gray-900 py-1">
@@ -453,7 +394,6 @@ const TreatyRegionCoverageForm: React.FC<{
         </div>
       </div>
 
-      {/* Selected Regions Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
