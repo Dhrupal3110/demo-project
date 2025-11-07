@@ -1,16 +1,7 @@
-import React, { useState } from 'react';
-import { Search, ChevronDown, ChevronUp } from 'lucide-react';
-
-interface Analysis {
-  id: string;
-  databaseName: string;
-  portfolioName: string;
-  numTreaties: number;
-  profile: string;
-  currency: string;
-  priority: string;
-  expanded: boolean;
-}
+import React, { useState, useEffect } from 'react';
+import { Search, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import type { Analysis } from '../../api/mockData/reviewAnalysesMockData';
+import { useReviewAnalysesApi } from '../../hooks/useReviewAnalysesApi';
 
 interface ValidationErrors {
   reviewAnalyses?: string;
@@ -22,87 +13,107 @@ const ReviewAnalyses: React.FC<{
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [analyses, setAnalyses] = useState<Analysis[]>([]);
+  const [context, setContext] = useState('');
 
-  // Initial data
-  const initialAnalyses: Analysis[] = [
-    {
-      id: '1',
-      databaseName: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolioName: 'Port1',
-      numTreaties: 1,
-      profile: 'A1 – US EQ',
-      currency: 'USD',
-      priority: 'Low',
-      expanded: false,
-    },
-    {
-      id: '2',
-      databaseName: 'EDM_RH_39823_AutoOwners_EQ_19',
-      portfolioName: 'Port7',
-      numTreaties: 1,
-      profile: 'A1 – US EQ',
-      currency: 'USD',
-      priority: 'Low',
-      expanded: false,
-    },
-    {
-      id: '3',
-      databaseName: 'RDM_RH_39823_AutoOwners_ALL_19',
-      portfolioName: 'Port20',
-      numTreaties: 2,
-      profile: 'A1 – US EQ',
-      currency: 'USD',
-      priority: 'Low',
-      expanded: true,
-    },
-  ];
+  const {
+    reviewData,
+    loading,
+    error,
+    updateAnalysisCurrency,
+    updateAnalysisPriority,
+    updateContext,
+    toggleExpanded,
+  } = useReviewAnalysesApi();
 
-  const currentAnalyses = data.analyses || initialAnalyses;
-  const currentContext = data.context || 'Treaty Pricing';
+  useEffect(() => {
+    if (reviewData) {
+      setAnalyses(reviewData.analyses);
+      setContext(reviewData.context);
 
-  // Initialize data if not present
-  React.useEffect(() => {
-    if (!data.analyses) {
       onChange({
         ...data,
-        analyses: initialAnalyses,
-        context: 'Treaty Pricing',
+        analyses: reviewData.analyses,
+        context: reviewData.context,
       });
     }
-  }, []);
+  }, [reviewData]);
 
-  const filteredAnalyses = currentAnalyses.filter(
+  const filteredAnalyses = analyses.filter(
     (analysis: Analysis) =>
       analysis.databaseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       analysis.portfolioName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const toggleExpand = (id: string) => {
-    const updated = currentAnalyses.map((analysis: Analysis) =>
-      analysis.id === id
-        ? { ...analysis, expanded: !analysis.expanded }
-        : analysis
-    );
-    onChange({ ...data, analyses: updated });
+  const handleToggleExpand = async (id: string) => {
+    try {
+      await toggleExpanded(id);
+      const updated = analyses.map((analysis: Analysis) =>
+        analysis.id === id
+          ? { ...analysis, expanded: !analysis.expanded }
+          : analysis
+      );
+      setAnalyses(updated);
+      onChange({ ...data, analyses: updated });
+    } catch (err) {
+      console.error('Failed to toggle expand:', err);
+    }
   };
 
-  const handleCurrencyChange = (id: string, value: string) => {
-    const updated = currentAnalyses.map((analysis: Analysis) =>
-      analysis.id === id ? { ...analysis, currency: value } : analysis
-    );
-    onChange({ ...data, analyses: updated });
+  const handleCurrencyChange = async (id: string, value: string) => {
+    try {
+      await updateAnalysisCurrency(id, value);
+      const updated = analyses.map((analysis: Analysis) =>
+        analysis.id === id ? { ...analysis, currency: value } : analysis
+      );
+      setAnalyses(updated);
+      onChange({ ...data, analyses: updated });
+    } catch (err) {
+      console.error('Failed to update currency:', err);
+    }
   };
 
-  const handlePriorityChange = (id: string, value: string) => {
-    const updated = currentAnalyses.map((analysis: Analysis) =>
-      analysis.id === id ? { ...analysis, priority: value } : analysis
-    );
-    onChange({ ...data, analyses: updated });
+  const handlePriorityChange = async (id: string, value: string) => {
+    try {
+      await updateAnalysisPriority(id, value);
+      const updated = analyses.map((analysis: Analysis) =>
+        analysis.id === id ? { ...analysis, priority: value } : analysis
+      );
+      setAnalyses(updated);
+      onChange({ ...data, analyses: updated });
+    } catch (err) {
+      console.error('Failed to update priority:', err);
+    }
   };
 
-  const handleContextChange = (value: string) => {
-    onChange({ ...data, context: value });
+  const handleContextChange = async (value: string) => {
+    try {
+      await updateContext(value);
+      setContext(value);
+      onChange({ ...data, context: value });
+    } catch (err) {
+      console.error('Failed to update context:', err);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-2">
+          <Loader2 className="animate-spin" size={24} />
+          <span className="text-gray-600">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -165,7 +176,7 @@ const ReviewAnalyses: React.FC<{
                   </td>
                   <td className="py-3 px-4 text-gray-900 text-sm">
                     <button
-                      onClick={() => toggleExpand(analysis.id)}
+                      onClick={() => handleToggleExpand(analysis.id)}
                       className="flex items-center gap-1 hover:text-blue-600"
                     >
                       {analysis.expanded ? (
@@ -181,36 +192,32 @@ const ReviewAnalyses: React.FC<{
                   </td>
                   <td className="py-3 px-4">
                     <select
-                      value={
-                        currentAnalyses.find(
-                          (a: Analysis) => a.id === analysis.id
-                        )?.currency || 'USD'
-                      }
+                      value={analysis.currency}
                       onChange={(e) =>
                         handleCurrencyChange(analysis.id, e.target.value)
                       }
                       className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="USD">USD</option>
-                      <option value="EUR">EUR</option>
-                      <option value="GBP">GBP</option>
+                      {reviewData?.currencyOptions.map((curr) => (
+                        <option key={curr} value={curr}>
+                          {curr}
+                        </option>
+                      ))}
                     </select>
                   </td>
                   <td className="py-3 px-4">
                     <select
-                      value={
-                        currentAnalyses.find(
-                          (a: Analysis) => a.id === analysis.id
-                        )?.priority || 'Low'
-                      }
+                      value={analysis.priority}
                       onChange={(e) =>
                         handlePriorityChange(analysis.id, e.target.value)
                       }
                       className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
+                      {reviewData?.priorityOptions.map((pri) => (
+                        <option key={pri} value={pri}>
+                          {pri}
+                        </option>
+                      ))}
                     </select>
                   </td>
                 </tr>
@@ -222,13 +229,15 @@ const ReviewAnalyses: React.FC<{
         <div className="mt-6 flex justify-end items-center gap-3">
           <label className="text-sm font-medium text-gray-700">Context:</label>
           <select
-            value={currentContext}
+            value={context}
             onChange={(e) => handleContextChange(e.target.value)}
             className="border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]"
           >
-            <option value="Treaty Pricing">Treaty Pricing</option>
-            <option value="Portfolio Analysis">Portfolio Analysis</option>
-            <option value="Risk Assessment">Risk Assessment</option>
+            {reviewData?.contextOptions.map((ctx) => (
+              <option key={ctx} value={ctx}>
+                {ctx}
+              </option>
+            ))}
           </select>
         </div>
 
