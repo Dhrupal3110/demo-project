@@ -17,6 +17,7 @@ const SteperHeader = ({
   return (
     <div className="flex items-center justify-between bg-(--color-primary) px-6 py-3">
       <button
+        id="stepper-prev"
         onClick={handlePrevious}
         disabled={activeStep === 1}
         className={`px-4 py-2 rounded-full border border-white text-white text-sm font-medium flex items-center gap-2 ${activeStep === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-primary)'}`}
@@ -26,6 +27,7 @@ const SteperHeader = ({
       </button>
 
       <button
+        id="stepper-next"
         onClick={handleNext}
         disabled={isSaving}
         className={`px-4 py-2 rounded-full bg-white text-(--color-primary-dark) text-sm font-medium flex items-center gap-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
