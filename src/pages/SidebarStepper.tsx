@@ -118,24 +118,24 @@ const SidebarStepper: React.FC = () => {
       // Save current step data
       await saveStepData(activeStep, currentStepData);
 
-      // Update local state
-      setLocalFormData((prev) => ({
-        ...prev,
+      // Update local state with latest data snapshot
+      const updatedFormData: FormData = {
+        ...localFormData,
         [activeStep]: currentStepData,
-      }));
+      };
+      setLocalFormData(updatedFormData);
 
-      // STEP 7 SPECIAL CASE: if NO treaties → jump to final page
-      if (activeStep === 7) {
-        const treaties = currentStepData?.treaties || [];
+      const finalStep = stepsData.length;
 
-        if (treaties.length === 0) {
-          const finalStep = stepsData.length;
-
-          setActiveStep(finalStep);
-          setMaxVisitedStep((prev) => Math.max(prev, finalStep));
-          setCurrentStepData(localFormData[finalStep] || {});
-          return;
-        }
+      // STEP 7 SPECIAL CASE: if NO treaties → jump to review page (step 11)
+      if (
+        activeStep === 7 &&
+        (!currentStepData?.treaties || currentStepData.treaties.length === 0)
+      ) {
+        setActiveStep(finalStep);
+        setMaxVisitedStep((prev) => Math.max(prev, finalStep));
+        setCurrentStepData(updatedFormData[finalStep] || {});
+        return;
       }
 
       // Normal next step behavior
@@ -143,10 +143,10 @@ const SidebarStepper: React.FC = () => {
         const nextStep = activeStep + 1;
         setActiveStep(nextStep);
         setMaxVisitedStep((prev) => Math.max(prev, nextStep));
-        setCurrentStepData(localFormData[nextStep] || {});
+        setCurrentStepData(updatedFormData[nextStep] || {});
       } else {
         // Final Submit
-        const submitResponse = await submitAllData(localFormData);
+        const submitResponse = await submitAllData(updatedFormData);
 
         if (submitResponse.success) {
           setSubmissionId(submitResponse.submissionId);
