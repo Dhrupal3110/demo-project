@@ -1,5 +1,6 @@
-import { Play, Redo2, Undo2 } from 'lucide-react';
+import { Moon, Play, Redo2, Sun, Undo2 } from 'lucide-react';
 import { stepsData } from '../../static/stepsData';
+import { useTheme } from '../../context/ThemeContext';
 
 interface SteperHeaderProps {
   handlePrevious: () => void;
@@ -14,6 +15,7 @@ const SteperHeader = ({
   activeStep,
   isSaving,
 }: SteperHeaderProps) => {
+  const { mode, name, toggleMode, setName } = useTheme();
   return (
     <div className="flex items-center justify-between bg-(--color-primary) px-6 py-3">
       <button
@@ -25,6 +27,33 @@ const SteperHeader = ({
         <Undo2 size={18} />
         {stepsData[activeStep - 1]?.prev}
       </button>
+
+      <div className="flex items-center gap-3">
+      <div className="flex items-center bg-(--color-primary-overlay) rounded-full p-1">
+          <button
+            onClick={() => setName('default')}
+          className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
+            aria-pressed={name === 'default'}
+          >
+            Default
+          </button>
+          <button
+            onClick={() => setName('sompo')}
+          className={`px-3 py-1 rounded-full text-sm ${name === 'sompo' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
+            aria-pressed={name === 'sompo'}
+          >
+            Sompo
+          </button>
+        </div>
+        <button
+          onClick={toggleMode}
+          aria-label="Toggle dark mode"
+          className="w-9 h-9 rounded-full bg-white text-(--color-primary-dark) flex items-center justify-center hover:bg-gray-100"
+          title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+      </div>
 
       <button
         id="stepper-next"

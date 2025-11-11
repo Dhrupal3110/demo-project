@@ -1,32 +1,47 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark';
+type ThemeMode = 'light' | 'dark';
+type ThemeName = 'default' | 'sompo';
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
+  mode: ThemeMode;
+  name: ThemeName;
+  toggleMode: () => void;
+  setName: (name: ThemeName) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>(
-    (localStorage.getItem('theme') as Theme) || 'light'
+  const [mode, setMode] = useState<ThemeMode>(
+    (localStorage.getItem('themeMode') as ThemeMode) || 'light'
+  );
+  const [name, setNameState] = useState<ThemeName>(
+    (localStorage.getItem('themeName') as ThemeName) || 'default'
   );
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') {
+    // apply dark/light
+    if (mode === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    // apply theme name class
+    if (name === 'sompo') {
+      root.classList.add('theme-sompo');
+    } else {
+      root.classList.remove('theme-sompo');
+    }
+    localStorage.setItem('themeMode', mode);
+    localStorage.setItem('themeName', name);
+  }, [mode, name]);
 
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
+  const toggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
+  const setName = (newName: ThemeName) => setNameState(newName);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ mode, name, toggleMode, setName }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -160,7 +160,7 @@ const PortfolioPerilCoverageForm: React.FC<{
             <div className="flex items-center gap-3">
               <div className="w-12 h-8 bg-(--color-primary-dark) border border-gray-300 rounded"></div>
               <span>
-                <strong>Green:</strong> Full coverage - Click to remove coverage
+                <strong>Filled:</strong> Full coverage - Click to remove coverage
               </span>
             </div>
           </div>

@@ -77,7 +77,7 @@ const Sidebar = ({
                   {step.id}. {step.title}
                 </span>
                 {(isCompleted || step.id == 1) && (
-                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                  <CheckCircle2 className="w-4 h-4 text-(--color-primary-dark)" />
                 )}
               </li>
             );
