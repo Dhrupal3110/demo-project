@@ -22,7 +22,7 @@ import { useSidebarStepperApi } from '../hooks/useSidebarStepperApi';
 import { setSelectedProgram } from '../app/slices/programSlice';
 
 interface FormData {
-  [key: number]: Record<string, any>;
+  [key: number]: Record<string, unknown>;
 }
 
 interface ValidationErrors {
@@ -33,9 +33,9 @@ const SidebarStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(2);
   const [maxVisitedStep, setMaxVisitedStep] = useState<number>(2);
   const [localFormData, setLocalFormData] = useState<FormData>({});
-  const [currentStepData, setCurrentStepData] = useState<Record<string, any>>(
-    {}
-  );
+  const [currentStepData, setCurrentStepData] = useState<
+    Record<string, unknown>
+  >({});
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState('');
@@ -71,7 +71,7 @@ const SidebarStepper: React.FC = () => {
         setCurrentStepData(apiFormData[activeStep]);
       }
     }
-  }, [apiFormData]);
+  }, [apiFormData, activeStep]);
 
   useEffect(() => {
     if (selectedProgram) {
@@ -100,7 +100,7 @@ const SidebarStepper: React.FC = () => {
     if (!programId) {
       navigate('/');
     }
-  }, [selectedProgram, programId, allPrograms, navigate]);
+  }, [selectedProgram, programId, allPrograms, navigate, dispatch]);
 
   const handleNext = async (): Promise<void> => {
     try {
@@ -128,10 +128,9 @@ const SidebarStepper: React.FC = () => {
       const finalStep = stepsData.length;
 
       // STEP 7 SPECIAL CASE: if NO treaties → jump to review page (step 11)
-      if (
-        activeStep === 7 &&
-        (!currentStepData?.treaties || currentStepData.treaties.length === 0)
-      ) {
+      const treaties = currentStepData?.treaties;
+      const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
+      if (activeStep === 7 && !hasTreaties) {
         setActiveStep(finalStep);
         setMaxVisitedStep((prev) => Math.max(prev, finalStep));
         setCurrentStepData(updatedFormData[finalStep] || {});
@@ -171,9 +170,10 @@ const SidebarStepper: React.FC = () => {
     // STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
     if (activeStep === stepsData.length) {
       const step7Data = localFormData[7] || {};
-      const treaties = step7Data?.treaties || [];
+      const treaties = step7Data?.treaties;
+      const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
 
-      if (treaties.length === 0) {
+      if (!hasTreaties) {
         const prevStep = 7;
         setActiveStep(prevStep);
         setCurrentStepData(localFormData[prevStep] || {});
