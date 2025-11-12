@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { usePortfolioPerilCoverageApi } from '../../hooks/usePortfolioPerilCoverageApi';
+import Checkbox from '../common/Checkbox';
 
 interface PerilCoverage {
   [key: string]: boolean | 'partial';
@@ -186,18 +187,14 @@ const PortfolioPerilCoverageForm: React.FC<{
             />
           </div>
 
-          <label className="flex items-center gap-2 cursor-pointer">
-            <div className="relative">
-              <input
-                type="checkbox"
-                checked={subPerils}
-                onChange={(e) => setSubPerils(e.target.checked)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-(--color-primary-light) rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-(--color-primary)"></div>
-            </div>
-            <span className="text-sm text-gray-700">Subperils</span>
-          </label>
+          <Checkbox
+            variant="toggle"
+            checked={subPerils}
+            onChange={(e) => setSubPerils(e.target.checked)}
+            label="Subperils"
+            labelClassName="text-sm text-gray-700"
+            aria-label="Toggle subperils"
+          />
         </div>
       </div>
 
@@ -217,11 +214,11 @@ const PortfolioPerilCoverageForm: React.FC<{
                   className="border border-gray-300 py-3 px-4 text-center font-semibold text-gray-700 w-16"
                 >
                   <div className="flex flex-col items-center gap-2">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={isHeaderChecked(peril)}
                       onChange={() => handleHeaderCheckbox(peril)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Toggle ${peril} coverage column`}
                     />
                     <span className="text-xs">{peril}</span>
                   </div>
@@ -240,11 +237,11 @@ const PortfolioPerilCoverageForm: React.FC<{
                 </td>
                 <td className="border border-gray-300 p-0 text-center">
                   <div className="flex items-center justify-center h-full py-3">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={item.all}
                       onChange={() => handleAllCheckbox(item.id, 'All')}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Toggle all coverages for ${item.portfolio}`}
                     />
                   </div>
                 </td>

@@ -6,6 +6,7 @@ import {
   useSearchDatabases,
 } from '../../hooks/useDatabaseApi';
 import type { Database } from '../../api/mockData/databaseMockData';
+import Checkbox from '../common/Checkbox';
 
 interface ValidationErrors {
   databases?: string;
@@ -99,7 +100,6 @@ const DatabaseForm: React.FC<{
             </div>
           )}
         </div>
-
       </div>
 
       {/* Error Display */}
@@ -162,13 +162,12 @@ const DatabaseForm: React.FC<{
                   }`}
                 >
                   <td className="py-3 px-4">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={(data.databases || []).some(
                         (database: Database) => database.id === db.id
                       )}
                       onChange={() => handleCheckboxChange(db)}
-                      className="w-5 h-5 text-(--color-primary) rounded border-gray-300 focus:ring-2 focus:ring-(--color-primary) cursor-pointer"
+                      aria-label={`Select ${db.name}`}
                     />
                   </td>
                   <td className="py-3 px-4 text-gray-900">{db.name}</td>

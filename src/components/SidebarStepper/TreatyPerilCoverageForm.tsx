@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useTreatyPerilCoverageApi } from '../../hooks/useTreatyPerilCoverageApi';
 import { perils } from '../../api/mockData/treatyPerilCoverageMockData';
+import Checkbox from '../common/Checkbox';
 
 interface PerilCoverage {
   [key: string]: boolean;
@@ -164,11 +165,11 @@ const TreatyPerilCoverageForm: React.FC<{
                   className="border border-gray-300 py-3 px-4 text-center font-semibold text-gray-700 w-16"
                 >
                   <div className="flex flex-col items-center gap-2">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={isHeaderChecked(peril)}
                       onChange={() => handleHeaderCheckbox(peril)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Toggle ${peril} coverage column`}
                     />
                     <span className="text-xs">{peril}</span>
                   </div>
@@ -187,11 +188,11 @@ const TreatyPerilCoverageForm: React.FC<{
                 </td>
                 <td className="border border-gray-300 p-0 text-center">
                   <div className="flex items-center justify-center h-full py-3">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={item.all}
                       onChange={() => handleCellClick(item.id, 'All')}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Toggle all coverages for ${item.treaty}`}
                     />
                   </div>
                 </td>

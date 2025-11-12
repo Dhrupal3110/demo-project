@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Minus } from 'lucide-react';
+import Checkbox from '../common/Checkbox';
 
 interface Portfolio {
   id: string;
@@ -255,18 +256,16 @@ const LinkPortfoliosTreatiesForm: React.FC<{
             <div className="border-b border-gray-300">
               <div className="flex items-center px-4 py-3 bg-gray-50">
                 <div className="flex items-center gap-2 flex-1">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    size="sm"
                     checked={allPortfoliosChecked}
-                    ref={(el) => {
-                      if (el)
-                        el.indeterminate =
-                          somePortfoliosChecked && !allPortfoliosChecked;
-                    }}
+                    indeterminate={
+                      somePortfoliosChecked && !allPortfoliosChecked
+                    }
                     onChange={(e) =>
                       handlePortfolioHeaderCheck(e.target.checked)
                     }
-                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                    aria-label="Select all portfolios"
                   />
                   <span className="text-sm font-semibold text-gray-900">
                     Portfolio name
@@ -282,11 +281,11 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                     key={portfolio.id}
                     className="flex items-center gap-2 py-2 hover:bg-gray-50 rounded"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={portfolio.checked}
                       onChange={() => handlePortfolioCheck(portfolio.id)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Select portfolio ${portfolio.name}`}
                     />
                     <span className="text-sm text-gray-700">
                       {portfolio.name}
@@ -302,16 +301,14 @@ const LinkPortfoliosTreatiesForm: React.FC<{
             <div className="border-b border-gray-300">
               <div className="flex items-center px-4 py-3 bg-gray-50">
                 <div className="flex items-center gap-2 flex-1">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    size="sm"
                     checked={allTreatiesChecked}
-                    ref={(el) => {
-                      if (el)
-                        el.indeterminate =
-                          someTreatiesChecked && !allTreatiesChecked;
-                    }}
+                    indeterminate={
+                      someTreatiesChecked && !allTreatiesChecked
+                    }
                     onChange={(e) => handleTreatyHeaderCheck(e.target.checked)}
-                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                    aria-label="Select all treaties"
                   />
                   <span className="text-sm font-semibold text-gray-900 flex-1">
                     Treaty name
@@ -333,11 +330,11 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                     key={treaty.id}
                     className="flex items-center gap-2 py-2 hover:bg-gray-50 rounded"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={treaty.checked}
                       onChange={() => handleTreatyCheck(treaty.id)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Select treaty ${treaty.name}`}
                     />
                     <span className="text-sm text-gray-700 flex-1">
                       {treaty.name}

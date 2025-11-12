@@ -15,7 +15,7 @@ export const useTreatiesApi = () => {
         setLoading(true);
         const data = await mockTreatiesService.getDatabases();
         setDatabases(data as any);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch databases');
       } finally {
         setLoading(false);
@@ -28,7 +28,7 @@ export const useTreatiesApi = () => {
   const getTreatiesByDatabase = async (databaseId: string): Promise<Treaty[]> => {
     try {
       return await mockTreatiesService.getTreatiesByDatabase(databaseId);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch treaties');
       return [];
     }
@@ -37,7 +37,7 @@ export const useTreatiesApi = () => {
   const searchTreaties = async (query: string): Promise<Treaty[]> => {
     try {
       return await mockTreatiesService.searchTreaties(query);
-    } catch (err) {
+    } catch {
       setError('Failed to search treaties');
       return [];
     }

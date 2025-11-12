@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useTreatiesApi } from '../../hooks/useTreatiesApi';
+import Checkbox from '../common/Checkbox';
 
 interface Treaty {
   id: string | number;
@@ -135,13 +136,12 @@ const TreatiesForm: React.FC<{
                 className={`border-b border-gray-200 hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
               >
                 <td className="py-3 px-4">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={currentTreaties.some(
                       (t: Treaty) => t.id === treaty.id
                     )}
                     onChange={() => handleCheckboxChange(treaty)}
-                    className="w-5 h-5 text-(--color-primary) rounded border-gray-300 focus:ring-2 focus:ring-(--color-primary) cursor-pointer"
+                    aria-label={`Select treaty ${treaty.name}`}
                   />
                 </td>
                 <td className="py-3 px-4 text-gray-900">{treaty.name}</td>

@@ -28,7 +28,7 @@ export const useTreatyRegionCoverageApi = () => {
         setRegionsEQFF(eqffRegions);
         setRegionsIF(ifRegions);
         setSelectedRegions(selected);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch treaty region coverage data');
       } finally {
         setLoading(false);
@@ -41,7 +41,7 @@ export const useTreatyRegionCoverageApi = () => {
   const addSelectedRegion = async (region: SelectedRegion): Promise<SelectedRegion | null> => {
     try {
       return await mockTreatyRegionCoverageService.addSelectedRegion(region);
-    } catch (err) {
+    } catch {
       setError('Failed to add selected region');
       return null;
     }
@@ -50,7 +50,7 @@ export const useTreatyRegionCoverageApi = () => {
   const removeSelectedRegion = async (id: string): Promise<boolean> => {
     try {
       return await mockTreatyRegionCoverageService.removeSelectedRegion(id);
-    } catch (err) {
+    } catch {
       setError('Failed to remove selected region');
       return false;
     }
@@ -59,7 +59,7 @@ export const useTreatyRegionCoverageApi = () => {
   const searchTreaties = async (query: string, peril: 'EQ/FF' | 'IF'): Promise<TreatyItem[]> => {
     try {
       return await mockTreatyRegionCoverageService.searchTreaties(query, peril);
-    } catch (err) {
+    } catch {
       setError('Failed to search treaties');
       return [];
     }

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useDemandSurgeApi } from '../../hooks/useDemandSurgeApi';
+import Checkbox from '../common/Checkbox';
 
 interface DemandSurgeItem {
   id: string;
@@ -135,21 +136,18 @@ const DemandSurgeForm: React.FC<{
                   {item.portfolioName}
                 </td>
                 <td className="py-3 px-4">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={
-                        currentItems.find(
-                          (i: DemandSurgeItem) => i.id === item.id
-                        )?.demandSurge || false
-                      }
-                      onChange={(e) =>
-                        handleToggleChange(item.id, e.target.checked)
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-(--color-primary-light) rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-(--color-primary)"></div>
-                  </label>
+                  <Checkbox
+                    variant="toggle"
+                    checked={
+                      currentItems.find(
+                        (i: DemandSurgeItem) => i.id === item.id
+                      )?.demandSurge || false
+                    }
+                    onChange={(e) =>
+                      handleToggleChange(item.id, e.target.checked)
+                    }
+                    aria-label={`Toggle demand surge for ${item.portfolioName}`}
+                  />
                 </td>
                 <td className="py-3 px-4">
                   <input

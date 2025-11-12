@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
+import Checkbox from '../common/Checkbox';
 
 interface RegionCoverage {
   id: string;
@@ -222,14 +223,12 @@ const PortfolioRegionCoverageForm: React.FC<{
             <div className="w-4 shrink-0" />
           )}
 
-          <input
-            type="checkbox"
+          <Checkbox
+            size="sm"
             checked={node.checked}
-            ref={(el) => {
-              if (el) el.indeterminate = node.indeterminate || false;
-            }}
+            indeterminate={node.indeterminate || false}
             onChange={() => onCheck(node.id)}
-            className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer shrink-0"
+            aria-label={`Select ${node.label}`}
           />
 
           <span className="text-sm text-gray-900 ml-1">{node.label}</span>

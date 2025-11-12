@@ -19,7 +19,7 @@ export const usePortfolioPerilCoverageApi = () => {
       setError(null);
       const data = await mockPortfolioPerilCoverageService.getPortfolioPerils();
       setItems(data);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch portfolio perils');
     } finally {
       setLoading(false);
@@ -41,7 +41,7 @@ export const usePortfolioPerilCoverageApi = () => {
         );
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to update portfolio peril');
       return undefined;
     }
@@ -50,7 +50,7 @@ export const usePortfolioPerilCoverageApi = () => {
   const searchPortfolioPerils = async (query: string): Promise<PortfolioPeril[]> => {
     try {
       return await mockPortfolioPerilCoverageService.searchPortfolioPerils(query);
-    } catch (err) {
+    } catch {
       setError('Failed to search portfolio perils');
       return [];
     }
@@ -65,7 +65,7 @@ export const usePortfolioPerilCoverageApi = () => {
       );
       setItems(updated);
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to bulk update peril coverage');
       return [];
     }

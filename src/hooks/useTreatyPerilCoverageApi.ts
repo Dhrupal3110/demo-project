@@ -14,7 +14,7 @@ export const useTreatyPerilCoverageApi = () => {
         setLoading(true);
         const data = await mockTreatyPerilCoverageService.getTreatyPerils();
         setTreatyPerils(data);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch treaty perils');
       } finally {
         setLoading(false);
@@ -27,7 +27,7 @@ export const useTreatyPerilCoverageApi = () => {
   const updateTreatyPeril = async (id: string, data: Partial<TreatyPeril>): Promise<TreatyPeril | null> => {
     try {
       return await mockTreatyPerilCoverageService.updateTreatyPeril(id, data);
-    } catch (err) {
+    } catch {
       setError('Failed to update treaty peril');
       return null;
     }
@@ -36,7 +36,7 @@ export const useTreatyPerilCoverageApi = () => {
   const searchTreatyPerils = async (query: string): Promise<TreatyPeril[]> => {
     try {
       return await mockTreatyPerilCoverageService.searchTreatyPerils(query);
-    } catch (err) {
+    } catch {
       setError('Failed to search treaty perils');
       return [];
     }

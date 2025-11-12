@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
 import { usePortfolioRegionCoverageApi } from '../../hooks/usePortfolioRegionCoverageApi';
+import Checkbox from '../common/Checkbox';
 
 interface Region {
   id: string;
@@ -236,14 +237,12 @@ const PortfolioRegionCoverageForm: React.FC<{
           {!hasChildren && <div className="w-5" />}
 
           <div className="relative">
-            <input
-              type="checkbox"
+            <Checkbox
+              size="sm"
               checked={region.checked}
-              ref={(el) => {
-                if (el) el.indeterminate = region.indeterminate || false;
-              }}
+              indeterminate={region.indeterminate || false}
               onChange={(e) => handleRegionCheck(region.id, e.target.checked)}
-              className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+              aria-label={`Select region ${region.name}`}
             />
             {region.indeterminate && (
               <Minus
@@ -324,16 +323,14 @@ const PortfolioRegionCoverageForm: React.FC<{
             <div className="space-y-2">
               <div className="flex items-center justify-between pb-2 border-b border-gray-200">
                 <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    size="sm"
                     checked={allPortfoliosChecked}
-                    ref={(el) => {
-                      if (el)
-                        el.indeterminate =
-                          somePortfoliosChecked && !allPortfoliosChecked;
-                    }}
+                    indeterminate={
+                      somePortfoliosChecked && !allPortfoliosChecked
+                    }
                     onChange={(e) => handleEDMCheck(e.target.checked)}
-                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                    aria-label="Select all EDM portfolios"
                   />
                   <span className="text-sm font-semibold text-gray-900">
                     EDM
@@ -350,11 +347,11 @@ const PortfolioRegionCoverageForm: React.FC<{
                   className="flex items-center justify-between py-2 hover:bg-gray-50 rounded"
                 >
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={portfolio.checked}
                       onChange={() => handlePortfolioCheck(portfolio.id)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Select portfolio ${portfolio.portfolio}`}
                     />
                     <span className="text-sm text-gray-700">
                       {portfolio.database}

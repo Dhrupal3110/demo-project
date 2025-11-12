@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { usePortfolioApi } from '../../hooks/usePortfolioApi';
+import Checkbox from '../common/Checkbox';
 
 interface Portfolio {
   id: string;
@@ -121,13 +122,12 @@ const PortfolioForm: React.FC<{
                 className={`border-b border-gray-200 hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
               >
                 <td className="py-3 px-4">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={(data.portfolios || []).some(
                       (p: Portfolio) => p.id === portfolio.id
                     )}
                     onChange={() => handleCheckboxChange(portfolio)}
-                    className="w-5 h-5 text-(--color-primary) rounded border-gray-300 focus:ring-2 focus:ring-(--color-primary) cursor-pointer"
+                    aria-label={`Select portfolio ${portfolio.portfolioName}`}
                   />
                 </td>
                 <td className="py-3 px-4 text-gray-900">

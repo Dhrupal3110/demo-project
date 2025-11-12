@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
 import { useTreatyRegionCoverageApi } from '../../hooks/useTreatyRegionCoverageApi';
+import Checkbox from '../common/Checkbox';
 
 interface Region {
   id: string;
@@ -235,14 +236,12 @@ const TreatyRegionCoverageForm: React.FC<{
           {!hasChildren && <div className="w-5" />}
 
           <div className="relative">
-            <input
-              type="checkbox"
+            <Checkbox
+              size="sm"
               checked={region.checked}
-              ref={(el) => {
-                if (el) el.indeterminate = region.indeterminate || false;
-              }}
+              indeterminate={region.indeterminate || false}
               onChange={(e) => handleRegionCheck(region.id, e.target.checked)}
-              className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+              aria-label={`Select region ${region.name}`}
             />
             {region.indeterminate && (
               <Minus
@@ -339,16 +338,14 @@ const TreatyRegionCoverageForm: React.FC<{
             <div className="space-y-2">
               <div className="flex items-center justify-between pb-2 border-b border-gray-200">
                 <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    size="sm"
                     checked={allTreatiesChecked}
-                    ref={(el) => {
-                      if (el)
-                        el.indeterminate =
-                          someTreatiesChecked && !allTreatiesChecked;
-                    }}
+                    indeterminate={
+                      someTreatiesChecked && !allTreatiesChecked
+                    }
                     onChange={(e) => handleEDMCheck(e.target.checked)}
-                    className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                    aria-label="Select all EDM treaties"
                   />
                   <span className="text-sm font-semibold text-gray-900">
                     EDM
@@ -365,11 +362,11 @@ const TreatyRegionCoverageForm: React.FC<{
                   className="flex items-center justify-between py-2 hover:bg-gray-50 rounded"
                 >
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      size="sm"
                       checked={treaty.checked}
                       onChange={() => handleTreatyCheck(treaty.id)}
-                      className="w-4 h-4 text-(--color-primary) rounded border-gray-300 cursor-pointer"
+                      aria-label={`Select treaty ${treaty.treaty}`}
                     />
                     <span className="text-sm text-gray-700">
                       {treaty.database}

@@ -19,7 +19,7 @@ export const useDemandSurgeApi = () => {
       setError(null);
       const data = await mockDemandSurgeService.getDemandSurgeItems();
       setItems(data);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch demand surge items');
     } finally {
       setLoading(false);
@@ -38,7 +38,7 @@ export const useDemandSurgeApi = () => {
         );
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to update demand surge item');
       return undefined;
     }
@@ -53,7 +53,7 @@ export const useDemandSurgeApi = () => {
         databaseQuery,
         portfolioQuery
       );
-    } catch (err) {
+    } catch {
       setError('Failed to search demand surge items');
       return [];
     }

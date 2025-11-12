@@ -28,7 +28,7 @@ const SteperHeader = ({
         {stepsData[activeStep - 1]?.prev}
       </button>
 
-        {/* <button
+      {/* <button
           onClick={toggleMode}
           aria-label="Toggle dark mode"
           className="w-9 h-9 rounded-full bg-white text-(--color-primary-dark) flex items-center justify-center hover:bg-gray-100"
@@ -65,7 +65,7 @@ const SteperHeader = ({
             className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
             aria-pressed={name === 'default'}
           >
-            Default
+            Aspen
           </button>
           <button
             onClick={() => setName('sompo')}

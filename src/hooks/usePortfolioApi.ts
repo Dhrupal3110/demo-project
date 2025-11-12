@@ -19,7 +19,7 @@ export const usePortfolioApi = () => {
       setError(null);
       const data = await mockPortfolioService.getDatabases();
       setDatabases(data as any);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch databases');
     } finally {
       setLoading(false);
@@ -29,7 +29,7 @@ export const usePortfolioApi = () => {
   const getDatabaseById = async (id: string): Promise<any> => {
     try {
       return await mockPortfolioService.getDatabaseById(id);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch database');
       return undefined;
     }
@@ -38,7 +38,7 @@ export const usePortfolioApi = () => {
   const searchPortfolios = async (query: string): Promise<any> => {
     try {
       return await mockPortfolioService.searchPortfolios(query);
-    } catch (err) {
+    } catch {
       setError('Failed to search portfolios');
       return [];
     }

@@ -17,7 +17,7 @@ const Header: React.FC = () => {
             className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
             aria-pressed={name === 'default'}
           >
-            Default
+          Aspen
           </button>
           <button
             onClick={() => setName('sompo')}

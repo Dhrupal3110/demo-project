@@ -19,7 +19,7 @@ export const usePortfolioRegionCoverageApi = () => {
       setError(null);
       const result = await mockPortfolioRegionCoverageService.getData();
       setData(result);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch portfolio region coverage data');
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export const usePortfolioRegionCoverageApi = () => {
         setData({ ...data, [key]: updated });
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to update portfolios');
       return [];
     }
@@ -60,7 +60,7 @@ export const usePortfolioRegionCoverageApi = () => {
         setData({ ...data, [key]: updated });
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to update regions');
       return [];
     }
@@ -77,7 +77,7 @@ export const usePortfolioRegionCoverageApi = () => {
         setData({ ...data, selectedCoverage: updated });
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to add selected coverage');
       return [];
     }
@@ -92,7 +92,7 @@ export const usePortfolioRegionCoverageApi = () => {
         setData({ ...data, selectedCoverage: updated });
       }
       return updated;
-    } catch (err) {
+    } catch {
       setError('Failed to remove selected coverage');
       return [];
     }
@@ -104,7 +104,7 @@ export const usePortfolioRegionCoverageApi = () => {
   ): Promise<PortfolioItem[]> => {
     try {
       return await mockPortfolioRegionCoverageService.searchPortfolios(peril, query);
-    } catch (err) {
+    } catch {
       setError('Failed to search portfolios');
       return [];
     }
