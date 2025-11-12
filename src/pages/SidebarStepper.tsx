@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, CheckCircle2, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/SidebarStepper/Sidebar';
-import SteperHeader from '../components/SidebarStepper/SteperHeader';
-import DatabaseForm from '../components/SidebarStepper/DatabaseForm';
-import PortfolioForm from '../components/SidebarStepper/PortfolioForm';
-import { stepsData } from '../static/stepsData';
-import DemandSurgeForm from '../components/SidebarStepper/DemandSurgeForm';
-import TreatiesForm from '../components/SidebarStepper/TreatiesForm';
-import PortfolioPerilCoverageForm from '../components/SidebarStepper/PortfolioPerilCoverageForm';
-import PortfolioRegionCoverageForm from '../components/SidebarStepper/PortfolioRegionCoverageForm';
-import TreatyPerilCoverageForm from '../components/SidebarStepper/TreatyPerilCoverageForm';
-import TreatyRegionCoverageForm from '../components/SidebarStepper/TreatyRegionCoverageForm';
-import LinkPortfoliosTreatiesForm from '../components/SidebarStepper/LinkPortfoliosTreatiesForm';
-import ReviewAnalyses from '../components/SidebarStepper/ReviewAnalyses';
-import type { RootState } from '../app/store';
+import {
+  DatabaseForm,
+  DemandSurgeForm,
+  LinkPortfoliosTreatiesForm,
+  PortfolioForm,
+  PortfolioPerilCoverageForm,
+  PortfolioRegionCoverageForm,
+  ReviewAnalyses,
+  Sidebar,
+  StepperHeader,
+  TreatiesForm,
+  TreatyPerilCoverageForm,
+  TreatyRegionCoverageForm,
+  stepsData,
+  useSidebarStepperApi,
+} from '@/features/sidebarStepper';
+import type { RootState } from '@/app/store';
+import type {
+  SidebarFormData,
+  SidebarValidationErrors,
+} from '@/features/sidebarStepper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useSidebarStepperApi } from '../hooks/useSidebarStepperApi';
-import { setSelectedProgram } from '../app/slices/programSlice';
-
-interface FormData {
-  [key: number]: Record<string, unknown>;
-}
-
-interface ValidationErrors {
-  [key: string]: string;
-}
+import { setSelectedProgram } from '@/features/searchProgram';
 
 const SidebarStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(2);
   const [maxVisitedStep, setMaxVisitedStep] = useState<number>(2);
-  const [localFormData, setLocalFormData] = useState<FormData>({});
+  const [localFormData, setLocalFormData] = useState<SidebarFormData>({});
   const [currentStepData, setCurrentStepData] = useState<
     Record<string, unknown>
   >({});
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [errors, setErrors] = useState<SidebarValidationErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState('');
 
@@ -119,7 +117,7 @@ const SidebarStepper: React.FC = () => {
       await saveStepData(activeStep, currentStepData);
 
       // Update local state with latest data snapshot
-      const updatedFormData: FormData = {
+      const updatedFormData: SidebarFormData = {
         ...localFormData,
         [activeStep]: currentStepData,
       };
@@ -419,7 +417,7 @@ const SidebarStepper: React.FC = () => {
         handleSidebarClick={handleSidebarClick}
       />
       <main className="flex-1 flex flex-col overflow-y-auto">
-        <SteperHeader
+        <StepperHeader
           activeStep={activeStep}
           handlePrevious={handlePrevious}
           handleNext={handleNext}

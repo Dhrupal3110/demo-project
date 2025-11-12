@@ -1,13 +1,16 @@
 // ============= components/CRMSearchUI.tsx =============
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setSelectedProgram, type Program } from '../app/slices/programSlice';
-import Header from '../components/SewarchProgram/Header';
-import SearchBar from '../components/SewarchProgram/SearchBar';
-import SearchResults from '../components/SewarchProgram/SearchResults';
-import ProgramList from '../components/SewarchProgram/ProgramList';
+import { setSelectedProgram } from '@/features/searchProgram';
+import type { Program } from '@/features/searchProgram/types';
+import {
+  Header,
+  ProgramList,
+  SearchBar,
+  SearchResults,
+} from '@/features/searchProgram/components';
 import { useNavigate } from 'react-router-dom';
-import { unifiedProgramService } from '../api/services/unifiedProgramService';
+import { unifiedProgramService } from '@/services/services/unifiedProgramService';
 
 const CRMSearchUI: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');

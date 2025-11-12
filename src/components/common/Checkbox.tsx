@@ -96,7 +96,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
               borderColor: 'var(--color-border-strong)',
             }}
           ></span>
-          <style jsx>{`
+          <style>{`
             input:checked + span {
               background-color: var(--color-primary) !important;
             }

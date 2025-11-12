@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
-import CRMSearchUI from '../pages/SearchProgram';
-import SidebarStepper from '../pages/SidebarStepper';
+import CRMSearchUI from '@/pages/SearchProgram';
+import SidebarStepper from '@/pages/SidebarStepper';
 
 export default function AppRoutes() {
   return (
