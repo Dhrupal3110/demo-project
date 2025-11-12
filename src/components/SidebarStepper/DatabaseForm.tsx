@@ -78,13 +78,13 @@ const DatabaseForm: React.FC<{
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-4">
           2 - Select databases
         </h2>
 
         <div className="relative mb-4 max-w-md">
           <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
             size={20}
           />
           <input
@@ -92,7 +92,7 @@ const DatabaseForm: React.FC<{
             placeholder="Search by Database name"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -104,7 +104,7 @@ const DatabaseForm: React.FC<{
 
       {/* Error Display */}
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+        <div className="mb-4 p-4 bg-(--color-error-bg) border border-(--color-error-border) rounded-lg text-(--color-error)">
           {error}
         </div>
       )}
@@ -114,7 +114,9 @@ const DatabaseForm: React.FC<{
         <div className="flex justify-center items-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--color-primary) mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading databases...</p>
+            <p className="text-(--color-text-secondary)">
+              Loading databases...
+            </p>
           </div>
         </div>
       )}
@@ -122,8 +124,10 @@ const DatabaseForm: React.FC<{
       {/* Empty State */}
       {!isLoading && displayDatabases.length === 0 && searchQuery && (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg mb-2">No databases found</p>
-          <p className="text-gray-400 text-sm">
+          <p className="text-(--color-text-muted) text-lg mb-2">
+            No databases found
+          </p>
+          <p className="text-(--color-text-muted) text-sm">
             Try adjusting your search query
           </p>
         </div>
@@ -134,21 +138,21 @@ const DatabaseForm: React.FC<{
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700"></th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <tr className="border-b-2 border-(--color-border)">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)"></th>
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                   Name
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                   Size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                   Portfolios
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                   Treaties
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                   Cedants
                 </th>
               </tr>
@@ -157,8 +161,10 @@ const DatabaseForm: React.FC<{
               {displayDatabases.map((db: Database, index: number) => (
                 <tr
                   key={db.id}
-                  className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                  className={`border-b border-(--color-border) hover:bg-(--color-secondary) transition-colors ${
+                    index % 2 === 0
+                      ? 'bg-(--color-surface)'
+                      : 'bg-(--color-secondary)'
                   }`}
                 >
                   <td className="py-3 px-4">
@@ -170,11 +176,19 @@ const DatabaseForm: React.FC<{
                       aria-label={`Select ${db.name}`}
                     />
                   </td>
-                  <td className="py-3 px-4 text-gray-900">{db.name}</td>
-                  <td className="py-3 px-4 text-gray-700">{db.size}</td>
-                  <td className="py-3 px-4 text-gray-700">{db.portfolios}</td>
-                  <td className="py-3 px-4 text-gray-700">{db.treaties}</td>
-                  <td className="py-3 px-4 text-gray-700">{db.cedants}</td>
+                  <td className="py-3 px-4 text-(--color-text)">{db.name}</td>
+                  <td className="py-3 px-4 text-(--color-text-secondary)">
+                    {db.size}
+                  </td>
+                  <td className="py-3 px-4 text-(--color-text-secondary)">
+                    {db.portfolios}
+                  </td>
+                  <td className="py-3 px-4 text-(--color-text-secondary)">
+                    {db.treaties}
+                  </td>
+                  <td className="py-3 px-4 text-(--color-text-secondary)">
+                    {db.cedants}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -184,7 +198,7 @@ const DatabaseForm: React.FC<{
 
       {/* Validation Error */}
       {errors.databases && (
-        <p className="text-red-500 text-sm mt-2">{errors.databases}</p>
+        <p className="text-(--color-error) text-sm mt-2">{errors.databases}</p>
       )}
     </div>
   );

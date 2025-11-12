@@ -22,7 +22,7 @@ const SteperHeader = ({
         id="stepper-prev"
         onClick={handlePrevious}
         disabled={activeStep === 1}
-        className={`px-4 py-2 rounded-full border border-white text-white text-sm font-medium flex items-center gap-2 ${activeStep === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-primary)'}`}
+        className={`px-4 py-2 rounded-full border border-(--color-primary-text) text-(--color-primary-text) text-sm font-medium flex items-center gap-2 ${activeStep === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-primary)'}`}
       >
         <Undo2 size={18} />
         {stepsData[activeStep - 1]?.prev}
@@ -31,7 +31,7 @@ const SteperHeader = ({
       {/* <button
           onClick={toggleMode}
           aria-label="Toggle dark mode"
-          className="w-9 h-9 rounded-full bg-white text-(--color-primary-dark) flex items-center justify-center hover:bg-gray-100"
+          className="w-9 h-9 rounded-full bg-(--color-surface) text-(--color-primary-dark) flex items-center justify-center hover:bg-(--color-hover)"
           title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -42,7 +42,7 @@ const SteperHeader = ({
           id="stepper-next"
           onClick={handleNext}
           disabled={isSaving}
-          className={`px-4 py-2 rounded-full bg-white text-(--color-primary-dark) text-sm font-medium flex items-center gap-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+          className={`px-4 py-2 rounded-full bg-(--color-surface) text-(--color-primary-dark) text-sm font-medium flex items-center gap-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-hover)'}`}
         >
           {isSaving
             ? 'Saving...'
@@ -62,14 +62,14 @@ const SteperHeader = ({
         <div className="flex items-center bg-(--color-primary-overlay) rounded-full p-1">
           <button
             onClick={() => setName('default')}
-            className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
+            className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-(--color-surface) text-(--color-primary-dark)' : 'text-(--color-primary-text) hover:bg-(--color-primary-overlay-hover)'}`}
             aria-pressed={name === 'default'}
           >
             Aspen
           </button>
           <button
             onClick={() => setName('sompo')}
-            className={`px-3 py-1 rounded-full text-sm ${name === 'sompo' ? 'bg-white text-(--color-primary-dark)' : 'text-white hover:bg-(--color-primary-overlay-hover)'}`}
+            className={`px-3 py-1 rounded-full text-sm ${name === 'sompo' ? 'bg-(--color-surface) text-(--color-primary-dark)' : 'text-(--color-primary-text) hover:bg-(--color-primary-overlay-hover)'}`}
             aria-pressed={name === 'sompo'}
           >
             Sompo

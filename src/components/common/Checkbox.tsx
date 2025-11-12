@@ -4,10 +4,7 @@ type CheckboxSize = 'sm' | 'md' | 'lg';
 type CheckboxVariant = 'default' | 'toggle';
 
 export interface CheckboxProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'type' | 'size'
-  > {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   label?: React.ReactNode;
   description?: React.ReactNode;
   containerClassName?: string;
@@ -29,7 +26,7 @@ const defaultBaseClasses =
   'border rounded focus:ring-2 focus:ring-offset-0 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-60';
 
 const toggleTrackClasses =
-  "relative block w-11 h-6 transition-colors peer-focus:outline-none peer-focus:ring-2 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all";
+  "relative block w-11 h-6 transition-colors peer-focus:outline-none peer-focus:ring-2 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-(--color-primary-text) after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-(--color-surface) after:border after:rounded-full after:h-5 after:w-5 after:transition-all";
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
   const {

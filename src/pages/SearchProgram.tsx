@@ -83,7 +83,7 @@ const CRMSearchUI: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-(--color-secondary)">
       <Header />
       <div className="max-w-5xl mx-auto p-8">
         <SearchBar
@@ -94,14 +94,14 @@ const CRMSearchUI: React.FC = () => {
         />
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+          <div className="mb-4 p-4 bg-(--color-error-bg) border border-(--color-error-border) rounded-lg text-(--color-error)">
             {error}
           </div>
         )}
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--color-info)"></div>
           </div>
         )}
 

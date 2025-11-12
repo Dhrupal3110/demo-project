@@ -56,7 +56,9 @@ const DemandSurgeForm: React.FC<{
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">Loading demand surge items...</div>
+        <div className="text-(--color-text-secondary)">
+          Loading demand surge items...
+        </div>
       </div>
     );
   }
@@ -64,7 +66,7 @@ const DemandSurgeForm: React.FC<{
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-red-600">{error}</div>
+        <div className="text-(--color-error)">{error}</div>
       </div>
     );
   }
@@ -72,14 +74,14 @@ const DemandSurgeForm: React.FC<{
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           4 – Set demand surge
         </h2>
 
         <div className="flex gap-4 mb-6">
           <div className="relative w-64">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -87,13 +89,13 @@ const DemandSurgeForm: React.FC<{
               placeholder="Search by database name"
               value={databaseSearch}
               onChange={(e) => setDatabaseSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
           <div className="relative w-64">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -101,7 +103,7 @@ const DemandSurgeForm: React.FC<{
               placeholder="Search by portfolio name"
               value={portfolioSearch}
               onChange={(e) => setPortfolioSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
         </div>
@@ -110,17 +112,17 @@ const DemandSurgeForm: React.FC<{
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b-2 border-gray-300">
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+            <tr className="border-b-2 border-(--color-border)">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Database name
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Portfolio name
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Demand surge
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Justification
               </th>
             </tr>
@@ -129,10 +131,12 @@ const DemandSurgeForm: React.FC<{
             {filteredItems.map((item: any, index: number) => (
               <tr
                 key={item.id}
-                className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                className={`border-b border-(--color-border) ${index % 2 === 0 ? 'bg-(--color-surface)' : 'bg-(--color-secondary)'}`}
               >
-                <td className="py-3 px-4 text-gray-900">{item.databaseName}</td>
-                <td className="py-3 px-4 text-gray-900">
+                <td className="py-3 px-4 text-(--color-text)">
+                  {item.databaseName}
+                </td>
+                <td className="py-3 px-4 text-(--color-text)">
                   {item.portfolioName}
                 </td>
                 <td className="py-3 px-4">
@@ -161,7 +165,7 @@ const DemandSurgeForm: React.FC<{
                       handleJustificationChange(item.id, e.target.value)
                     }
                     placeholder=""
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+                    className="w-full px-3 py-2 border border-(--color-border) rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
                   />
                 </td>
               </tr>
@@ -171,7 +175,9 @@ const DemandSurgeForm: React.FC<{
       </div>
 
       {errors.demandSurge && (
-        <p className="text-red-500 text-sm mt-2">{errors.demandSurge}</p>
+        <p className="text-(--color-error) text-sm mt-2">
+          {errors.demandSurge}
+        </p>
       )}
     </div>
   );

@@ -60,7 +60,7 @@ const PortfolioRegionCoverageForm: React.FC<{
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">
+        <div className="text-(--color-text-secondary)">
           Loading portfolio region coverage...
         </div>
       </div>
@@ -70,7 +70,7 @@ const PortfolioRegionCoverageForm: React.FC<{
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-red-600">{error}</div>
+        <div className="text-(--color-error)">{error}</div>
       </div>
     );
   }
@@ -219,18 +219,24 @@ const PortfolioRegionCoverageForm: React.FC<{
     return (
       <div key={region.id}>
         <div
-          className="flex items-center gap-2 py-2 hover:bg-gray-50"
+          className="flex items-center gap-2 py-2 hover:bg-(--color-secondary)"
           style={{ paddingLeft: `${level * 24 + 8}px` }}
         >
           {hasChildren && (
             <button
               onClick={() => toggleExpanded(region.id)}
-              className="p-0.5 hover:bg-gray-200 rounded"
+              className="p-0.5 hover:bg-(--color-surface-muted) rounded"
             >
               {isExpanded ? (
-                <ChevronDown size={16} className="text-gray-600" />
+                <ChevronDown
+                  size={16}
+                  className="text-(--color-text-secondary)"
+                />
               ) : (
-                <ChevronRight size={16} className="text-gray-600" />
+                <ChevronRight
+                  size={16}
+                  className="text-(--color-text-secondary)"
+                />
               )}
             </button>
           )}
@@ -253,7 +259,9 @@ const PortfolioRegionCoverageForm: React.FC<{
             )}
           </div>
 
-          <span className="text-sm text-gray-700">{region.name}</span>
+          <span className="text-sm text-(--color-text-secondary)">
+            {region.name}
+          </span>
         </div>
         {hasChildren &&
           isExpanded &&
@@ -266,16 +274,16 @@ const PortfolioRegionCoverageForm: React.FC<{
   const somePortfoliosChecked = portfolios.some((p) => p.checked);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-(--color-secondary) min-h-screen">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           6 – Set portfolio region coverage
         </h2>
 
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="relative w-80">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -283,12 +291,12 @@ const PortfolioRegionCoverageForm: React.FC<{
               placeholder="Search by EDM - Portfolio name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
           <button
             onClick={handleAdd}
-            className="px-6 py-2 bg-(--color-primary) text-white rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+            className="px-6 py-2 bg-(--color-primary) text-(--color-primary-text) rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
           >
             Add
           </button>
@@ -296,14 +304,14 @@ const PortfolioRegionCoverageForm: React.FC<{
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">
-        <div className="bg-white border border-gray-300 rounded-lg">
-          <div className="p-4 border-b border-gray-300 flex gap-2">
+        <div className="bg-(--color-surface) border border-(--color-border) rounded-lg">
+          <div className="p-4 border-b border-(--color-border) flex gap-2">
             <button
               onClick={() => setActivePeril('EQ/FF')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                 activePeril === 'EQ/FF'
-                  ? 'bg-(--color-primary) text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-(--color-primary) text-(--color-primary-text)'
+                  : 'bg-(--color-hover) text-(--color-text-secondary) hover:bg-(--color-surface-muted)'
               }`}
             >
               EQ/FF
@@ -312,8 +320,8 @@ const PortfolioRegionCoverageForm: React.FC<{
               onClick={() => setActivePeril('IF')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                 activePeril === 'IF'
-                  ? 'bg-(--color-primary) text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-(--color-primary) text-(--color-primary-text)'
+                  : 'bg-(--color-hover) text-(--color-text-secondary) hover:bg-(--color-surface-muted)'
               }`}
             >
               IF
@@ -321,7 +329,7 @@ const PortfolioRegionCoverageForm: React.FC<{
           </div>
           <div className="p-4">
             <div className="space-y-2">
-              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+              <div className="flex items-center justify-between pb-2 border-b border-(--color-border)">
                 <div className="flex items-center gap-2">
                   <Checkbox
                     size="sm"
@@ -332,11 +340,11 @@ const PortfolioRegionCoverageForm: React.FC<{
                     onChange={(e) => handleEDMCheck(e.target.checked)}
                     aria-label="Select all EDM portfolios"
                   />
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-(--color-text)">
                     EDM
                   </span>
                 </div>
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-(--color-text)">
                   Portfolio
                 </span>
               </div>
@@ -344,7 +352,7 @@ const PortfolioRegionCoverageForm: React.FC<{
               {filteredPortfolios.map((portfolio) => (
                 <div
                   key={portfolio.id}
-                  className="flex items-center justify-between py-2 hover:bg-gray-50 rounded"
+                  className="flex items-center justify-between py-2 hover:bg-(--color-secondary) rounded"
                 >
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -353,11 +361,11 @@ const PortfolioRegionCoverageForm: React.FC<{
                       onChange={() => handlePortfolioCheck(portfolio.id)}
                       aria-label={`Select portfolio ${portfolio.portfolio}`}
                     />
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-(--color-text-secondary)">
                       {portfolio.database}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-(--color-text-secondary)">
                     {portfolio.portfolio}
                   </span>
                 </div>
@@ -366,9 +374,9 @@ const PortfolioRegionCoverageForm: React.FC<{
           </div>
         </div>
 
-        <div className="bg-white border border-gray-300 rounded-lg">
-          <div className="p-4 border-b border-gray-300">
-            <h3 className="text-sm font-semibold text-gray-900 py-1">
+        <div className="bg-(--color-surface) border border-(--color-border) rounded-lg">
+          <div className="p-4 border-b border-(--color-border)">
+            <h3 className="text-sm font-semibold text-(--color-text) py-1">
               Regional Coverage
             </h3>
           </div>
@@ -379,25 +387,25 @@ const PortfolioRegionCoverageForm: React.FC<{
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse border border-(--color-border)">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+            <tr className="bg-(--color-hover)">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Database
               </th>
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Portfolio
               </th>
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Peril
               </th>
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Region
               </th>
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Include/Exclude
               </th>
-              <th className="border border-gray-300 py-2.5 px-3 text-left font-semibold text-gray-700 text-sm">
+              <th className="border border-(--color-border) py-2.5 px-3 text-left font-semibold text-(--color-text-secondary) text-sm">
                 Remove
               </th>
             </tr>
@@ -407,7 +415,7 @@ const PortfolioRegionCoverageForm: React.FC<{
               <tr>
                 <td
                   colSpan={6}
-                  className="border border-gray-300 py-8 px-3 text-center text-sm text-gray-500"
+                  className="border border-(--color-border) py-8 px-3 text-center text-sm text-(--color-text-muted)"
                 >
                   No coverage data
                 </td>
@@ -416,27 +424,31 @@ const PortfolioRegionCoverageForm: React.FC<{
               selectedCoverage.map((item, index) => (
                 <tr
                   key={item.id}
-                  className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                  className={
+                    index % 2 === 0
+                      ? 'bg-(--color-surface)'
+                      : 'bg-(--color-secondary)'
+                  }
                 >
-                  <td className="border border-gray-300 py-2.5 px-3 text-sm text-gray-900">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-sm text-(--color-text)">
                     {item.database}
                   </td>
-                  <td className="border border-gray-300 py-2.5 px-3 text-sm text-gray-900">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-sm text-(--color-text)">
                     {item.portfolio}
                   </td>
-                  <td className="border border-gray-300 py-2.5 px-3 text-sm text-gray-900">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-sm text-(--color-text)">
                     {item.peril}
                   </td>
-                  <td className="border border-gray-300 py-2.5 px-3 text-sm text-gray-900">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-sm text-(--color-text)">
                     {item.region}
                   </td>
-                  <td className="border border-gray-300 py-2.5 px-3 text-sm text-gray-900">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-sm text-(--color-text)">
                     {item.includeExclude}
                   </td>
-                  <td className="border border-gray-300 py-2.5 px-3 text-center">
+                  <td className="border border-(--color-border) py-2.5 px-3 text-center">
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="w-6 h-6 bg-(--color-primary) text-white rounded-full flex items-center justify-center hover:bg-(--color-primary-dark) mx-auto"
+                      className="w-6 h-6 bg-(--color-primary) text-(--color-primary-text) rounded-full flex items-center justify-center hover:bg-(--color-primary-dark) mx-auto"
                     >
                       <Minus size={14} strokeWidth={3} />
                     </button>
@@ -449,7 +461,7 @@ const PortfolioRegionCoverageForm: React.FC<{
       </div>
 
       {errors.portfolioRegionCoverage && (
-        <p className="text-red-500 text-sm mt-2">
+        <p className="text-(--color-error) text-sm mt-2">
           {errors.portfolioRegionCoverage}
         </p>
       )}

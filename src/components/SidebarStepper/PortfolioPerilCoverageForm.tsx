@@ -104,14 +104,16 @@ const PortfolioPerilCoverageForm: React.FC<{
 
   const getCellClass = (value: boolean | 'partial') => {
     if (value === true) return 'bg-(--color-primary-dark)';
-    if (value === 'partial') return 'bg-white bg-dotted';
-    return 'bg-white';
+    if (value === 'partial') return 'bg-(--color-surface) bg-dotted';
+    return 'bg-(--color-surface)';
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">Loading portfolio peril coverage...</div>
+        <div className="text-(--color-text-secondary)">
+          Loading portfolio peril coverage...
+        </div>
       </div>
     );
   }
@@ -119,7 +121,7 @@ const PortfolioPerilCoverageForm: React.FC<{
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-red-600">{error}</div>
+        <div className="text-(--color-error)">{error}</div>
       </div>
     );
   }
@@ -135,37 +137,38 @@ const PortfolioPerilCoverageForm: React.FC<{
       `}</style>
 
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           5 – Set portfolio peril coverage
         </h2>
 
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">
+        <div className="mb-6 p-4 bg-(--color-info-bg) border border-(--color-info-border) rounded-lg">
+          <h3 className="text-sm font-semibold text-(--color-info-dark) mb-2">
             How coverage states work:
           </h3>
-          <div className="space-y-2 text-sm text-blue-800">
+          <div className="space-y-2 text-sm text-(--color-info-dark)">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-8 bg-white border border-gray-300 rounded"></div>
+              <div className="w-12 h-8 bg-(--color-surface) border border-(--color-border) rounded"></div>
               <span>
                 <strong>Empty (White):</strong> No coverage - Click to enable
                 partial coverage
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-8 bg-dotted border border-gray-300 rounded"></div>
+              <div className="w-12 h-8 bg-dotted border border-(--color-border) rounded"></div>
               <span>
                 <strong>Dotted:</strong> Partial coverage - Click to enable full
                 coverage
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-8 bg-(--color-primary-dark) border border-gray-300 rounded"></div>
+              <div className="w-12 h-8 bg-(--color-primary-dark) border border-(--color-border) rounded"></div>
               <span>
-                <strong>Filled:</strong> Full coverage - Click to remove coverage
+                <strong>Filled:</strong> Full coverage - Click to remove
+                coverage
               </span>
             </div>
           </div>
-          <p className="text-xs text-blue-700 mt-3 italic">
+          <p className="text-xs text-(--color-info-dark) mt-3 italic">
             💡 Tip: Use header checkboxes to select/deselect all rows for a
             specific peril, or use the "All" checkbox in each row to select all
             perils for that portfolio.
@@ -175,7 +178,7 @@ const PortfolioPerilCoverageForm: React.FC<{
         <div className="flex items-center gap-4 mb-6">
           <div className="relative w-80">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -183,7 +186,7 @@ const PortfolioPerilCoverageForm: React.FC<{
               placeholder="Search database - portfolio name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
@@ -192,26 +195,26 @@ const PortfolioPerilCoverageForm: React.FC<{
             checked={subPerils}
             onChange={(e) => setSubPerils(e.target.checked)}
             label="Subperils"
-            labelClassName="text-sm text-gray-700"
+            labelClassName="text-sm text-(--color-text-secondary)"
             aria-label="Toggle subperils"
           />
         </div>
       </div>
 
-      <div className="overflow-x-auto border border-gray-300">
+      <div className="overflow-x-auto border border-(--color-border)">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 py-3 px-4 text-left font-semibold text-gray-700 min-w-[200px]">
+            <tr className="bg-(--color-hover)">
+              <th className="border border-(--color-border) py-3 px-4 text-left font-semibold text-(--color-text-secondary) min-w-[200px]">
                 Database
               </th>
-              <th className="border border-gray-300 py-3 px-4 text-left font-semibold text-gray-700">
+              <th className="border border-(--color-border) py-3 px-4 text-left font-semibold text-(--color-text-secondary)">
                 Portfolio
               </th>
               {perils.map((peril) => (
                 <th
                   key={peril}
-                  className="border border-gray-300 py-3 px-4 text-center font-semibold text-gray-700 w-16"
+                  className="border border-(--color-border) py-3 px-4 text-center font-semibold text-(--color-text-secondary) w-16"
                 >
                   <div className="flex flex-col items-center gap-2">
                     <Checkbox
@@ -228,14 +231,14 @@ const PortfolioPerilCoverageForm: React.FC<{
           </thead>
           <tbody>
             {filteredData.map((item: PortfolioPeril) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border border-gray-300 py-3 px-4 text-gray-900">
+              <tr key={item.id} className="hover:bg-(--color-secondary)">
+                <td className="border border-(--color-border) py-3 px-4 text-(--color-text)">
                   {item.database}
                 </td>
-                <td className="border border-gray-300 py-3 px-4 text-gray-900">
+                <td className="border border-(--color-border) py-3 px-4 text-(--color-text)">
                   {item.portfolio}
                 </td>
-                <td className="border border-gray-300 p-0 text-center">
+                <td className="border border-(--color-border) p-0 text-center">
                   <div className="flex items-center justify-center h-full py-3">
                     <Checkbox
                       size="sm"
@@ -248,17 +251,17 @@ const PortfolioPerilCoverageForm: React.FC<{
                 {perils.slice(1).map((peril) => (
                   <td
                     key={peril}
-                    className={`border border-gray-300 p-0 cursor-pointer relative ${getCellClass(item.coverages[peril])}`}
+                    className={`border border-(--color-border) p-0 cursor-pointer relative ${getCellClass(item.coverages[peril])}`}
                     onClick={() => handleAllCheckbox(item.id, peril)}
                   >
                     <div className="h-16 flex items-center justify-center">
                       {item.coverages[peril] === true && (
-                        <div className="text-white font-bold text-sm">
+                        <div className="text-(--color-primary-text) font-bold text-sm">
                           {peril} ▼
                         </div>
                       )}
                       {item.coverages[peril] === 'partial' && (
-                        <div className="text-gray-700 font-bold text-sm">
+                        <div className="text-(--color-text-secondary) font-bold text-sm">
                           {peril} ▼
                         </div>
                       )}
@@ -272,7 +275,7 @@ const PortfolioPerilCoverageForm: React.FC<{
       </div>
 
       {errors.portfolioPerilCoverage && (
-        <p className="text-red-500 text-sm mt-2">
+        <p className="text-(--color-error) text-sm mt-2">
           {errors.portfolioPerilCoverage}
         </p>
       )}

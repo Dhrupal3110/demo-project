@@ -13,11 +13,13 @@ const SelectedProgram: React.FC = () => {
   if (!selectedProgram) return null;
 
   return (
-    <div className="mb-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+    <div className="mb-6 p-4 bg-(--color-accent-bg) border border-(--color-accent-border) rounded-lg">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="font-semibold text-teal-900 mb-1">Selected Program</h3>
-          <p className="text-sm text-gray-700">
+          <h3 className="font-semibold text-(--color-accent) mb-1">
+            Selected Program
+          </h3>
+          <p className="text-sm text-(--color-text-secondary)">
             <span className="font-medium">{selectedProgram.id}</span>
             {' - '}
             <span>{selectedProgram.name}</span>
@@ -25,7 +27,7 @@ const SelectedProgram: React.FC = () => {
         </div>
         <button
           onClick={() => dispatch(clearSelectedProgram())}
-          className="text-teal-600 hover:text-(--color-primary-dark)"
+          className="text-(--color-accent) hover:text-(--color-primary-dark)"
         >
           <X className="w-5 h-5" />
         </button>

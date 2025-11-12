@@ -101,7 +101,7 @@ const ReviewAnalyses: React.FC<{
       <div className="flex items-center justify-center py-12">
         <div className="flex items-center gap-2">
           <Loader2 className="animate-spin" size={24} />
-          <span className="text-gray-600">Loading...</span>
+          <span className="text-(--color-text-secondary)">Loading...</span>
         </div>
       </div>
     );
@@ -109,8 +109,8 @@ const ReviewAnalyses: React.FC<{
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">{error}</p>
+      <div className="bg-(--color-error-bg) border border-(--color-error-border) rounded-lg p-4">
+        <p className="text-(--color-error)">{error}</p>
       </div>
     );
   }
@@ -118,14 +118,14 @@ const ReviewAnalyses: React.FC<{
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+        <h1 className="text-2xl font-bold text-(--color-text) mb-6">
           11 – Review analyses
         </h1>
 
         <div className="mb-6">
           <div className="relative max-w-xs">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -133,7 +133,7 @@ const ReviewAnalyses: React.FC<{
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent text-sm"
             />
           </div>
         </div>
@@ -141,23 +141,23 @@ const ReviewAnalyses: React.FC<{
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-300">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+              <tr className="border-b border-(--color-border)">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Database name
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Portfolio name
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Num of Treaties
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Profile
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Currency
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700 text-sm">
+                <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary) text-sm">
                   Priority
                 </th>
               </tr>
@@ -166,18 +166,18 @@ const ReviewAnalyses: React.FC<{
               {filteredAnalyses.map((analysis: Analysis) => (
                 <tr
                   key={analysis.id}
-                  className="border-b border-gray-200 hover:bg-gray-50"
+                  className="border-b border-(--color-border) hover:bg-(--color-secondary)"
                 >
-                  <td className="py-3 px-4 text-gray-900 text-sm">
+                  <td className="py-3 px-4 text-(--color-text) text-sm">
                     {analysis.databaseName}
                   </td>
-                  <td className="py-3 px-4 text-gray-900 text-sm">
+                  <td className="py-3 px-4 text-(--color-text) text-sm">
                     {analysis.portfolioName}
                   </td>
-                  <td className="py-3 px-4 text-gray-900 text-sm">
+                  <td className="py-3 px-4 text-(--color-text) text-sm">
                     <button
                       onClick={() => handleToggleExpand(analysis.id)}
-                      className="flex items-center gap-1 hover:text-blue-600"
+                      className="flex items-center gap-1 hover:text-(--color-info)"
                     >
                       {analysis.expanded ? (
                         <ChevronDown size={16} />
@@ -187,7 +187,7 @@ const ReviewAnalyses: React.FC<{
                       <span>{analysis.numTreaties}</span>
                     </button>
                   </td>
-                  <td className="py-3 px-4 text-gray-900 text-sm">
+                  <td className="py-3 px-4 text-(--color-text) text-sm">
                     {analysis.profile}
                   </td>
                   <td className="py-3 px-4">
@@ -196,7 +196,7 @@ const ReviewAnalyses: React.FC<{
                       onChange={(e) =>
                         handleCurrencyChange(analysis.id, e.target.value)
                       }
-                      className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-(--color-border) rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
                     >
                       {reviewData?.currencyOptions.map((curr) => (
                         <option key={curr} value={curr}>
@@ -211,7 +211,7 @@ const ReviewAnalyses: React.FC<{
                       onChange={(e) =>
                         handlePriorityChange(analysis.id, e.target.value)
                       }
-                      className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-(--color-border) rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
                     >
                       {reviewData?.priorityOptions.map((pri) => (
                         <option key={pri} value={pri}>
@@ -227,11 +227,13 @@ const ReviewAnalyses: React.FC<{
         </div>
 
         <div className="mt-6 flex justify-end items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">Context:</label>
+          <label className="text-sm font-medium text-(--color-text-secondary)">
+            Context:
+          </label>
           <select
             value={context}
             onChange={(e) => handleContextChange(e.target.value)}
-            className="border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]"
+            className="border border-(--color-border) rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) min-w-[200px]"
           >
             {reviewData?.contextOptions.map((ctx) => (
               <option key={ctx} value={ctx}>
@@ -242,7 +244,9 @@ const ReviewAnalyses: React.FC<{
         </div>
 
         {errors.reviewAnalyses && (
-          <p className="text-red-500 text-sm mt-2">{errors.reviewAnalyses}</p>
+          <p className="text-(--color-error) text-sm mt-2">
+            {errors.reviewAnalyses}
+          </p>
         )}
       </div>
     </div>

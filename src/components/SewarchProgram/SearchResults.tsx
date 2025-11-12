@@ -18,12 +18,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   return (
     <>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-(--color-text-secondary)">
           {results.length} result{results.length !== 1 ? 's' : ''} found
         </p>
         <button
           onClick={onClear}
-          className="text-sm text-teal-600 hover:text-(--color-primary-dark) font-medium"
+          className="text-sm text-(--color-accent) hover:text-(--color-primary-dark) font-medium"
         >
           Clear Search
         </button>
@@ -32,7 +32,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       {results.length > 0 ? (
         <ProgramList programs={results} onSelect={onSelect} title="" />
       ) : (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-(--color-text-muted)">
           <p>No results found for "{searchQuery}"</p>
           <p className="text-sm mt-2">Try a different search term</p>
         </div>

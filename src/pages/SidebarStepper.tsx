@@ -265,10 +265,12 @@ const SidebarStepper: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
+      <div className="flex h-screen items-center justify-center bg-(--color-secondary)">
         <div className="flex items-center gap-2">
           <Loader2 className="animate-spin" size={32} />
-          <span className="text-gray-600 text-lg">Loading form data...</span>
+          <span className="text-(--color-text-secondary) text-lg">
+            Loading form data...
+          </span>
         </div>
       </div>
     );
@@ -276,12 +278,12 @@ const SidebarStepper: React.FC = () => {
 
   if (apiError) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <p className="text-red-600 text-center">{apiError}</p>
+      <div className="flex h-screen items-center justify-center bg-(--color-secondary)">
+        <div className="bg-(--color-error-bg) border border-(--color-error-border) rounded-lg p-6 max-w-md">
+          <p className="text-(--color-error) text-center">{apiError}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            className="mt-4 w-full px-4 py-2 bg-(--color-error) text-(--color-primary-text) rounded-lg hover:bg-red-700"
           >
             Retry
           </button>
@@ -292,28 +294,28 @@ const SidebarStepper: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <div className="flex h-screen from-blue-50 via-indigo-50 to-purple-50">
+      <div className="flex h-screen from-(--color-info-bg) via-indigo-50 to-(--color-accent-bg)">
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-2xl w-full">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center animate-scaleIn">
+            <div className="bg-(--color-surface) rounded-2xl shadow-2xl p-8 md:p-12 text-center animate-scaleIn">
               <div className="mb-6 flex justify-center">
                 <div className="relative">
-                  <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
-                    <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="w-12 h-12 text-white animate-checkmark" />
+                  <div className="w-24 h-24 bg-(--color-success-bg) rounded-full flex items-center justify-center animate-pulse">
+                    <div className="w-20 h-20 bg-(--color-success) rounded-full flex items-center justify-center">
+                      <CheckCircle2 className="w-12 h-12 text-(--color-primary-text) animate-checkmark" />
                     </div>
                   </div>
-                  <div className="absolute top-0 left-0 w-3 h-3 bg-blue-400 rounded-full animate-confetti-1"></div>
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-purple-400 rounded-full animate-confetti-2"></div>
-                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-yellow-400 rounded-full animate-confetti-3"></div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-pink-400 rounded-full animate-confetti-4"></div>
+                  <div className="absolute top-0 left-0 w-3 h-3 bg-(--color-info) rounded-full animate-confetti-1"></div>
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-(--color-accent) rounded-full animate-confetti-2"></div>
+                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-(--color-warning) rounded-full animate-confetti-3"></div>
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-(--color-error) rounded-full animate-confetti-4"></div>
                 </div>
               </div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4 animate-fadeInUp">
+              <h2 className="text-4xl font-bold text-(--color-text) mb-4 animate-fadeInUp">
                 Submission Successful!
               </h2>
               <p
-                className="text-lg text-gray-600 mb-8 animate-fadeInUp"
+                className="text-lg text-(--color-text-secondary) mb-8 animate-fadeInUp"
                 style={{ animationDelay: '0.1s' }}
               >
                 Your configuration has been successfully submitted and is now
@@ -321,23 +323,23 @@ const SidebarStepper: React.FC = () => {
               </p>
               <div className="grid md:grid-cols-2 gap-4 mb-8">
                 <div
-                  className="bg-blue-50 rounded-lg p-4 animate-fadeInUp"
+                  className="bg-(--color-info-bg) rounded-lg p-4 animate-fadeInUp"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <FileText className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-gray-900 mb-1">
+                  <FileText className="w-6 h-6 text-(--color-info) mx-auto mb-2" />
+                  <p className="text-sm font-semibold text-(--color-text) mb-1">
                     Submission ID
                   </p>
-                  <p className="text-xs text-gray-600 font-mono">
+                  <p className="text-xs text-(--color-text-secondary) font-mono">
                     #{submissionId}
                   </p>
                 </div>
                 <div
-                  className="bg-purple-50 rounded-lg p-4 animate-fadeInUp"
+                  className="bg-(--color-accent-bg) rounded-lg p-4 animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
                   <svg
-                    className="w-6 h-6 text-purple-600 mx-auto mb-2"
+                    className="w-6 h-6 text-(--color-accent) mx-auto mb-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -349,10 +351,12 @@ const SidebarStepper: React.FC = () => {
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <p className="text-sm font-semibold text-gray-900 mb-1">
+                  <p className="text-sm font-semibold text-(--color-text) mb-1">
                     Processing Time
                   </p>
-                  <p className="text-xs text-gray-600">Estimated 2-5 minutes</p>
+                  <p className="text-xs text-(--color-text-secondary)">
+                    Estimated 2-5 minutes
+                  </p>
                 </div>
               </div>
               <div
@@ -362,22 +366,22 @@ const SidebarStepper: React.FC = () => {
                 <button
                   onClick={handleResetAndCreateNew}
                   disabled={submitting}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-(--color-primary) text-(--color-primary-text) rounded-lg font-medium hover:bg-blue-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Processing...' : 'Create New Submission'}
                 </button>
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="px-6 py-3 bg-white text-gray-700 border-2 border-gray-300 rounded-lg font-medium hover:bg-gray-50"
+                  className="px-6 py-3 bg-(--color-surface) text-(--color-text-secondary) border-2 border-(--color-border) rounded-lg font-medium hover:bg-(--color-secondary)"
                 >
                   View Details
                 </button>
               </div>
               <div
-                className="mt-8 pt-6 border-t border-gray-200 animate-fadeInUp"
+                className="mt-8 pt-6 border-t border-(--color-border) animate-fadeInUp"
                 style={{ animationDelay: '0.5s' }}
               >
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-(--color-text-muted)">
                   You will receive a confirmation email shortly at your
                   registered email address.
                 </p>
@@ -406,7 +410,7 @@ const SidebarStepper: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-(--color-secondary)">
       <Sidebar
         activeStep={activeStep}
         maxVisitedStep={maxVisitedStep}

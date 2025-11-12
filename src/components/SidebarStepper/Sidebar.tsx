@@ -26,20 +26,20 @@ const Sidebar = ({
     (state: RootState) => state.program.selectedProgram
   );
   return (
-    <aside className="w-64 bg-gray-200 border-r border-gray-200 flex flex-col">
+    <aside className="w-64 bg-(--color-surface-muted) border-r border-(--color-border) flex flex-col">
       {/* Header */}
-      <div className="px-6 py-2 flex items-center  border-b border-gray-200 ">
+      <div className="px-6 py-2 flex items-center  border-b border-(--color-border) ">
         <div className="px-6 flex items-center gap-2">
           <img src={logo} alt="logo" className="w-10 h-12" />
-          <h1 className="text-lg font-semibold text-gray-800">CRM-UI</h1>
+          <h1 className="text-lg font-semibold text-(--color-text)">CRM-UI</h1>
         </div>
       </div>
 
       {/* Selected Program */}
       <div className="pr-4">
-        <div className="p-6 bg-gray-200 border-b-2 border-gray-500">
+        <div className="p-6 bg-(--color-surface-muted) border-b-2 border-(--color-border-strong)">
           <div className="flex items-start gap-3">
-            <FileText className="w-12 h-12 text-gray-600 mt-1" />
+            <FileText className="w-12 h-12 text-(--color-text-secondary) mt-1" />
             <div>
               <>
                 <h2 className="text-sm font-semibold  uppercase leading-tight">
@@ -67,8 +67,8 @@ const Sidebar = ({
                   isActive
                     ? 'text-(--color-primary) cursor-pointer'
                     : isVisited
-                      ? 'hover:bg-gray-100 cursor-pointer '
-                      : 'opacity-50 cursor-not-allowed text-gray-400'
+                      ? 'hover:bg-(--color-hover) cursor-pointer '
+                      : 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
                 }`}
               >
                 <span className="text-xs">

@@ -112,7 +112,9 @@ const TreatyPerilCoverageForm: React.FC<{
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">Loading treaty peril coverage...</div>
+        <div className="text-(--color-text-secondary)">
+          Loading treaty peril coverage...
+        </div>
       </div>
     );
   }
@@ -120,7 +122,7 @@ const TreatyPerilCoverageForm: React.FC<{
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-red-600">{error}</div>
+        <div className="text-(--color-error)">{error}</div>
       </div>
     );
   }
@@ -128,14 +130,14 @@ const TreatyPerilCoverageForm: React.FC<{
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           8 – Set treaty peril coverage
         </h2>
 
         <div className="mb-6">
           <div className="relative w-80">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -143,26 +145,26 @@ const TreatyPerilCoverageForm: React.FC<{
               placeholder="Search database - treaty name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto border border-gray-300">
-        <table className="w-full border-collapse bg-white">
+      <div className="overflow-x-auto border border-(--color-border)">
+        <table className="w-full border-collapse bg-(--color-surface)">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="border border-gray-300 py-3 px-4 text-left font-semibold text-gray-700 min-w-60">
+            <tr className="bg-(--color-secondary)">
+              <th className="border border-(--color-border) py-3 px-4 text-left font-semibold text-(--color-text-secondary) min-w-60">
                 Database
               </th>
-              <th className="border border-gray-300 py-3 px-4 text-left font-semibold text-gray-700 min-w-[120px]">
+              <th className="border border-(--color-border) py-3 px-4 text-left font-semibold text-(--color-text-secondary) min-w-[120px]">
                 Treaty
               </th>
               {perils.map((peril) => (
                 <th
                   key={peril}
-                  className="border border-gray-300 py-3 px-4 text-center font-semibold text-gray-700 w-16"
+                  className="border border-(--color-border) py-3 px-4 text-center font-semibold text-(--color-text-secondary) w-16"
                 >
                   <div className="flex flex-col items-center gap-2">
                     <Checkbox
@@ -179,14 +181,14 @@ const TreatyPerilCoverageForm: React.FC<{
           </thead>
           <tbody>
             {filteredData.map((item: TreatyPeril) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border border-gray-300 py-3 px-4 text-sm text-gray-700">
+              <tr key={item.id} className="hover:bg-(--color-secondary)">
+                <td className="border border-(--color-border) py-3 px-4 text-sm text-(--color-text-secondary)">
                   {item.database}
                 </td>
-                <td className="border border-gray-300 py-3 px-4 text-sm text-gray-700">
+                <td className="border border-(--color-border) py-3 px-4 text-sm text-(--color-text-secondary)">
                   {item.treaty}
                 </td>
-                <td className="border border-gray-300 p-0 text-center">
+                <td className="border border-(--color-border) p-0 text-center">
                   <div className="flex items-center justify-center h-full py-3">
                     <Checkbox
                       size="sm"
@@ -199,10 +201,10 @@ const TreatyPerilCoverageForm: React.FC<{
                 {perils.slice(1).map((peril) => (
                   <td
                     key={peril}
-                    className={`border border-gray-300 p-0 cursor-pointer ${
+                    className={`border border-(--color-border) p-0 cursor-pointer ${
                       item.coverages[peril]
                         ? 'bg-(--color-primary-dark)'
-                        : 'bg-white'
+                        : 'bg-(--color-surface)'
                     }`}
                     onClick={() => handleCellClick(item.id, peril)}
                   >
@@ -218,7 +220,7 @@ const TreatyPerilCoverageForm: React.FC<{
       </div>
 
       {errors.treatyPerilCoverage && (
-        <p className="text-red-500 text-sm mt-2">
+        <p className="text-(--color-error) text-sm mt-2">
           {errors.treatyPerilCoverage}
         </p>
       )}

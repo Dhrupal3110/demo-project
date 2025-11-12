@@ -186,16 +186,16 @@ const LinkPortfoliosTreatiesForm: React.FC<{
   const someTreatiesChecked = treaties.some((t: Treaty) => t.checked);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-(--color-secondary) min-h-screen">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           10 – Link portfolios and treaties
         </h2>
 
         <div className="flex items-center gap-4 mb-6">
           <div className="relative w-80">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -203,13 +203,13 @@ const LinkPortfoliosTreatiesForm: React.FC<{
               placeholder="Search by portfolio name"
               value={portfolioSearch}
               onChange={(e) => setPortfolioSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
           <div className="relative w-80">
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
               size={18}
             />
             <input
@@ -217,13 +217,13 @@ const LinkPortfoliosTreatiesForm: React.FC<{
               placeholder="Search by treaty name"
               value={treatySearch}
               onChange={(e) => setTreatySearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
             />
           </div>
 
           <button
             onClick={handleAdd}
-            className="px-6 py-2 bg-(--color-primary) text-white rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary) ml-auto"
+            className="px-6 py-2 bg-(--color-primary) text-(--color-primary-text) rounded-lg text-sm font-medium hover:bg-(--color-primary-dark) focus:outline-none focus:ring-2 focus:ring-(--color-primary) ml-auto"
           >
             Add
           </button>
@@ -240,8 +240,8 @@ const LinkPortfoliosTreatiesForm: React.FC<{
               onClick={() => handleDatabaseChange(db)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative ${
                 currentDatabase === db
-                  ? 'bg-white border-2 border-gray-300 text-gray-900'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-(--color-surface) border-2 border-(--color-border) text-(--color-text)'
+                  : 'bg-(--color-hover) text-(--color-text-secondary) hover:bg-(--color-surface-muted)'
               }`}
             >
               {db}
@@ -252,9 +252,9 @@ const LinkPortfoliosTreatiesForm: React.FC<{
         {/* Two Panel Lists */}
         <div className="grid grid-cols-2 gap-6">
           {/* Left Panel - Portfolios */}
-          <div className="bg-white border border-gray-300 rounded-lg overflow-hidden">
-            <div className="border-b border-gray-300">
-              <div className="flex items-center px-4 py-3 bg-gray-50">
+          <div className="bg-(--color-surface) border border-(--color-border) rounded-lg overflow-hidden">
+            <div className="border-b border-(--color-border)">
+              <div className="flex items-center px-4 py-3 bg-(--color-secondary)">
                 <div className="flex items-center gap-2 flex-1">
                   <Checkbox
                     size="sm"
@@ -267,7 +267,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                     }
                     aria-label="Select all portfolios"
                   />
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-(--color-text)">
                     Portfolio name
                   </span>
                 </div>
@@ -279,7 +279,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                 {filteredPortfolios.map((portfolio: Portfolio) => (
                   <div
                     key={portfolio.id}
-                    className="flex items-center gap-2 py-2 hover:bg-gray-50 rounded"
+                    className="flex items-center gap-2 py-2 hover:bg-(--color-secondary) rounded"
                   >
                     <Checkbox
                       size="sm"
@@ -287,7 +287,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                       onChange={() => handlePortfolioCheck(portfolio.id)}
                       aria-label={`Select portfolio ${portfolio.name}`}
                     />
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-(--color-text-secondary)">
                       {portfolio.name}
                     </span>
                   </div>
@@ -297,27 +297,25 @@ const LinkPortfoliosTreatiesForm: React.FC<{
           </div>
 
           {/* Right Panel - Treaties */}
-          <div className="bg-white border border-gray-300 rounded-lg overflow-hidden">
-            <div className="border-b border-gray-300">
-              <div className="flex items-center px-4 py-3 bg-gray-50">
+          <div className="bg-(--color-surface) border border-(--color-border) rounded-lg overflow-hidden">
+            <div className="border-b border-(--color-border)">
+              <div className="flex items-center px-4 py-3 bg-(--color-secondary)">
                 <div className="flex items-center gap-2 flex-1">
                   <Checkbox
                     size="sm"
                     checked={allTreatiesChecked}
-                    indeterminate={
-                      someTreatiesChecked && !allTreatiesChecked
-                    }
+                    indeterminate={someTreatiesChecked && !allTreatiesChecked}
                     onChange={(e) => handleTreatyHeaderCheck(e.target.checked)}
                     aria-label="Select all treaties"
                   />
-                  <span className="text-sm font-semibold text-gray-900 flex-1">
+                  <span className="text-sm font-semibold text-(--color-text) flex-1">
                     Treaty name
                   </span>
                 </div>
-                <span className="text-sm font-semibold text-gray-900 w-24 text-center">
+                <span className="text-sm font-semibold text-(--color-text) w-24 text-center">
                   LOB
                 </span>
-                <span className="text-sm font-semibold text-gray-900 w-24 text-center">
+                <span className="text-sm font-semibold text-(--color-text) w-24 text-center">
                   Cedant
                 </span>
               </div>
@@ -328,7 +326,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                 {filteredTreaties.map((treaty: Treaty) => (
                   <div
                     key={treaty.id}
-                    className="flex items-center gap-2 py-2 hover:bg-gray-50 rounded"
+                    className="flex items-center gap-2 py-2 hover:bg-(--color-secondary) rounded"
                   >
                     <Checkbox
                       size="sm"
@@ -336,13 +334,13 @@ const LinkPortfoliosTreatiesForm: React.FC<{
                       onChange={() => handleTreatyCheck(treaty.id)}
                       aria-label={`Select treaty ${treaty.name}`}
                     />
-                    <span className="text-sm text-gray-700 flex-1">
+                    <span className="text-sm text-(--color-text-secondary) flex-1">
                       {treaty.name}
                     </span>
-                    <span className="text-sm text-gray-700 w-24 text-center">
+                    <span className="text-sm text-(--color-text-secondary) w-24 text-center">
                       {treaty.lob}
                     </span>
-                    <span className="text-sm text-gray-700 w-24 text-center">
+                    <span className="text-sm text-(--color-text-secondary) w-24 text-center">
                       {treaty.cedant}
                     </span>
                   </div>
@@ -354,20 +352,20 @@ const LinkPortfoliosTreatiesForm: React.FC<{
       </div>
 
       {/* Linked Items Table */}
-      <div className="bg-white border border-gray-300 rounded-lg overflow-hidden">
+      <div className="bg-(--color-surface) border border-(--color-border) rounded-lg overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-300">
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+            <tr className="bg-(--color-secondary) border-b border-(--color-border)">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-(--color-text-secondary)">
                 Database
               </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-(--color-text-secondary)">
                 Portfolio
               </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-(--color-text-secondary)">
                 Treaty
               </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-(--color-text-secondary)">
                 Remove
               </th>
             </tr>
@@ -376,21 +374,21 @@ const LinkPortfoliosTreatiesForm: React.FC<{
             {linkedItems.map((item: LinkedItem) => (
               <tr
                 key={item.id}
-                className="border-b border-gray-200 hover:bg-gray-50"
+                className="border-b border-(--color-border) hover:bg-(--color-secondary)"
               >
-                <td className="px-4 py-3 text-sm text-gray-700">
+                <td className="px-4 py-3 text-sm text-(--color-text-secondary)">
                   {item.database}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
+                <td className="px-4 py-3 text-sm text-(--color-text-secondary)">
                   {item.portfolio}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
+                <td className="px-4 py-3 text-sm text-(--color-text-secondary)">
                   {item.treaty}
                 </td>
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleRemove(item.id)}
-                    className="w-8 h-8 flex items-center justify-center bg-(--color-primary) text-white rounded-full hover:bg-(--color-primary-dark)"
+                    className="w-8 h-8 flex items-center justify-center bg-(--color-primary) text-(--color-primary-text) rounded-full hover:bg-(--color-primary-dark)"
                   >
                     <Minus size={16} />
                   </button>
@@ -401,7 +399,9 @@ const LinkPortfoliosTreatiesForm: React.FC<{
         </table>
       </div>
       {errors.linkedItems && (
-        <p className="text-red-500 text-sm mt-2">{errors.linkedItems}</p>
+        <p className="text-(--color-error) text-sm mt-2">
+          {errors.linkedItems}
+        </p>
       )}
     </div>
   );

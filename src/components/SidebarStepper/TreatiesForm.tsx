@@ -51,7 +51,7 @@ const TreatiesForm: React.FC<{
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">Loading treaties...</div>
+        <div className="text-(--color-text-secondary)">Loading treaties...</div>
       </div>
     );
   }
@@ -59,7 +59,7 @@ const TreatiesForm: React.FC<{
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-red-600">{error}</div>
+        <div className="text-(--color-error)">{error}</div>
       </div>
     );
   }
@@ -68,14 +68,14 @@ const TreatiesForm: React.FC<{
     <div>
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-(--color-text)">
             7 – Select treaties
           </h2>
         </div>
 
         <div className="relative mb-4 max-w-xs">
           <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-(--color-text-muted)"
             size={18}
           />
           <input
@@ -83,7 +83,7 @@ const TreatiesForm: React.FC<{
             placeholder="Search by Treaty name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-(--color-border) rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
           />
         </div>
 
@@ -94,8 +94,8 @@ const TreatiesForm: React.FC<{
               onClick={() => setActiveTab(db.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative ${
                 activeTab === db.id
-                  ? 'bg-white border-2 border-gray-300 text-gray-900'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-(--color-surface) border-2 border-(--color-border) text-(--color-text)'
+                  : 'bg-(--color-hover) text-(--color-text-secondary) hover:bg-(--color-surface-muted)'
               }`}
             >
               {db.name}
@@ -107,24 +107,24 @@ const TreatiesForm: React.FC<{
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b-2 border-gray-300">
-              <th className="text-left py-3 px-4 font-semibold text-gray-700"></th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+            <tr className="border-b-2 border-(--color-border)">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)"></th>
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Name
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Num
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Date
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Limit
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 Cedant
               </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              <th className="text-left py-3 px-4 font-semibold text-(--color-text-secondary)">
                 LOB
               </th>
             </tr>
@@ -133,7 +133,7 @@ const TreatiesForm: React.FC<{
             {filteredTreaties.map((treaty: Treaty, index: number) => (
               <tr
                 key={treaty.id}
-                className={`border-b border-gray-200 hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                className={`border-b border-(--color-border) hover:bg-(--color-secondary) ${index % 2 === 0 ? 'bg-(--color-surface)' : 'bg-(--color-secondary)'}`}
               >
                 <td className="py-3 px-4">
                   <Checkbox
@@ -144,12 +144,22 @@ const TreatiesForm: React.FC<{
                     aria-label={`Select treaty ${treaty.name}`}
                   />
                 </td>
-                <td className="py-3 px-4 text-gray-900">{treaty.name}</td>
-                <td className="py-3 px-4 text-gray-700">{treaty.num}</td>
-                <td className="py-3 px-4 text-gray-700">{treaty.date}</td>
-                <td className="py-3 px-4 text-gray-700">{treaty.limit}</td>
-                <td className="py-3 px-4 text-gray-700">{treaty.cedant}</td>
-                <td className="py-3 px-4 text-gray-700">{treaty.lob}</td>
+                <td className="py-3 px-4 text-(--color-text)">{treaty.name}</td>
+                <td className="py-3 px-4 text-(--color-text-secondary)">
+                  {treaty.num}
+                </td>
+                <td className="py-3 px-4 text-(--color-text-secondary)">
+                  {treaty.date}
+                </td>
+                <td className="py-3 px-4 text-(--color-text-secondary)">
+                  {treaty.limit}
+                </td>
+                <td className="py-3 px-4 text-(--color-text-secondary)">
+                  {treaty.cedant}
+                </td>
+                <td className="py-3 px-4 text-(--color-text-secondary)">
+                  {treaty.lob}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -157,7 +167,7 @@ const TreatiesForm: React.FC<{
       </div>
 
       {errors.treaties && (
-        <p className="text-red-500 text-sm mt-2">{errors.treaties}</p>
+        <p className="text-(--color-error) text-sm mt-2">{errors.treaties}</p>
       )}
     </div>
   );
