@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import programReducer from './slices/programSlice';
+
+import { searchProgramReducer } from '@/features/searchProgram';
 
 export const store = configureStore({
   reducer: {
-    program: programReducer,
+    program: searchProgramReducer,
   },
 });
 

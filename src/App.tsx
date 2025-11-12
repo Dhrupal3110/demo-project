@@ -1,8 +1,8 @@
-import AppRoutes from './routes/AppRoutes';
+import AppRoutes from '@/routes/AppRoutes';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
+    <div className="min-h-screen bg-(--color-secondary) text-(--color-text)">
       <main>
         <AppRoutes />
       </main>

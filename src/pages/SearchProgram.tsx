@@ -1,13 +1,16 @@
 // ============= components/CRMSearchUI.tsx =============
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setSelectedProgram, type Program } from '../app/slices/programSlice';
-import Header from '../components/SewarchProgram/Header';
-import SearchBar from '../components/SewarchProgram/SearchBar';
-import SearchResults from '../components/SewarchProgram/SearchResults';
-import ProgramList from '../components/SewarchProgram/ProgramList';
+import { setSelectedProgram } from '@/features/searchProgram';
+import type { Program } from '@/features/searchProgram/types';
+import {
+  Header,
+  ProgramList,
+  SearchBar,
+  SearchResults,
+} from '@/features/searchProgram/components';
 import { useNavigate } from 'react-router-dom';
-import { unifiedProgramService } from '../api/services/unifiedProgramService';
+import { unifiedProgramService } from '@/services/services/unifiedProgramService';
 
 const CRMSearchUI: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,7 +86,7 @@ const CRMSearchUI: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-(--color-secondary)">
       <Header />
       <div className="max-w-5xl mx-auto p-8">
         <SearchBar
@@ -94,14 +97,14 @@ const CRMSearchUI: React.FC = () => {
         />
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+          <div className="mb-4 p-4 bg-(--color-error-bg) border border-(--color-error-border) rounded-lg text-(--color-error)">
             {error}
           </div>
         )}
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--color-info)"></div>
           </div>
         )}
 
