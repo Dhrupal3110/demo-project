@@ -224,7 +224,7 @@ const PortfolioPerilCoverageForm: React.FC<{
                       onChange={() => handleHeaderCheckbox(peril)}
                       aria-label={`Toggle ${peril} coverage column`}
                     />
-                    <span className="text-xs">{peril}</span>
+                    <p className="text-xs mb-0">{peril}</p>
                   </div>
                 </th>
               ))}
