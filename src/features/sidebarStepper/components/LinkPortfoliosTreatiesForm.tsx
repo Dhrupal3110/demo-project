@@ -28,9 +28,16 @@ interface ValidationErrors {
   linkedItems?: string;
 }
 
+interface FormData {
+  portfolios?: Portfolio[];
+  treaties?: Treaty[];
+  linkedItems?: LinkedItem[];
+  selectedDatabase?: string;
+}
+
 const LinkPortfoliosTreatiesForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: FormData;
+  onChange: (data: FormData) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [portfolioSearch, setPortfolioSearch] = useState('');
@@ -95,7 +102,14 @@ const LinkPortfoliosTreatiesForm: React.FC<{
         selectedDatabase: data.selectedDatabase || databases[0],
       });
     }
-  }, []);
+  }, [
+    data,
+    onChange,
+    initialPortfolios,
+    initialTreaties,
+    initialLinkedItems,
+    databases,
+  ]);
 
   // Set selectedDatabase from data
   // useEffect(() => {

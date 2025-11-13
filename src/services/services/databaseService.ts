@@ -87,8 +87,8 @@ export const databaseService = {
   /**
    * Get database statistics
    */
-getDatabaseStats: async (): Promise<any> => {
-  const response = await apiClient.get('/databases/stats');
-  return response;
-},
+  getDatabaseStats: async (): Promise<unknown> => {
+    const response = await apiClient.get('/databases/stats');
+    return response;
+  },
 };

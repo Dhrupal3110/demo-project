@@ -9,8 +9,8 @@ interface ValidationErrors {
 }
 
 const ReviewAnalyses: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: Record<string, unknown>;
+  onChange: (data: Record<string, unknown>) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');

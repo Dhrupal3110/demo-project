@@ -144,7 +144,13 @@ class UnifiedDatabaseService {
       if (API_CONFIG.useDummyAPI) {
         return await mockDatabaseService.getDatabaseStats();
       }
-      return await databaseService.getDatabaseStats();
+      return await databaseService.getDatabaseStats() as {
+        totalDatabases: number;
+        totalSize: string;
+        totalPortfolios: number;
+        totalTreaties: number;
+        totalCedants: number;
+      };
     } catch (error) {
       console.error('Error fetching database stats:', error);
       throw error;

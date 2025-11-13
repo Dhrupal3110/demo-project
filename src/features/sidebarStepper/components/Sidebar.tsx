@@ -12,7 +12,7 @@ interface SidebarProps {
   stepsData: Step[];
   activeStep: number;
   maxVisitedStep: number;
-  formData: Record<string, any>;
+  formData: Record<string, unknown>;
   handleSidebarClick: (stepId: number) => void;
 }
 

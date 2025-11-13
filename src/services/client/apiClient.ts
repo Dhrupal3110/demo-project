@@ -1,5 +1,5 @@
 // ============= api/client/apiClient.ts =============
-import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { API_CONFIG } from '../config/apiConfig';
 
 class ApiClient {
@@ -20,7 +20,7 @@ class ApiClient {
   private setupInterceptors() {
     // Request interceptor
     this.client.interceptors.request.use(
-      (config) => {
+      (config: InternalAxiosRequestConfig) => {
         // Add auth token if available
         const token = localStorage.getItem('authToken');
         if (token) {
@@ -97,15 +97,15 @@ class ApiClient {
     return this.client.get<T, T>(url, config);
   }
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.client.post<T, T>(url, data, config);
   }
 
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.client.put<T, T>(url, data, config);
   }
 
-  async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.client.patch<T, T>(url, data, config);
   }
 

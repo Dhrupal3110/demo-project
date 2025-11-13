@@ -17,9 +17,13 @@ interface ValidationErrors {
   portfolios?: string;
 }
 
+interface FormData {
+  portfolios?: Portfolio[];
+}
+
 const PortfolioForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: FormData;
+  onChange: (data: FormData) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');

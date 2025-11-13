@@ -10,7 +10,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 class MockSidebarStepperService {
   private formData: StepFormData = JSON.parse(JSON.stringify(mockStepperData));
 
-  async fetchStepData(stepId: number): Promise<Record<string, any>> {
+  async fetchStepData(stepId: number): Promise<Record<string, unknown>> {
     await delay(300);
     return this.formData[stepId] || {};
   }
@@ -20,7 +20,7 @@ class MockSidebarStepperService {
     return JSON.parse(JSON.stringify(this.formData));
   }
 
-  async saveStepData(stepId: number, data: Record<string, any>): Promise<SaveResponse> {
+  async saveStepData(stepId: number, data: Record<string, unknown>): Promise<SaveResponse> {
     await delay(500);
     this.formData[stepId] = {
       ...data,
@@ -34,7 +34,7 @@ class MockSidebarStepperService {
     };
   }
 
-  async updateStepData(stepId: number, updates: Partial<Record<string, any>>): Promise<SaveResponse> {
+  async updateStepData(stepId: number, updates: Partial<Record<string, unknown>>): Promise<SaveResponse> {
     await delay(300);
     this.formData[stepId] = {
       ...this.formData[stepId],
@@ -65,7 +65,7 @@ class MockSidebarStepperService {
       }
     }
 
-    const submissionId = Math.random().toString(36).substr(2, 9).toUpperCase();
+    const submissionId = Math.random().toString(36).substring(2, 11).toUpperCase();
     
     return {
       success: true,
@@ -75,7 +75,7 @@ class MockSidebarStepperService {
     };
   }
 
-  async validateStep(stepId: number, data: Record<string, any>): Promise<{ valid: boolean; errors: Record<string, string> }> {
+  async validateStep(stepId: number, data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> {
     await delay(200);
     const errors: Record<string, string> = {};
 
@@ -87,7 +87,7 @@ class MockSidebarStepperService {
         }
         break;
       case 3:
-        if (!data.portfolios || data.portfolios.length === 0) {
+        if (!data.portfolios || (data.portfolios as unknown[]).length === 0) {
           errors.portfolios = 'At least one portfolio is required';
         }
         break;
@@ -95,12 +95,12 @@ class MockSidebarStepperService {
         // Treaties are optional
         break;
       case 10:
-        if (!data.linkedItems || data.linkedItems.length === 0) {
+        if (!data.linkedItems || (data.linkedItems as unknown[]).length === 0) {
           errors.linkedItems = 'At least one link is required';
         }
         break;
       case 11:
-        if (!data.analyses || data.analyses.length === 0) {
+        if (!data.analyses || (data.analyses as unknown[]).length === 0) {
           errors.reviewAnalyses = 'Analysis review is required';
         }
         break;

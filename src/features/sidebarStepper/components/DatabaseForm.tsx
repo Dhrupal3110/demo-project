@@ -13,8 +13,8 @@ interface ValidationErrors {
 }
 
 const DatabaseForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: Record<string, unknown>;
+  onChange: (data: Record<string, unknown>) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -63,7 +63,7 @@ const DatabaseForm: React.FC<{
   }, [searchQuery, searchDatabases, clearSearch]);
 
   const handleCheckboxChange = (database: Database) => {
-    const current = data.databases || [];
+    const current = (data.databases as Database[]) || [];
     const isSelected = current.some((db: Database) => db.id === database.id);
     const updated = isSelected
       ? current.filter((db: Database) => db.id !== database.id)
@@ -167,7 +167,7 @@ const DatabaseForm: React.FC<{
                 >
                   <td className="py-3 px-4">
                     <Checkbox
-                      checked={(data.databases || []).some(
+                      checked={((data.databases as Database[]) || []).some(
                         (database: Database) => database.id === db.id
                       )}
                       onChange={() => handleCheckboxChange(db)}

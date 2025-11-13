@@ -18,15 +18,15 @@ interface ValidationErrors {
 }
 
 const DemandSurgeForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: Record<string, DemandSurgeItem[]>;
+  onChange: (data: Record<string, DemandSurgeItem[]>) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [databaseSearch, setDatabaseSearch] = useState('');
   const [portfolioSearch, setPortfolioSearch] = useState('');
   const { items, loading, error } = useDemandSurgeApi();
 
-  const currentItems = data.demandSurgeItems || items;
+  const currentItems: DemandSurgeItem[] = data.demandSurgeItems || items;
 
   const filteredItems = currentItems.filter(
     (item: DemandSurgeItem) =>
@@ -38,7 +38,7 @@ const DemandSurgeForm: React.FC<{
     if (!data.demandSurgeItems && items.length > 0) {
       onChange({ ...data, demandSurgeItems: items });
     }
-  }, [items]);
+  }, [items, data, onChange]);
 
   const handleToggleChange = (itemId: string, value: boolean) => {
     const updated = currentItems.map((item: DemandSurgeItem) =>
@@ -127,7 +127,7 @@ const DemandSurgeForm: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item: any, index: number) => (
+            {filteredItems.map((item: DemandSurgeItem, index: number) => (
               <tr
                 key={item.id}
                 className={`border-b border-(--color-border) ${index % 2 === 0 ? 'bg-(--color-surface)' : 'bg-(--color-secondary)'}`}

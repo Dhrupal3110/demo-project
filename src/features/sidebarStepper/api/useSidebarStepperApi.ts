@@ -32,7 +32,7 @@ export const useSidebarStepperApi = () => {
     }
   };
 
-  const loadStepData = async (stepId: number): Promise<Record<string, any>> => {
+  const loadStepData = async (stepId: number): Promise<Record<string, unknown>> => {
     try {
       const data = await mockStepperService.fetchStepData(stepId);
       setFormData((prev) => ({
@@ -49,7 +49,7 @@ export const useSidebarStepperApi = () => {
 
   const saveStepData = async (
     stepId: number,
-    data: Record<string, any>
+    data: Record<string, unknown>
   ): Promise<SaveResponse> => {
     try {
       setSaving(true);
@@ -74,7 +74,7 @@ export const useSidebarStepperApi = () => {
 
   const updateStepData = async (
     stepId: number,
-    updates: Partial<Record<string, any>>
+    updates: Partial<Record<string, unknown>>
   ): Promise<SaveResponse> => {
     try {
       const response = await mockStepperService.updateStepData(stepId, updates);
@@ -94,32 +94,20 @@ export const useSidebarStepperApi = () => {
     }
   };
 
-//   const validateStep = async (
-//     stepId: number,
-//     data: Record<string, any>
-//   ): Promise<{ valid: boolean; errors: Record<string, string> }> => {
-//     try {
-//       return await mockStepperService.validateStep(stepId, data);
-//     } catch (err) {
-//       console.error('Failed to validate step:', err);
-//       return { valid: false, errors: { general: 'Validation failed' } };
-//     }
-//   };
-const validateStep = async (
-  stepId: number,
-  data: Record<string, any>
-): Promise<{ valid: boolean; errors: Record<string, string> }> => {
-  try {
-    // still calling service, but ignoring its response if you want
-    await mockStepperService.validateStep(stepId, data);
-    
-    return { valid: true, errors: {} }; // ✅ always pass
-  } catch (err) {
-    console.error('Ignoring validation error:', err);
-    return { valid: true, errors: {} }; // ✅ still pass even on error
-  }
-};
-
+  const validateStep = async (
+    stepId: number,
+    data: Record<string, unknown>
+  ): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+    try {
+      // still calling service, but ignoring its response if you want
+      await mockStepperService.validateStep(stepId, data);
+      
+      return { valid: true, errors: {} }; // ✅ always pass
+    } catch (err) {
+      console.error('Ignoring validation error:', err);
+      return { valid: true, errors: {} }; // ✅ still pass even on error
+    }
+  };
 
   const submitAllData = async (data: StepFormData): Promise<SubmitResponse> => {
     try {

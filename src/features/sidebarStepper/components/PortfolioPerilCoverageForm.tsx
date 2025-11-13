@@ -21,9 +21,13 @@ interface ValidationErrors {
   portfolioPerilCoverage?: string;
 }
 
+interface FormData {
+  portfolioPerils?: PortfolioPeril[];
+}
+
 const PortfolioPerilCoverageForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
+  data: FormData;
+  onChange: (data: FormData) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,9 +40,9 @@ const PortfolioPerilCoverageForm: React.FC<{
     if (!data.portfolioPerils && items.length > 0) {
       onChange({ ...data, portfolioPerils: items });
     }
-  }, [items]);
+  }, [items, data, onChange]);
 
-  const currentData = data.portfolioPerils || items;
+  const currentData: PortfolioPeril[] = data.portfolioPerils || items;
 
   const filteredData = currentData.filter(
     (item: PortfolioPeril) =>
