@@ -18,8 +18,8 @@ interface ValidationErrors {
 }
 
 const DemandSurgeForm: React.FC<{
-  data: Record<string, DemandSurgeItem[]>;
-  onChange: (data: Record<string, DemandSurgeItem[]>) => void;
+  data: any;
+  onChange: (data: any) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [databaseSearch, setDatabaseSearch] = useState('');

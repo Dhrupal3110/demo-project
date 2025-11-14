@@ -263,7 +263,7 @@ const SidebarStepper: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-(--color-secondary)">
+      <div className="flex h-[calc(100vh-54px)] items-center justify-center ">
         <div className="flex items-center gap-2">
           <Loader2 className="animate-spin" size={32} />
           <span className="text-(--color-text-secondary) text-lg">
@@ -276,7 +276,7 @@ const SidebarStepper: React.FC = () => {
 
   if (apiError) {
     return (
-      <div className="flex h-screen items-center justify-center bg-(--color-secondary)">
+      <div className="flex h-[calc(100vh-54px)] items-center justify-center ">
         <div className="bg-(--color-error-bg) border border-(--color-error-border) rounded-lg p-6 max-w-md">
           <p className="text-(--color-error) text-center">{apiError}</p>
           <button
@@ -292,7 +292,7 @@ const SidebarStepper: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <div className="flex h-screen from-(--color-info-bg) via-indigo-50 to-(--color-accent-bg)">
+      <div className="flex min-h-[calc(100vh-54px)] from-(--color-info-bg) via-indigo-50 to-(--color-accent-bg)">
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-2xl w-full">
             <div className="bg-(--color-surface) rounded-2xl shadow-2xl p-8 md:p-12 text-center animate-scaleIn">
@@ -408,7 +408,7 @@ const SidebarStepper: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-(--color-secondary)">
+    <div className="flex h-[calc(100vh-54px)] ">
       <Sidebar
         activeStep={activeStep}
         maxVisitedStep={maxVisitedStep}
@@ -416,15 +416,15 @@ const SidebarStepper: React.FC = () => {
         formData={localFormData}
         handleSidebarClick={handleSidebarClick}
       />
-      <main className="flex-1 flex flex-col overflow-y-auto">
+      <main className="flex-1 flex flex-col">
         <StepperHeader
           activeStep={activeStep}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
           isSaving={saving}
         />
-        <div className="flex flex-col p-6 gap-4 animate-fadeIn">
-          <div className="flex-1 p-6">{renderStepForm()}</div>
+        <div className="flex flex-col  px-0 gap-4 animate-fadeIn max-h-[calc(100vh-110px)] overflow-y-auto">
+          <div className="flex-1 px-6 py-4">{renderStepForm()}</div>
         </div>
       </main>
       <style>{`

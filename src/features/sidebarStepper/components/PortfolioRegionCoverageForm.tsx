@@ -275,7 +275,7 @@ const PortfolioRegionCoverageForm: React.FC<{
   const somePortfoliosChecked = portfolios.some((p) => p.checked);
 
   return (
-    <div className="p-6 bg-(--color-secondary) min-h-screen">
+    <div className="p-6 ">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           6 – Set portfolio region coverage

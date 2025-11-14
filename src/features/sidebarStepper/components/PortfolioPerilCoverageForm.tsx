@@ -21,13 +21,10 @@ interface ValidationErrors {
   portfolioPerilCoverage?: string;
 }
 
-interface FormData {
-  portfolioPerils?: PortfolioPeril[];
-}
 
 const PortfolioPerilCoverageForm: React.FC<{
-  data: FormData;
-  onChange: (data: FormData) => void;
+  data: any;
+  onChange: (data: any) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');

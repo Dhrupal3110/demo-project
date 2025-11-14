@@ -2,7 +2,9 @@ import { CheckCircle2, FileText } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/app/store';
-import logo from '@/assets/logo.png';
+import logoAspen from '@/assets/logo-aspen.png';
+import logoSompo from '@/assets/logo-sompo.png';
+import { useTheme } from '@/app/providers/ThemeProvider';
 
 interface Step {
   id: number;
@@ -26,13 +28,17 @@ const Sidebar = ({
   const selectedProgram = useSelector(
     (state: RootState) => state.program.selectedProgram
   );
+  const { name } = useTheme();
+  const logo = name === 'default' ? logoAspen : logoSompo;
   return (
-    <aside className="w-64 bg-(--color-surface-muted) border-r border-(--color-border) flex flex-col">
+    <aside className="w-64 bg-(--color-surface-muted) border-r border-(--color-border) flex flex-col max-h-[calc(100vh-54px)] overflow-y-auto">
       {/* Header */}
       <div className="px-6 py-2 flex items-center  border-b border-(--color-border) ">
-        <div className="px-6 flex items-center gap-2">
-          <img src={logo} alt="logo" className="w-10 h-12" />
-          <h1 className="text-lg font-semibold text-(--color-text)">CRM-UI</h1>
+        <div className="px-6 py-1.5 flex items-center gap-2">
+          <img src={logo} alt="logo" className="w-8 h-8" />
+          <h1 className="text-lg font-semibold text-(--color-primary-dark)">
+            RMS-UI
+          </h1>
         </div>
       </div>
 
@@ -72,7 +78,7 @@ const Sidebar = ({
                       : 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
                 }`}
               >
-                <span className="text-xs">
+                <span className="text-sm">
                   {step.id}. {step.title}
                 </span>
                 {(isCompleted || step.id == 1) && (

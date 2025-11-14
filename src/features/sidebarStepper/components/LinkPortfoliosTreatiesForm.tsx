@@ -28,16 +28,16 @@ interface ValidationErrors {
   linkedItems?: string;
 }
 
-interface FormData {
-  portfolios?: Portfolio[];
-  treaties?: Treaty[];
-  linkedItems?: LinkedItem[];
-  selectedDatabase?: string;
-}
+// interface FormData {
+//   portfolios?: Portfolio[];
+//   treaties?: Treaty[];
+//   linkedItems?: LinkedItem[];
+//   selectedDatabase?: string;
+// }
 
 const LinkPortfoliosTreatiesForm: React.FC<{
-  data: FormData;
-  onChange: (data: FormData) => void;
+  data: any;
+  onChange: (data: any) => void;
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [portfolioSearch, setPortfolioSearch] = useState('');
@@ -201,7 +201,7 @@ const LinkPortfoliosTreatiesForm: React.FC<{
   const someTreatiesChecked = treaties.some((t: Treaty) => t.checked);
 
   return (
-    <div className="p-6 bg-(--color-secondary) min-h-screen">
+    <div className="p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           10 – Link portfolios and treaties

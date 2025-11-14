@@ -4,6 +4,8 @@
 :root {
   /* Primary */
   --color-primary: #34805a;
+  --color-primary-header: #34805a;
+  --color-header-text: #ffffff;
   --color-primary-light: #4caf7d;
   --color-primary-dark: #003b3b;
   --color-primary-text: #ffffff;
@@ -13,6 +15,7 @@
   --color-accent-light: #2dd4bf;
   --color-accent-bg: #ccfbf1;
   --color-accent-border: #5eead4;
+  --color-black: #000;
 
   /* Backgrounds */
   --color-bg: #ffffff;
@@ -55,6 +58,7 @@
 /* === Dark Theme === */
 .dark {
   --color-primary: #34805a;
+   --color-primary-header: #34805a;
   --color-primary-light: #4caf7d;
   --color-primary-dark: #003b3b;
   --color-primary-text: #ffffff;
@@ -102,6 +106,9 @@
 .theme-sompo {
   /* Primary */
   --color-primary: #cc0022;
+  --color-primary-header: #ffffff;
+  --color-header-text: #000;
+  --color-black: #000;
   --color-primary-light: #e52f46; /* slightly lighter red */
   --color-primary-dark: #99001a; /* slightly darker red */
   --color-primary-text: #ffffff;
@@ -203,4 +210,29 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-light) var(--color-bg);
 }

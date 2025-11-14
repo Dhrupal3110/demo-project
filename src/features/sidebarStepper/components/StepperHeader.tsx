@@ -1,7 +1,6 @@
 import { Play, Redo2, Undo2 } from 'lucide-react';
-
-import { useTheme } from '@/app/providers/ThemeProvider';
 import { stepsData } from '@/features/sidebarStepper/constants/stepsData';
+import { ThemeToggler } from '@/components/common';
 
 interface StepperHeaderProps {
   handlePrevious: () => void;
@@ -16,14 +15,12 @@ const StepperHeader = ({
   activeStep,
   isSaving,
 }: StepperHeaderProps) => {
-  const { name, setName } = useTheme();
   return (
-    <div className="flex items-center justify-between bg-(--color-primary) px-6 py-3">
+    <div className="flex items-center justify-between bg-(--color-primary-header) px-6 py-[13px] ">
       <button
         id="stepper-prev"
         onClick={handlePrevious}
-        disabled={activeStep === 1}
-        className={`px-4 py-2 rounded-full border border-(--color-primary-text) text-(--color-primary-text) text-sm font-medium flex items-center gap-2 ${activeStep === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-primary)'}`}
+        className={`px-4 py-2 rounded-full bg-(--color-surface) text-(--color-primary-dark) text-sm font-medium flex items-center gap-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--color-hover)'}`}
       >
         <Undo2 size={18} />
         {stepsData[activeStep - 1]?.prev}
@@ -60,22 +57,7 @@ const StepperHeader = ({
             <Redo2 size={18} />
           )}
         </button>
-        <div className="flex items-center bg-(--color-primary-overlay) rounded-full p-1">
-          <button
-            onClick={() => setName('default')}
-            className={`px-3 py-1 rounded-full text-sm ${name === 'default' ? 'bg-(--color-surface) text-(--color-primary-dark)' : 'text-(--color-primary-text) hover:bg-(--color-primary-overlay-hover)'}`}
-            aria-pressed={name === 'default'}
-          >
-            Aspen
-          </button>
-          <button
-            onClick={() => setName('sompo')}
-            className={`px-3 py-1 rounded-full text-sm ${name === 'sompo' ? 'bg-(--color-surface) text-(--color-primary-dark)' : 'text-(--color-primary-text) hover:bg-(--color-primary-overlay-hover)'}`}
-            aria-pressed={name === 'sompo'}
-          >
-            Sompo
-          </button>
-        </div>
+        <ThemeToggler />
       </div>
     </div>
   );

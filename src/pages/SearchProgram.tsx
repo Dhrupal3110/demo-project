@@ -86,7 +86,7 @@ const CRMSearchUI: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-(--color-secondary)">
+    <div className="min-h-[calc(100vh-54px)]">
       <Header />
       <div className="max-w-5xl mx-auto p-8">
         <SearchBar

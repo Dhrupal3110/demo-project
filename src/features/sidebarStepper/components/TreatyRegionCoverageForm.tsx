@@ -292,7 +292,7 @@ const TreatyRegionCoverageForm: React.FC<{
   }
 
   return (
-    <div className="p-6 bg-(--color-secondary) min-h-screen">
+    <div className="p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-(--color-text) mb-6">
           9 – Set treaty region coverage
