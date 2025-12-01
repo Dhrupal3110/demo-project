@@ -11,6 +11,7 @@ import {
 } from '@/features/selectProgram/components';
 import { useNavigate } from 'react-router-dom';
 import { unifiedProgramService } from '@/services/services/unifiedProgramService';
+import { resetStepper } from '@/features/sidebarStepper/stepperSlice';
 
 const CRMSearchUI: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,8 +68,9 @@ const CRMSearchUI: React.FC = () => {
 
   const handleProgramSelect = async (program: Program) => {
     try {
+      dispatch(resetStepper());
       await dispatch(setSelectedProgram(program));
-      navigate(`/stepper?id=${program.id}`);
+      navigate(`/${program.id}/database`);
       setSearchQuery('');
       setSearchResults([]);
       setIsSearching(false);

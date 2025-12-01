@@ -1,47 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { FileText, CheckCircle2, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom';
 import {
-  DatabaseForm,
-  DemandSurgeForm,
-  LinkPortfoliosTreatiesForm,
-  PortfolioForm,
-  PortfolioPerilCoverageForm,
-  PortfolioRegionCoverageForm,
-  ReviewAnalyses,
   Sidebar,
   StepperHeader,
-  TreatiesForm,
-  TreatyPerilCoverageForm,
-  TreatyRegionCoverageForm,
   stepsData,
   useSidebarStepperApi,
 } from '@/features/sidebarStepper';
 import type { RootState } from '@/app/store';
-import type {
-  SidebarFormData,
-  SidebarValidationErrors,
-} from '@/features/sidebarStepper';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { setSelectedProgram } from '@/features/selectProgram';
+import {
+  setActiveStep,
+  setMaxVisitedStep,
+  setStepData,
+  setAllFormData,
+  setErrors,
+  setIsSubmitted,
+  setSubmissionId,
+  resetStepper,
+} from '@/features/sidebarStepper/stepperSlice';
+
+const stepRoutes: Record<number, string> = {
+  2: 'database',
+  3: 'portfolio',
+  4: 'demand-surge',
+  5: 'portfolio-peril',
+  6: 'portfolio-region',
+  7: 'treaties',
+  8: 'treaty-peril',
+  9: 'treaty-region',
+  10: 'link-portfolios',
+  11: 'review',
+};
 
 const SidebarStepper: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<number>(2);
-  const [maxVisitedStep, setMaxVisitedStep] = useState<number>(2);
-  const [localFormData, setLocalFormData] = useState<SidebarFormData>({});
-  const [currentStepData, setCurrentStepData] = useState<
-    Record<string, unknown>
-  >({});
-  const [errors, setErrors] = useState<SidebarValidationErrors>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submissionId, setSubmissionId] = useState('');
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const programId = searchParams.get('id');
+  const location = useLocation();
+  const { programId } = useParams<{ programId: string }>();
+
+  const {
+    activeStep,
+    maxVisitedStep,
+    formData: localFormData,
+  } = useSelector((state: RootState) => state.stepper);
 
   const selectedProgram = useSelector(
     (state: RootState) => state.program.selectedProgram
@@ -55,28 +59,103 @@ const SidebarStepper: React.FC = () => {
     loading,
     error: apiError,
     saving,
-    submitting,
     saveStepData,
     validateStep,
     submitAllData,
-    resetForm,
   } = useSidebarStepperApi();
+
+  // Sync Route with Active Step (URL -> State)
+  useEffect(() => {
+    const path = location.pathname.split('/').pop();
+    const stepId = Object.keys(stepRoutes).find(
+      (key) => stepRoutes[Number(key)] === path
+    );
+    if (stepId && Number(stepId) !== activeStep) {
+      dispatch(setActiveStep(Number(stepId)));
+    }
+  }, [location.pathname, dispatch, activeStep]);
 
   useEffect(() => {
     if (apiFormData && Object.keys(apiFormData).length > 0) {
-      setLocalFormData(apiFormData);
-      if (apiFormData[activeStep]) {
-        setCurrentStepData(apiFormData[activeStep]);
-      }
+      dispatch(setAllFormData(apiFormData));
     }
-  }, [apiFormData, activeStep]);
+  }, [apiFormData, dispatch]);
+
+  // Validate Session & Sequence on Load
+  const toastShownRef = React.useRef(false);
 
   useEffect(() => {
+    if (loading) return;
+
+    // 1. Strict Program Check: If state is lost, force restart
+    if (!selectedProgram) {
+      navigate('/');
+      return;
+    }
+
+    // 2. Sequence Check: Ensure previous steps have data
+    if (activeStep > 2) {
+      const sourceData = apiFormData || localFormData;
+      let isSequenceValid = true;
+
+      for (let i = 2; i < activeStep; i++) {
+        // Special case: If step 7 has no treaties, steps 8, 9, 10 are skipped (valid to be empty)
+        if ([8, 9, 10].includes(i)) {
+          const step7Data = sourceData[7];
+          const treaties = (step7Data as any)?.treaties;
+          const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
+          if (!hasTreaties) {
+            continue;
+          }
+        }
+
+        const stepData = sourceData[i];
+        if (
+          !stepData ||
+          (typeof stepData === 'object' && Object.keys(stepData).length === 0)
+        ) {
+          isSequenceValid = false;
+          break;
+        }
+      }
+
+      if (!isSequenceValid) {
+        if (!toastShownRef.current) {
+          toast.error('Please complete previous steps first');
+          toastShownRef.current = true;
+          navigate(`/${programId}/database`);
+          
+          // Reset ref after navigation completes (approximate)
+          setTimeout(() => {
+            toastShownRef.current = false;
+          }, 1000);
+        }
+      }
+    }
+  }, [
+    loading,
+    selectedProgram,
+    activeStep,
+    // apiFormData and localFormData can change frequently, but we only care about the check when activeStep changes or loading finishes
+    // Removing them from dependencies to avoid re-running on every keystroke/update if activeStep hasn't changed
+    // However, we need to check validity if data *arrives* (loading finishes).
+    // Let's keep it simple: only run when loading finishes or activeStep changes.
+    // We can access the latest data via refs if needed, but here we just want to prevent spam.
+    // The main issue is likely re-renders causing the effect to fire multiple times.
+    programId,
+    navigate,
+  ]);
+
+  useEffect(() => {
+    // If program changes, reset stepper
+    if (selectedProgram && programId && selectedProgram.id !== programId) {
+      dispatch(resetStepper());
+      dispatch(setStepData({ step: 1, data: { program: { id: programId, name: 'Loading...' } } })); // Temporary placeholder or fetch logic
+      // Ideally we should fetch the new program details here if not in allPrograms
+    }
+
     if (selectedProgram) {
-      setLocalFormData((prev) => ({
-        ...prev,
-        1: { program: selectedProgram },
-      }));
+      dispatch(setStepData({ step: 1, data: { program: selectedProgram } }));
       return;
     }
 
@@ -84,21 +163,21 @@ const SidebarStepper: React.FC = () => {
       const foundProgram = allPrograms.find((p) => p.id === programId);
 
       if (foundProgram) {
-        setLocalFormData((prev) => ({
-          ...prev,
-          1: { program: foundProgram },
-        }));
+        // If we found a program but it's different from what might have been in state (though covered by first check), set it.
+        dispatch(setStepData({ step: 1, data: { program: foundProgram } }));
         dispatch(setSelectedProgram(foundProgram));
       } else {
+        // This block might be redundant now due to the strict check above, 
+        // but kept for consistency if allPrograms happens to be populated.
         toast.error('Invalid program ID');
         navigate('/');
       }
     }
-
-    if (!programId) {
-      navigate('/');
-    }
+    
+    // Removed the simple !programId check as it's handled by the strict check
   }, [selectedProgram, programId, allPrograms, navigate, dispatch]);
+
+  const currentStepData = localFormData[activeStep] || {};
 
   const handleNext = async (): Promise<void> => {
     try {
@@ -106,48 +185,40 @@ const SidebarStepper: React.FC = () => {
       const validation = await validateStep(activeStep, currentStepData);
 
       if (!validation.valid) {
-        setErrors(validation.errors);
+        dispatch(setErrors(validation.errors));
         toast.error('Please fix the errors before proceeding');
         return;
       }
 
-      setErrors({});
+      dispatch(setErrors({}));
 
       // Save current step data
       await saveStepData(activeStep, currentStepData);
 
-      // Update local state with latest data snapshot
-      const updatedFormData: SidebarFormData = {
-        ...localFormData,
-        [activeStep]: currentStepData,
-      };
-      setLocalFormData(updatedFormData);
-
       const finalStep = stepsData.length;
 
       // STEP 7 SPECIAL CASE: if NO treaties → jump to review page (step 11)
-      const treaties = currentStepData?.treaties;
+      const treaties = (currentStepData as any)?.treaties;
       const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
       if (activeStep === 7 && !hasTreaties) {
-        setActiveStep(finalStep);
-        setMaxVisitedStep((prev) => Math.max(prev, finalStep));
-        setCurrentStepData(updatedFormData[finalStep] || {});
+        dispatch(setMaxVisitedStep(finalStep));
+        navigate(`/${programId}/${stepRoutes[finalStep]}`);
         return;
       }
 
       // Normal next step behavior
       if (activeStep < stepsData.length) {
         const nextStep = activeStep + 1;
-        setActiveStep(nextStep);
-        setMaxVisitedStep((prev) => Math.max(prev, nextStep));
-        setCurrentStepData(updatedFormData[nextStep] || {});
+        dispatch(setMaxVisitedStep(nextStep));
+        navigate(`/${programId}/${stepRoutes[nextStep]}`);
       } else {
         // Final Submit
-        const submitResponse = await submitAllData(updatedFormData);
+        const submitResponse = await submitAllData(localFormData);
 
         if (submitResponse.success) {
-          setSubmissionId(submitResponse.submissionId);
-          setIsSubmitted(true);
+          dispatch(setSubmissionId(submitResponse.submissionId));
+          dispatch(setIsSubmitted(true));
+          navigate(`/${programId}/success`);
           toast.success('Form submitted successfully!');
         } else {
           toast.error(submitResponse.message || 'Submission failed');
@@ -168,28 +239,19 @@ const SidebarStepper: React.FC = () => {
     // STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
     if (activeStep === stepsData.length) {
       const step7Data = localFormData[7] || {};
-      const treaties = step7Data?.treaties;
+      const treaties = (step7Data as any)?.treaties;
       const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
 
       if (!hasTreaties) {
-        const prevStep = 7;
-        setActiveStep(prevStep);
-        setCurrentStepData(localFormData[prevStep] || {});
-        setErrors({});
+        dispatch(setErrors({}));
+        navigate(`/${programId}/${stepRoutes[7]}`);
         return;
       }
     }
 
     if (activeStep > 2) {
-      setLocalFormData((prev) => ({
-        ...prev,
-        [activeStep]: currentStepData,
-      }));
-
-      const prevStep = activeStep - 1;
-      setActiveStep(prevStep);
-      setCurrentStepData(localFormData[prevStep] || {});
-      setErrors({});
+      dispatch(setErrors({}));
+      navigate(`/${programId}/${stepRoutes[activeStep - 1]}`);
     }
   };
 
@@ -197,69 +259,14 @@ const SidebarStepper: React.FC = () => {
     if (activeStep === stepId) return;
     if (stepId === 1) {
       navigate('/');
+      return;
     }
     if (stepId <= maxVisitedStep) {
-      setLocalFormData((prev) => ({ ...prev, [activeStep]: currentStepData }));
-      setActiveStep(stepId);
-      setCurrentStepData(localFormData[stepId] || {});
-      setErrors({});
+      dispatch(setErrors({}));
+      navigate(`/${programId}/${stepRoutes[stepId]}`);
     }
   };
 
-  const renderStepForm = () => {
-    const props = {
-      data: currentStepData,
-      onChange: setCurrentStepData,
-      errors,
-    };
-    switch (activeStep) {
-      case 1:
-      case 2:
-        return <DatabaseForm {...props} />;
-      case 3:
-        return <PortfolioForm {...props} />;
-      case 4:
-        return <DemandSurgeForm {...props} />;
-      case 5:
-        return <PortfolioPerilCoverageForm {...props} />;
-      case 6:
-        return <PortfolioRegionCoverageForm {...props} />;
-      case 7:
-        return <TreatiesForm {...props} />;
-      case 8:
-        return <TreatyPerilCoverageForm {...props} />;
-      case 9:
-        return <TreatyRegionCoverageForm {...props} />;
-      case 10:
-        return <LinkPortfoliosTreatiesForm {...props} />;
-      case 11:
-        return <ReviewAnalyses {...props} />;
-      default:
-        return (
-          <div>
-            <p>Step {activeStep} not found</p>
-          </div>
-        );
-    }
-  };
-
-  const handleResetAndCreateNew = async () => {
-    try {
-      await resetForm();
-      setIsSubmitted(false);
-      setActiveStep(2);
-      setMaxVisitedStep(2);
-      setLocalFormData({});
-      setCurrentStepData({});
-      setErrors({});
-      setSubmissionId('');
-      navigate('/');
-      toast.success('Form reset successfully');
-    } catch (err) {
-      console.error('Error resetting form:', err);
-      toast.error('Failed to reset form');
-    }
-  };
 
   if (loading) {
     return (
@@ -290,122 +297,6 @@ const SidebarStepper: React.FC = () => {
     );
   }
 
-  if (isSubmitted) {
-    return (
-      <div className="flex min-h-[calc(100vh-54px)] from-(--color-info-bg) via-indigo-50 to-(--color-accent-bg)">
-        <div className="flex-1 flex items-center justify-center p-6">
-          <div className="max-w-2xl w-full">
-            <div className="bg-(--color-surface) rounded-2xl shadow-2xl p-8 md:p-12 text-center animate-scaleIn">
-              <div className="mb-6 flex justify-center">
-                <div className="relative">
-                  <div className="w-24 h-24 bg-(--color-success-bg) rounded-full flex items-center justify-center animate-pulse">
-                    <div className="w-20 h-20 bg-(--color-success) rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="w-12 h-12 text-(--color-primary-text) animate-checkmark" />
-                    </div>
-                  </div>
-                  <div className="absolute top-0 left-0 w-3 h-3 bg-(--color-info) rounded-full animate-confetti-1"></div>
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-(--color-accent) rounded-full animate-confetti-2"></div>
-                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-(--color-warning) rounded-full animate-confetti-3"></div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-(--color-error) rounded-full animate-confetti-4"></div>
-                </div>
-              </div>
-              <h2 className="text-4xl font-bold text-(--color-text) mb-4 animate-fadeInUp">
-                Submission Successful!
-              </h2>
-              <p
-                className="text-lg text-(--color-text-secondary) mb-8 animate-fadeInUp"
-                style={{ animationDelay: '0.1s' }}
-              >
-                Your configuration has been successfully submitted and is now
-                being processed.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                <div
-                  className="bg-(--color-info-bg) rounded-lg p-4 animate-fadeInUp"
-                  style={{ animationDelay: '0.2s' }}
-                >
-                  <FileText className="w-6 h-6 text-(--color-info) mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-(--color-text) mb-1">
-                    Submission ID
-                  </p>
-                  <p className="text-xs text-(--color-text-secondary) font-mono">
-                    #{submissionId}
-                  </p>
-                </div>
-                <div
-                  className="bg-(--color-accent-bg) rounded-lg p-4 animate-fadeInUp"
-                  style={{ animationDelay: '0.3s' }}
-                >
-                  <svg
-                    className="w-6 h-6 text-(--color-accent) mx-auto mb-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p className="text-sm font-semibold text-(--color-text) mb-1">
-                    Processing Time
-                  </p>
-                  <p className="text-xs text-(--color-text-secondary)">
-                    Estimated 2-5 minutes
-                  </p>
-                </div>
-              </div>
-              <div
-                className="flex flex-col sm:flex-row gap-3 justify-center animate-fadeInUp"
-                style={{ animationDelay: '0.4s' }}
-              >
-                <button
-                  onClick={handleResetAndCreateNew}
-                  disabled={submitting}
-                  className="px-6 py-3 bg-(--color-primary) text-(--color-primary-text) rounded-lg font-medium hover:bg-blue-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting ? 'Processing...' : 'Create New Submission'}
-                </button>
-                <button
-                  onClick={() => setIsSubmitted(false)}
-                  className="px-6 py-3 bg-(--color-surface) text-(--color-text-secondary) border-2 border-(--color-border) rounded-lg font-medium hover:bg-(--color-secondary)"
-                >
-                  View Details
-                </button>
-              </div>
-              <div
-                className="mt-8 pt-6 border-t border-(--color-border) animate-fadeInUp"
-                style={{ animationDelay: '0.5s' }}
-              >
-                <p className="text-sm text-(--color-text-muted)">
-                  You will receive a confirmation email shortly at your
-                  registered email address.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <style>{`
-          @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-          @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-          @keyframes checkmark { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-          @keyframes confetti-1 { 0% { transform: translate(0, 0) scale(0); } 50% { transform: translate(-30px, -30px) scale(1); } 100% { transform: translate(-40px, -40px) scale(0); } }
-          @keyframes confetti-2 { 0% { transform: translate(0, 0) scale(0); } 50% { transform: translate(30px, -30px) scale(1); } 100% { transform: translate(40px, -40px) scale(0); } }
-          @keyframes confetti-3 { 0% { transform: translate(0, 0) scale(0); } 50% { transform: translate(-30px, 30px) scale(1); } 100% { transform: translate(-40px, 40px) scale(0); } }
-          @keyframes confetti-4 { 0% { transform: translate(0, 0) scale(0); } 50% { transform: translate(30px, 30px) scale(1); } 100% { transform: translate(40px, 40px) scale(0); } }
-          .animate-scaleIn { animation: scaleIn 0.5s ease-out; }
-          .animate-fadeInUp { animation: fadeInUp 0.6s ease-out both; }
-          .animate-checkmark { animation: checkmark 0.6s ease-out 0.3s both; }
-          .animate-confetti-1 { animation: confetti-1 1.5s ease-out infinite; }
-          .animate-confetti-2 { animation: confetti-2 1.5s ease-out 0.2s infinite; }
-          .animate-confetti-3 { animation: confetti-3 1.5s ease-out 0.4s infinite; }
-          .animate-confetti-4 { animation: confetti-4 1.5s ease-out 0.6s infinite; }
-        `}</style>
-      </div>
-    );
-  }
 
   return (
     <div className="flex h-[calc(100vh-54px)] ">
@@ -424,7 +315,9 @@ const SidebarStepper: React.FC = () => {
           isSaving={saving}
         />
         <div className="flex flex-col  px-0 gap-4 animate-fadeIn max-h-[calc(100vh-110px)] overflow-y-auto">
-          <div className="flex-1 px-6 py-4">{renderStepForm()}</div>
+          <div className="flex-1 px-6 py-4">
+            <Outlet />
+          </div>
         </div>
       </main>
       <style>{`

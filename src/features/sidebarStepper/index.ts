@@ -1,4 +1,5 @@
 export * from './components';
+export * from './steps';
 export * from './hooks';
 export { useSidebarStepperApi } from './api/useSidebarStepperApi';
 export { stepsData } from './constants/stepsData';
