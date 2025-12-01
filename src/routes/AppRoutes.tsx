@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import CRMSearchUI from '@/pages/SearchProgram';
+import SelectProgram from '@/pages/SelectProgram';
 import MainLayout from '@/layouts/MainLayout';
 import NotFound from '@/pages/NotFound';
 import {
@@ -21,7 +21,7 @@ import SubmissionSuccess from '@/pages/SubmissionSuccess';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<CRMSearchUI />} />
+      <Route path="/" element={<SelectProgram />} />
       <Route path="/:programId/success" element={<SubmissionSuccess />} />
       <Route path="/:programId" element={<MainLayout />}>
         <Route index element={<Navigate to="database" replace />} />

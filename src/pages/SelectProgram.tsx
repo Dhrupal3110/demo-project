@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { unifiedProgramService } from '@/services/services/unifiedProgramService';
 import { resetStepper } from '@/features/sidebarStepper/stepperSlice';
 
-const CRMSearchUI: React.FC = () => {
+const SelectProgram: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Program[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -133,4 +133,4 @@ const CRMSearchUI: React.FC = () => {
   );
 };
 
-export default CRMSearchUI;
+export default SelectProgram;
