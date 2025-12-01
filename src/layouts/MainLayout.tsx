@@ -35,7 +35,7 @@ const stepRoutes: Record<number, string> = {
   11: 'review',
 };
 
-const SidebarStepper: React.FC = () => {
+const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -328,4 +328,4 @@ const SidebarStepper: React.FC = () => {
   );
 };
 
-export default SidebarStepper;
+export default MainLayout;

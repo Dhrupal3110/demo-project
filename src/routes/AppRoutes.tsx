@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import CRMSearchUI from '@/pages/SearchProgram';
-import SidebarStepper from '@/pages/SidebarStepper';
+import MainLayout from '@/layouts/MainLayout';
 import NotFound from '@/pages/NotFound';
 import {
   SelectDatabases,
@@ -23,7 +23,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<CRMSearchUI />} />
       <Route path="/:programId/success" element={<SubmissionSuccess />} />
-      <Route path="/:programId" element={<SidebarStepper />}>
+      <Route path="/:programId" element={<MainLayout />}>
         <Route index element={<Navigate to="database" replace />} />
         <Route
           path="database"
