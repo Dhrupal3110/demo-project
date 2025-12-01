@@ -25,7 +25,7 @@ import type {
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { setSelectedProgram } from '@/features/searchProgram';
+import { setSelectedProgram } from '@/features/selectProgram';
 
 const SidebarStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(2);

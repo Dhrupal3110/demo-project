@@ -1,7 +1,7 @@
 import React from 'react';
 import ProgramList from './ProgramList';
 
-import type { Program } from '@/features/searchProgram';
+import type { Program } from '@/features/selectProgram';
 
 interface SearchResultsProps {
   results: Program[];

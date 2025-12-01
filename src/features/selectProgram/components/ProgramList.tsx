@@ -1,7 +1,7 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 
-import type { Program } from '@/features/searchProgram';
+import type { Program } from '@/features/selectProgram';
 
 interface ProgramListProps {
   programs: Program[];

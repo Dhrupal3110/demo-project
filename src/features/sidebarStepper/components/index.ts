@@ -1,7 +1,7 @@
-export { default as DatabaseForm } from './DatabaseForm';
+export { default as DatabaseForm } from './SelectDatabase';
 export { default as DemandSurgeForm } from './DemandSurgeForm';
 export { default as LinkPortfoliosTreatiesForm } from './LinkPortfoliosTreatiesForm';
-export { default as PortfolioForm } from './PortfolioForm';
+export { default as PortfolioForm } from './SelectPortfolio';
 export { default as PortfolioPerilCoverageForm } from './PortfolioPerilCoverageForm';
 export { default as PortfolioRegionCoverageForm } from './PortfolioRegionCoverageForm';
 export { default as ReviewAnalyses } from './ReviewAnalyses';

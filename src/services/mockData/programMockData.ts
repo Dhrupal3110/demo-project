@@ -1,5 +1,5 @@
 // ============= api/mocks/programMockData.ts =============
-import type { Program } from '@/features/searchProgram/types';
+import type { Program } from '@/features/selectProgram/types';
 
 export const mockPrograms: Program[] = [
   {

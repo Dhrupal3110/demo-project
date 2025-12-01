@@ -1,4 +1,4 @@
-import { Header } from '@/features/searchProgram';
+import { Header } from '@/features/selectProgram';
 import { Link } from 'react-router-dom';
 
 export default function NotFound() {

@@ -2,7 +2,7 @@
 import { API_CONFIG } from '../config/apiConfig';
 import { programService } from './programService';
 import { mockApiService } from '../mocks/mockApiService';
-import type { Program } from '@/features/searchProgram/types';
+import type { Program } from '@/features/selectProgram/types';
 import type { ProgramResponse, ProgramSearchParams } from './programService';
 
 /**

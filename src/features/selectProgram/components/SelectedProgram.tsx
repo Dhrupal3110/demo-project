@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import type { RootState } from '@/app/store';
-import { clearSelectedProgram } from '@/features/searchProgram';
+import { clearSelectedProgram } from '@/features/selectProgram';
 
 const SelectedProgram: React.FC = () => {
   const dispatch = useDispatch();

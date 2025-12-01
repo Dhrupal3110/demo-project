@@ -1,5 +1,5 @@
 // ============= api/mocks/mockApiService.ts =============
-import type { Program } from '@/features/searchProgram/types';
+import type { Program } from '@/features/selectProgram/types';
 import { mockPrograms, simulateDelay } from '../mockData/programMockData';
 import type { ProgramResponse, ProgramSearchParams } from '../services/programService';
 
@@ -11,10 +11,10 @@ class MockApiService {
    */
   async getAllPrograms(params?: ProgramSearchParams): Promise<ProgramResponse> {
     await simulateDelay();
-    
+
     const { limit = 10, offset = 0 } = params || {};
     const paginatedData = this.programs.slice(offset, offset + limit);
-    
+
     return {
       data: paginatedData,
       total: this.programs.length,
@@ -28,7 +28,7 @@ class MockApiService {
    */
   async searchPrograms(query: string): Promise<Program[]> {
     await simulateDelay(500);
-    
+
     if (!query.trim()) {
       return [];
     }
@@ -47,13 +47,13 @@ class MockApiService {
    */
   async getProgramById(id: string): Promise<Program> {
     await simulateDelay(300);
-    
+
     const program = this.programs.find((p) => p.id === id);
-    
+
     if (!program) {
       throw new Error(`Program with ID ${id} not found`);
     }
-    
+
     return program;
   }
 
@@ -62,12 +62,12 @@ class MockApiService {
    */
   async getRecentPrograms(limit: number = 5): Promise<Program[]> {
     await simulateDelay(400);
-    
+
     // Sort by updatedAt date (most recent first)
     const sortedPrograms = [...this.programs].sort((a, b) => {
       return new Date(b.updatedAt as string).getTime() - new Date(a.updatedAt as string).getTime();
     });
-    
+
     return sortedPrograms.slice(0, limit);
   }
 
@@ -76,14 +76,14 @@ class MockApiService {
    */
   async createProgram(program: Omit<Program, 'id'>): Promise<Program> {
     await simulateDelay(600);
-    
+
     const newProgram: Program = {
       ...program,
       id: `PRG${String(this.programs.length + 1).padStart(3, '0')}`,
       createdAt: new Date().toISOString().split('T')[0],
       updatedAt: new Date().toISOString().split('T')[0],
     };
-    
+
     this.programs.push(newProgram);
     return newProgram;
   }
@@ -93,20 +93,20 @@ class MockApiService {
    */
   async updateProgram(id: string, updates: Partial<Program>): Promise<Program> {
     await simulateDelay(500);
-    
+
     const index = this.programs.findIndex((p) => p.id === id);
-    
+
     if (index === -1) {
       throw new Error(`Program with ID ${id} not found`);
     }
-    
+
     const updatedProgram = {
       ...this.programs[index],
       ...updates,
       id: this.programs[index].id, // Ensure ID cannot be changed
       updatedAt: new Date().toISOString().split('T')[0],
     };
-    
+
     this.programs[index] = updatedProgram;
     return updatedProgram;
   }
@@ -116,13 +116,13 @@ class MockApiService {
    */
   async deleteProgram(id: string): Promise<void> {
     await simulateDelay(400);
-    
+
     const index = this.programs.findIndex((p) => p.id === id);
-    
+
     if (index === -1) {
       throw new Error(`Program with ID ${id} not found`);
     }
-    
+
     this.programs.splice(index, 1);
   }
 

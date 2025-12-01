@@ -1,7 +1,7 @@
 // ============= hooks/useProgramApi.ts =============
 import { useState, useCallback } from 'react';
 import { unifiedProgramService } from '@/services/services/unifiedProgramService';
-import type { Program } from '@/features/searchProgram/types';
+import type { Program } from '@/features/selectProgram/types';
 import type { ProgramSearchParams } from '@/services/services/programService';
 
 interface UseApiState<T> {

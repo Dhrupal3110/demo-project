@@ -1,6 +1,6 @@
 // ============= api/services/programService.ts =============
 import { apiClient } from '../client/apiClient';
-import type { Program } from '@/features/searchProgram/types';
+import type { Program } from '@/features/selectProgram/types';
 
 export interface ProgramSearchParams {
   query?: string;
