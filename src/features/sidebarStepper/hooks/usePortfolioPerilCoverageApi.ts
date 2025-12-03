@@ -1,7 +1,7 @@
 // usePortfolioPerilCoverageApi.ts
 import { useState, useEffect } from 'react';
 
-import { mockPortfolioPerilCoverageService } from '@/services/mocks/mockPortfolioPerilCoverageService';
+import { portfolioPerilCoverageService } from '@/services/portfolioPerilCoverageService';
 import type { PortfolioPeril } from '@/services/mockData/portfolioPerilCoverageMockData';
 
 
@@ -18,7 +18,7 @@ export const usePortfolioPerilCoverageApi = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await mockPortfolioPerilCoverageService.getPortfolioPerils();
+      const data = await portfolioPerilCoverageService.getPortfolioPerils();
       setItems(data);
     } catch {
       setError('Failed to fetch portfolio perils');
@@ -32,7 +32,7 @@ export const usePortfolioPerilCoverageApi = () => {
     updates: Partial<PortfolioPeril>
   ): Promise<PortfolioPeril | undefined> => {
     try {
-      const updated = await mockPortfolioPerilCoverageService.updatePortfolioPeril(
+      const updated = await portfolioPerilCoverageService.updatePortfolioPeril(
         id,
         updates
       );
@@ -50,7 +50,7 @@ export const usePortfolioPerilCoverageApi = () => {
 
   const searchPortfolioPerils = async (query: string): Promise<PortfolioPeril[]> => {
     try {
-      return await mockPortfolioPerilCoverageService.searchPortfolioPerils(query);
+      return await portfolioPerilCoverageService.searchPortfolioPerils(query);
     } catch {
       setError('Failed to search portfolio perils');
       return [];
@@ -61,7 +61,7 @@ export const usePortfolioPerilCoverageApi = () => {
     updates: Array<{ id: string; updates: Partial<PortfolioPeril> }>
   ): Promise<PortfolioPeril[]> => {
     try {
-      const updated = await mockPortfolioPerilCoverageService.bulkUpdatePerilCoverage(
+      const updated = await portfolioPerilCoverageService.bulkUpdatePerilCoverage(
         updates
       );
       setItems(updated);

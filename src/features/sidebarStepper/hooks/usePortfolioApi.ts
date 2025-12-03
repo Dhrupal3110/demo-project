@@ -1,19 +1,19 @@
 // usePortfolioApi.ts
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { mockPortfolioService } from '@/services/mocks/mockPortfolioService';
+import { portfolioService } from '@/services/portfolioService';
 import { queryKeys } from '@/utils/queryKeys';
 
 export const usePortfolioDatabases = () => {
   return useQuery({
     queryKey: queryKeys.portfolios.databases(),
-    queryFn: () => mockPortfolioService.getDatabases(),
+    queryFn: () => portfolioService.getDatabases(),
   });
 };
 
 export const usePortfolioById = (id: string) => {
   return useQuery({
     queryKey: queryKeys.portfolios.detail(id),
-    queryFn: () => mockPortfolioService.getDatabaseById(id),
+    queryFn: () => portfolioService.getDatabaseById(id),
     enabled: !!id,
   });
 };
@@ -21,7 +21,7 @@ export const usePortfolioById = (id: string) => {
 export const useSearchPortfolios = (query: string) => {
   return useQuery({
     queryKey: queryKeys.portfolios.search(query),
-    queryFn: () => mockPortfolioService.searchPortfolios(query),
+    queryFn: () => portfolioService.searchPortfolios(query),
     enabled: !!query.trim(),
   });
 };
@@ -33,14 +33,14 @@ export const usePortfolioApi = () => {
   const getDatabaseById = async (id: string) => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.portfolios.detail(id),
-      queryFn: () => mockPortfolioService.getDatabaseById(id),
+      queryFn: () => portfolioService.getDatabaseById(id),
     });
   };
 
   const searchPortfolios = async (query: string) => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.portfolios.search(query),
-      queryFn: () => mockPortfolioService.searchPortfolios(query),
+      queryFn: () => portfolioService.searchPortfolios(query),
     });
   };
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import type { ReviewAnalysesData } from '@/services/mockData/reviewAnalysesMockData';
-import { mockReviewAnalysesService } from '@/services/mocks/mockReviewAnalysesService';
+import { reviewAnalysesService } from '@/services/reviewAnalysesService';
 
 export const useReviewAnalysesApi = () => {
   const [reviewData, setReviewData] = useState<ReviewAnalysesData | null>(null);
@@ -15,7 +15,7 @@ export const useReviewAnalysesApi = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const data = await mockReviewAnalysesService.fetchReviewAnalysesData();
+      const data = await reviewAnalysesService.fetchReviewAnalysesData();
       setReviewData(data);
       setError(null);
     } catch (err) {
@@ -28,7 +28,7 @@ export const useReviewAnalysesApi = () => {
 
   const updateAnalysisCurrency = async (id: string, currency: string): Promise<void> => {
     try {
-      const updated = await mockReviewAnalysesService.updateAnalysis(id, { currency });
+      const updated = await reviewAnalysesService.updateAnalysis(id, { currency });
       if (reviewData) {
         setReviewData({
           ...reviewData,
@@ -44,7 +44,7 @@ export const useReviewAnalysesApi = () => {
 
   const updateAnalysisPriority = async (id: string, priority: string): Promise<void> => {
     try {
-      const updated = await mockReviewAnalysesService.updateAnalysis(id, { priority });
+      const updated = await reviewAnalysesService.updateAnalysis(id, { priority });
       if (reviewData) {
         setReviewData({
           ...reviewData,
@@ -60,7 +60,7 @@ export const useReviewAnalysesApi = () => {
 
   const updateContext = async (context: string): Promise<void> => {
     try {
-      await mockReviewAnalysesService.updateContext(context);
+      await reviewAnalysesService.updateContext(context);
       if (reviewData) {
         setReviewData({
           ...reviewData,
@@ -76,7 +76,7 @@ export const useReviewAnalysesApi = () => {
 
   const toggleExpanded = async (id: string): Promise<void> => {
     try {
-      const updated = await mockReviewAnalysesService.toggleExpanded(id);
+      const updated = await reviewAnalysesService.toggleExpanded(id);
       if (reviewData) {
         setReviewData({
           ...reviewData,

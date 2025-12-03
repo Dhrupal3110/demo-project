@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { mockLinkService } from '@/services/mocks/mockLinkPortfoliosTreatiesService';
+import { linkPortfoliosTreatiesService } from '@/services/linkPortfoliosTreatiesService';
 import type {
   LinkData,
   LinkedItem,
@@ -20,7 +20,7 @@ export const useLinkPortfoliosTreatiesApi = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const data = await mockLinkService.fetchLinkData();
+      const data = await linkPortfoliosTreatiesService.fetchLinkData();
       setLinkData(data);
       setError(null);
     } catch (err) {
@@ -58,7 +58,7 @@ export const useLinkPortfoliosTreatiesApi = () => {
       });
 
       if (newLinks.length > 0) {
-        const addedItems = await mockLinkService.addLinkedItems(newLinks);
+        const addedItems = await linkPortfoliosTreatiesService.addLinkedItems(newLinks);
         if (linkData) {
           setLinkData({
             ...linkData,
@@ -77,7 +77,7 @@ export const useLinkPortfoliosTreatiesApi = () => {
 
   const removeLinkedItem = async (id: string): Promise<void> => {
     try {
-      await mockLinkService.removeLinkedItem(id);
+      await linkPortfoliosTreatiesService.removeLinkedItem(id);
       if (linkData) {
         setLinkData({
           ...linkData,

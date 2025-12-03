@@ -1,7 +1,7 @@
 // useTreatyRegionCoverageApi.ts
 import { useState, useEffect } from 'react';
 
-import { mockTreatyRegionCoverageService } from '@/services/mocks/mockTreatyRegionCoverageService';
+import { treatyRegionCoverageService } from '@/services/treatyRegionCoverageService';
 import type {
   TreatyItem,
   Region,
@@ -22,11 +22,11 @@ export const useTreatyRegionCoverageApi = () => {
       try {
         setLoading(true);
         const [eqffTreaties, ifTreaties, eqffRegions, ifRegions, selected] = await Promise.all([
-          mockTreatyRegionCoverageService.getTreatiesByPeril('EQ/FF'),
-          mockTreatyRegionCoverageService.getTreatiesByPeril('IF'),
-          mockTreatyRegionCoverageService.getRegionsByPeril('EQ/FF'),
-          mockTreatyRegionCoverageService.getRegionsByPeril('IF'),
-          mockTreatyRegionCoverageService.getSelectedRegions(),
+          treatyRegionCoverageService.getTreatiesByPeril('EQ/FF'),
+          treatyRegionCoverageService.getTreatiesByPeril('IF'),
+          treatyRegionCoverageService.getRegionsByPeril('EQ/FF'),
+          treatyRegionCoverageService.getRegionsByPeril('IF'),
+          treatyRegionCoverageService.getSelectedRegions(),
         ]);
         setTreatiesEQFF(eqffTreaties);
         setTreatiesIF(ifTreaties);
@@ -45,7 +45,7 @@ export const useTreatyRegionCoverageApi = () => {
 
   const addSelectedRegion = async (region: SelectedRegion): Promise<SelectedRegion | null> => {
     try {
-      return await mockTreatyRegionCoverageService.addSelectedRegion(region);
+      return await treatyRegionCoverageService.addSelectedRegion(region);
     } catch {
       setError('Failed to add selected region');
       return null;
@@ -54,7 +54,7 @@ export const useTreatyRegionCoverageApi = () => {
 
   const removeSelectedRegion = async (id: string): Promise<boolean> => {
     try {
-      return await mockTreatyRegionCoverageService.removeSelectedRegion(id);
+      return await treatyRegionCoverageService.removeSelectedRegion(id);
     } catch {
       setError('Failed to remove selected region');
       return false;
@@ -63,7 +63,7 @@ export const useTreatyRegionCoverageApi = () => {
 
   const searchTreaties = async (query: string, peril: 'EQ/FF' | 'IF'): Promise<TreatyItem[]> => {
     try {
-      return await mockTreatyRegionCoverageService.searchTreaties(query, peril);
+      return await treatyRegionCoverageService.searchTreaties(query, peril);
     } catch {
       setError('Failed to search treaties');
       return [];

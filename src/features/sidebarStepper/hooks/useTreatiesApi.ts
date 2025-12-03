@@ -1,20 +1,20 @@
 // useTreatiesApi.ts
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { mockTreatiesService } from '@/services/mocks/mockTreatiesService';
+import { treatiesService } from '@/services/treatiesService';
 import type { Treaty } from '@/services/mockData/treatiesMockData';
 import { queryKeys } from '@/utils/queryKeys';
 
 export const useTreatiesDatabases = () => {
   return useQuery({
     queryKey: queryKeys.treaties.databases(),
-    queryFn: () => mockTreatiesService.getDatabases(),
+    queryFn: () => treatiesService.getDatabases(),
   });
 };
 
 export const useTreatiesByDatabase = (databaseId: string) => {
   return useQuery({
     queryKey: queryKeys.treaties.byDatabase(databaseId),
-    queryFn: () => mockTreatiesService.getTreatiesByDatabase(databaseId),
+    queryFn: () => treatiesService.getTreatiesByDatabase(databaseId),
     enabled: !!databaseId,
     initialData: [],
   });
@@ -23,7 +23,7 @@ export const useTreatiesByDatabase = (databaseId: string) => {
 export const useSearchTreaties = (query: string) => {
   return useQuery({
     queryKey: queryKeys.treaties.search(query),
-    queryFn: () => mockTreatiesService.searchTreaties(query),
+    queryFn: () => treatiesService.searchTreaties(query),
     enabled: !!query.trim(),
     initialData: [],
   });
@@ -36,14 +36,14 @@ export const useTreatiesApi = () => {
   const getTreatiesByDatabase = async (databaseId: string): Promise<Treaty[]> => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.treaties.byDatabase(databaseId),
-      queryFn: () => mockTreatiesService.getTreatiesByDatabase(databaseId),
+      queryFn: () => treatiesService.getTreatiesByDatabase(databaseId),
     });
   };
 
   const searchTreaties = async (query: string): Promise<Treaty[]> => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.treaties.search(query),
-      queryFn: () => mockTreatiesService.searchTreaties(query),
+      queryFn: () => treatiesService.searchTreaties(query),
     });
   };
 

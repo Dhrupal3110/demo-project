@@ -51,7 +51,7 @@ class MockSidebarStepperService {
 
   async submitAllData(formData: StepFormData): Promise<SubmitResponse> {
     await delay(1000);
-    
+
     // Validate required steps
     const requiredSteps = [2, 3, 7, 10, 11];
     for (const step of requiredSteps) {
@@ -66,7 +66,7 @@ class MockSidebarStepperService {
     }
 
     const submissionId = Math.random().toString(36).substring(2, 11).toUpperCase();
-    
+
     return {
       success: true,
       submissionId,
@@ -82,8 +82,8 @@ class MockSidebarStepperService {
     // Add validation logic per step
     switch (stepId) {
       case 2:
-        if (!data.selectedDatabase) {
-          errors.database = 'Database is required';
+        if (!data.databases || !Array.isArray(data.databases) || data.databases.length === 0) {
+          errors.databases = 'At least one database is required';
         }
         break;
       case 3:

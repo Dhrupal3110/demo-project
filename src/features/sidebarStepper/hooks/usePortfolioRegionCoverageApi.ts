@@ -1,10 +1,7 @@
 // usePortfolioRegionCoverageApi.ts
 import { useState, useEffect } from 'react';
 
-import {
-  mockPortfolioRegionCoverageService,
-  type PortfolioRegionCoverageData,
-} from '@/services/mocks/mockPortfolioRegionCoverageService';
+import { portfolioRegionCoverageService, type PortfolioRegionCoverageData } from '@/services/portfolioRegionCoverageService';
 import type {
   PortfolioItem,
   Region,
@@ -25,7 +22,7 @@ export const usePortfolioRegionCoverageApi = () => {
     try {
       setLoading(true);
       setError(null);
-      const result = await mockPortfolioRegionCoverageService.getData();
+      const result = await portfolioRegionCoverageService.getData();
       setData(result);
     } catch {
       setError('Failed to fetch portfolio region coverage data');
@@ -39,7 +36,7 @@ export const usePortfolioRegionCoverageApi = () => {
     portfolios: PortfolioItem[]
   ): Promise<PortfolioItem[]> => {
     try {
-      const updated = await mockPortfolioRegionCoverageService.updatePortfolios(
+      const updated = await portfolioRegionCoverageService.updatePortfolios(
         peril,
         portfolios
       );
@@ -59,7 +56,7 @@ export const usePortfolioRegionCoverageApi = () => {
     regions: Region[]
   ): Promise<Region[]> => {
     try {
-      const updated = await mockPortfolioRegionCoverageService.updateRegions(
+      const updated = await portfolioRegionCoverageService.updateRegions(
         peril,
         regions
       );
@@ -78,7 +75,7 @@ export const usePortfolioRegionCoverageApi = () => {
     coverage: SelectedCoverage[]
   ): Promise<SelectedCoverage[]> => {
     try {
-      const updated = await mockPortfolioRegionCoverageService.addSelectedCoverage(
+      const updated = await portfolioRegionCoverageService.addSelectedCoverage(
         coverage
       );
       if (data) {
@@ -93,7 +90,7 @@ export const usePortfolioRegionCoverageApi = () => {
 
   const removeSelectedCoverage = async (id: string): Promise<SelectedCoverage[]> => {
     try {
-      const updated = await mockPortfolioRegionCoverageService.removeSelectedCoverage(
+      const updated = await portfolioRegionCoverageService.removeSelectedCoverage(
         id
       );
       if (data) {
@@ -111,7 +108,7 @@ export const usePortfolioRegionCoverageApi = () => {
     query: string
   ): Promise<PortfolioItem[]> => {
     try {
-      return await mockPortfolioRegionCoverageService.searchPortfolios(peril, query);
+      return await portfolioRegionCoverageService.searchPortfolios(peril, query);
     } catch {
       setError('Failed to search portfolios');
       return [];

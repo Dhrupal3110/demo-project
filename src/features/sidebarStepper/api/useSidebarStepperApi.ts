@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type {
   StepFormData,
 } from '@/services/mockData/sidebarStepperMockData';
-import { mockStepperService } from '@/services/mocks/mockSidebarStepperService';
+import { sidebarStepperService } from '@/services/sidebarStepperService';
 import { queryKeys } from '@/utils/queryKeys';
 
 export const useSidebarStepperApi = () => {
@@ -10,19 +10,19 @@ export const useSidebarStepperApi = () => {
 
   const formDataQuery = useQuery({
     queryKey: queryKeys.stepper.formData(),
-    queryFn: () => mockStepperService.fetchAllFormData(),
+    queryFn: () => sidebarStepperService.fetchAllFormData(),
   });
 
   const loadStepData = async (stepId: number) => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.stepper.step(stepId),
-      queryFn: () => mockStepperService.fetchStepData(stepId),
+      queryFn: () => sidebarStepperService.fetchStepData(stepId),
     });
   };
 
   const saveStepDataMutation = useMutation({
     mutationFn: ({ stepId, data }: { stepId: number; data: Record<string, unknown> }) =>
-      mockStepperService.saveStepData(stepId, data),
+      sidebarStepperService.saveStepData(stepId, data),
     onSuccess: (response, { stepId }) => {
       queryClient.setQueryData(queryKeys.stepper.formData(), (old: StepFormData | undefined) => ({
         ...old,
@@ -37,7 +37,7 @@ export const useSidebarStepperApi = () => {
 
   const updateStepDataMutation = useMutation({
     mutationFn: ({ stepId, updates }: { stepId: number; updates: Partial<Record<string, unknown>> }) =>
-      mockStepperService.updateStepData(stepId, updates),
+      sidebarStepperService.updateStepData(stepId, updates),
     onSuccess: (response, { stepId, updates }) => {
       queryClient.setQueryData(queryKeys.stepper.formData(), (old: StepFormData | undefined) => ({
         ...old,
@@ -52,11 +52,11 @@ export const useSidebarStepperApi = () => {
   });
 
   const submitAllDataMutation = useMutation({
-    mutationFn: (data: StepFormData) => mockStepperService.submitAllData(data),
+    mutationFn: (formData: StepFormData) => sidebarStepperService.submitAllData(formData),
   });
 
   const resetFormMutation = useMutation({
-    mutationFn: () => mockStepperService.resetFormData(),
+    mutationFn: () => sidebarStepperService.resetFormData(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.stepper.all });
     },
@@ -73,8 +73,7 @@ export const useSidebarStepperApi = () => {
 
   const validateStep = async (stepId: number, data: Record<string, unknown>) => {
     try {
-      await mockStepperService.validateStep(stepId, data);
-      return { valid: true, errors: {} };
+      return await sidebarStepperService.validateStep(stepId, data);
     } catch (err) {
       console.error('Ignoring validation error:', err);
       return { valid: true, errors: {} };

@@ -1,13 +1,13 @@
 // useDemandSurgeApi.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { DemandSurgeItem } from '@/services/mockData/demandSurgeMockData';
-import { mockDemandSurgeService } from '@/services/mocks/mockDemandSurgeService';
+import { demandSurgeService } from '@/services/demandSurgeService';
 import { queryKeys } from '@/utils/queryKeys';
 
 export const useDemandSurgeItems = () => {
   return useQuery({
     queryKey: queryKeys.demandSurge.items(),
-    queryFn: () => mockDemandSurgeService.getDemandSurgeItems(),
+    queryFn: () => demandSurgeService.getDemandSurgeItems(),
   });
 };
 
@@ -17,7 +17,7 @@ export const useDemandSurgeApi = () => {
 
   const updateDemandSurgeItemMutation = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<DemandSurgeItem> }) =>
-      mockDemandSurgeService.updateDemandSurgeItem(id, updates),
+      demandSurgeService.updateDemandSurgeItem(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.demandSurge.items() });
     },
@@ -34,7 +34,7 @@ export const useDemandSurgeApi = () => {
   const searchDemandSurgeItems = async (databaseQuery: string, portfolioQuery: string) => {
     return queryClient.fetchQuery({
       queryKey: queryKeys.demandSurge.search(databaseQuery, portfolioQuery),
-      queryFn: () => mockDemandSurgeService.searchDemandSurgeItems(databaseQuery, portfolioQuery),
+      queryFn: () => demandSurgeService.searchDemandSurgeItems(databaseQuery, portfolioQuery),
     });
   };
 
