@@ -1,7 +1,7 @@
 // ============= api/mocks/mockApiService.ts =============
 import type { Program } from '@/features/selectProgram/types';
 import { mockPrograms, simulateDelay } from '../mockData/programMockData';
-import type { ProgramResponse, ProgramSearchParams } from '../services/programService';
+import type { ProgramResponse, ProgramSearchParams } from '../programService';
 
 class MockApiService {
   private programs: Program[] = [...mockPrograms];

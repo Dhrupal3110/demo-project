@@ -1,6 +1,8 @@
 // ============= api/services/databaseService.ts =============
-import { apiClient } from '../client/apiClient';
-import type { Database } from '../mockData/databaseMockData';
+import { apiClient } from './client/apiClient';
+import type { Database } from './mockData/databaseMockData';
+import { API_CONFIG } from './config/apiConfig';
+import { mockDatabaseService } from './mocks/mockDatabaseService';
 
 export interface DatabaseSearchParams {
   query?: string;
@@ -21,6 +23,9 @@ export const databaseService = {
    * Get all databases with optional filtering and pagination
    */
   getAllDatabases: async (params?: DatabaseSearchParams): Promise<DatabaseResponse> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.getAllDatabases(params);
+    }
     const response = await apiClient.get<DatabaseResponse>('/databases', { params });
     return response;
   },
@@ -29,6 +34,9 @@ export const databaseService = {
    * Search databases by name
    */
   searchDatabases: async (query: string): Promise<Database[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.searchDatabases(query);
+    }
     const response = await apiClient.get<{ data: Database[] }>('/databases/search', {
       params: { q: query }
     });
@@ -39,6 +47,9 @@ export const databaseService = {
    * Get database by ID
    */
   getDatabaseById: async (id: string): Promise<Database> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.getDatabaseById(id);
+    }
     const response = await apiClient.get<{ data: Database }>(`/databases/${id}`);
     return response.data;
   },
@@ -47,6 +58,9 @@ export const databaseService = {
    * Get multiple databases by IDs
    */
   getDatabasesByIds: async (ids: string[]): Promise<Database[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.getDatabasesByIds(ids);
+    }
     const response = await apiClient.post<{ data: Database[] }>('/databases/bulk', { ids });
     return response.data;
   },
@@ -55,6 +69,9 @@ export const databaseService = {
    * Get databases by status
    */
   getDatabasesByStatus: async (status: 'active' | 'archived' | 'maintenance'): Promise<Database[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.getDatabasesByStatus(status);
+    }
     const response = await apiClient.get<{ data: Database[] }>('/databases/by-status', {
       params: { status }
     });
@@ -65,6 +82,9 @@ export const databaseService = {
    * Create new database
    */
   createDatabase: async (database: Omit<Database, 'id' | 'createdAt' | 'updatedAt'>): Promise<Database> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.createDatabase(database);
+    }
     const response = await apiClient.post<{ data: Database }>('/databases', database);
     return response.data;
   },
@@ -73,6 +93,9 @@ export const databaseService = {
    * Update database
    */
   updateDatabase: async (id: string, database: Partial<Database>): Promise<Database> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.updateDatabase(id, database);
+    }
     const response = await apiClient.put<{ data: Database }>(`/databases/${id}`, database);
     return response.data;
   },
@@ -81,6 +104,9 @@ export const databaseService = {
    * Delete database
    */
   deleteDatabase: async (id: string): Promise<void> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.deleteDatabase(id);
+    }
     await apiClient.delete(`/databases/${id}`);
   },
 
@@ -88,6 +114,9 @@ export const databaseService = {
    * Get database statistics
    */
   getDatabaseStats: async (): Promise<unknown> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockDatabaseService.getDatabaseStats();
+    }
     const response = await apiClient.get('/databases/stats');
     return response;
   },

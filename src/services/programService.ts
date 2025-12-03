@@ -1,6 +1,8 @@
 // ============= api/services/programService.ts =============
-import { apiClient } from '../client/apiClient';
+import { apiClient } from './client/apiClient';
 import type { Program } from '@/features/selectProgram/types';
+import { API_CONFIG } from './config/apiConfig';
+import { mockApiService } from './mocks/mockApiService';
 
 export interface ProgramSearchParams {
   query?: string;
@@ -20,6 +22,9 @@ export const programService = {
    * Get all programs with optional pagination
    */
   getAllPrograms: async (params?: ProgramSearchParams): Promise<ProgramResponse> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.getAllPrograms(params);
+    }
     const response = await apiClient.get<ProgramResponse>('/programs', { params });
     return response;
   },
@@ -28,6 +33,9 @@ export const programService = {
    * Search programs by query
    */
   searchPrograms: async (query: string): Promise<Program[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.searchPrograms(query);
+    }
     const response = await apiClient.get<{ data: Program[] }>('/programs/search', {
       params: { q: query }
     });
@@ -38,6 +46,9 @@ export const programService = {
    * Get program by ID
    */
   getProgramById: async (id: string): Promise<Program> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.getProgramById(id);
+    }
     const response = await apiClient.get<{ data: Program }>(`/programs/${id}`);
     return response.data;
   },
@@ -46,6 +57,9 @@ export const programService = {
    * Get recent programs
    */
   getRecentPrograms: async (limit: number = 5): Promise<Program[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.getRecentPrograms(limit);
+    }
     const response = await apiClient.get<{ data: Program[] }>('/programs/recent', {
       params: { limit }
     });
@@ -56,6 +70,9 @@ export const programService = {
    * Create new program
    */
   createProgram: async (program: Omit<Program, 'id'>): Promise<Program> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.createProgram(program);
+    }
     const response = await apiClient.post<{ data: Program }>('/programs', program);
     return response.data;
   },
@@ -64,6 +81,9 @@ export const programService = {
    * Update program
    */
   updateProgram: async (id: string, program: Partial<Program>): Promise<Program> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.updateProgram(id, program);
+    }
     const response = await apiClient.put<{ data: Program }>(`/programs/${id}`, program);
     return response.data;
   },
@@ -72,6 +92,9 @@ export const programService = {
    * Delete program
    */
   deleteProgram: async (id: string): Promise<void> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.deleteProgram(id);
+    }
     await apiClient.delete(`/programs/${id}`);
   }
 };

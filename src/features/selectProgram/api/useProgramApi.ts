@@ -1,8 +1,8 @@
 // ============= hooks/useProgramApi.ts =============
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { unifiedProgramService } from '@/services/services/unifiedProgramService';
+import { programService } from '@/services/programService';
 import type { Program } from '@/features/selectProgram/types';
-import type { ProgramSearchParams } from '@/services/services/programService';
+import type { ProgramSearchParams } from '@/services/programService';
 import { queryKeys } from '@/utils/queryKeys';
 
 /**
@@ -11,7 +11,7 @@ import { queryKeys } from '@/utils/queryKeys';
 export const useAllPrograms = (params?: ProgramSearchParams) => {
   return useQuery({
     queryKey: queryKeys.programs.list(params),
-    queryFn: () => unifiedProgramService.getAllPrograms(params),
+    queryFn: () => programService.getAllPrograms(params),
   });
 };
 
@@ -21,7 +21,7 @@ export const useAllPrograms = (params?: ProgramSearchParams) => {
 export const useSearchPrograms = (query: string) => {
   return useQuery({
     queryKey: queryKeys.programs.search(query),
-    queryFn: () => unifiedProgramService.searchPrograms(query),
+    queryFn: () => programService.searchPrograms(query),
     enabled: !!query.trim(),
   });
 };
@@ -32,7 +32,7 @@ export const useSearchPrograms = (query: string) => {
 export const useRecentPrograms = (limit: number = 5) => {
   return useQuery({
     queryKey: queryKeys.programs.recent(limit),
-    queryFn: () => unifiedProgramService.getRecentPrograms(limit),
+    queryFn: () => programService.getRecentPrograms(limit),
   });
 };
 
@@ -42,7 +42,7 @@ export const useRecentPrograms = (limit: number = 5) => {
 export const useProgramById = (id: string) => {
   return useQuery({
     queryKey: queryKeys.programs.detail(id),
-    queryFn: () => unifiedProgramService.getProgramById(id),
+    queryFn: () => programService.getProgramById(id),
     enabled: !!id,
   });
 };
@@ -54,7 +54,7 @@ export const useProgramMutations = () => {
   const queryClient = useQueryClient();
 
   const createProgram = useMutation({
-    mutationFn: (program: Omit<Program, 'id'>) => unifiedProgramService.createProgram(program),
+    mutationFn: (program: Omit<Program, 'id'>) => programService.createProgram(program),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.programs.all });
     },
@@ -62,7 +62,7 @@ export const useProgramMutations = () => {
 
   const updateProgram = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<Program> }) =>
-      unifiedProgramService.updateProgram(id, updates),
+      programService.updateProgram(id, updates),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.programs.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.programs.detail(data.id) });
@@ -70,7 +70,7 @@ export const useProgramMutations = () => {
   });
 
   const deleteProgram = useMutation({
-    mutationFn: (id: string) => unifiedProgramService.deleteProgram(id),
+    mutationFn: (id: string) => programService.deleteProgram(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.programs.all });
     },

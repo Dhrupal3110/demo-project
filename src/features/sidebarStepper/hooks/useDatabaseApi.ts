@@ -1,8 +1,8 @@
 // ============= hooks/useDatabaseApi.ts =============
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { unifiedDatabaseService } from '@/services/services/unifiedDatabaseService';
+import { databaseService } from '@/services/databaseService';
 import type { Database } from '@/services/mockData/databaseMockData';
-import type { DatabaseSearchParams } from '@/services/services/databaseService';
+import type { DatabaseSearchParams } from '@/services/databaseService';
 import { queryKeys } from '@/utils/queryKeys';
 
 /**
@@ -11,7 +11,7 @@ import { queryKeys } from '@/utils/queryKeys';
 export const useAllDatabases = (autoFetch = false, params?: DatabaseSearchParams) => {
   return useQuery({
     queryKey: queryKeys.databases.list(params),
-    queryFn: () => unifiedDatabaseService.getAllDatabases(params),
+    queryFn: () => databaseService.getAllDatabases(params),
     enabled: autoFetch,
   });
 };
@@ -22,7 +22,7 @@ export const useAllDatabases = (autoFetch = false, params?: DatabaseSearchParams
 export const useSearchDatabases = (query: string) => {
   return useQuery({
     queryKey: queryKeys.databases.search(query),
-    queryFn: () => unifiedDatabaseService.searchDatabases(query),
+    queryFn: () => databaseService.searchDatabases(query),
     enabled: !!query.trim(),
   });
 };
@@ -33,7 +33,7 @@ export const useSearchDatabases = (query: string) => {
 export const useDatabaseById = (id: string) => {
   return useQuery({
     queryKey: queryKeys.databases.detail(id),
-    queryFn: () => unifiedDatabaseService.getDatabaseById(id),
+    queryFn: () => databaseService.getDatabaseById(id),
     enabled: !!id,
   });
 };
@@ -44,7 +44,7 @@ export const useDatabaseById = (id: string) => {
 export const useDatabasesByIds = (ids: string[]) => {
   return useQuery({
     queryKey: queryKeys.databases.detailsByIds(ids),
-    queryFn: () => unifiedDatabaseService.getDatabasesByIds(ids),
+    queryFn: () => databaseService.getDatabasesByIds(ids),
     enabled: ids.length > 0,
     initialData: [],
   });
@@ -56,7 +56,7 @@ export const useDatabasesByIds = (ids: string[]) => {
 export const useDatabaseStats = (autoFetch = false) => {
   return useQuery({
     queryKey: queryKeys.databases.stats(),
-    queryFn: () => unifiedDatabaseService.getDatabaseStats(),
+    queryFn: () => databaseService.getDatabaseStats(),
     enabled: autoFetch,
   });
 };
@@ -69,7 +69,7 @@ export const useDatabaseMutations = () => {
 
   const createDatabase = useMutation({
     mutationFn: (database: Omit<Database, 'id' | 'createdAt' | 'updatedAt'>) =>
-      unifiedDatabaseService.createDatabase(database),
+      databaseService.createDatabase(database),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.databases.all });
     },
@@ -77,7 +77,7 @@ export const useDatabaseMutations = () => {
 
   const updateDatabase = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<Database> }) =>
-      unifiedDatabaseService.updateDatabase(id, updates),
+      databaseService.updateDatabase(id, updates),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.databases.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.databases.detail(data.id) });
@@ -85,7 +85,7 @@ export const useDatabaseMutations = () => {
   });
 
   const deleteDatabase = useMutation({
-    mutationFn: (id: string) => unifiedDatabaseService.deleteDatabase(id),
+    mutationFn: (id: string) => databaseService.deleteDatabase(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.databases.all });
     },
