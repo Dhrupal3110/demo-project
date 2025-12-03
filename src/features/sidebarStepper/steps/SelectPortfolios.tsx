@@ -4,6 +4,9 @@ import { Search } from 'lucide-react';
 
 import { Checkbox, SectionTitle } from '@/components/common';
 import { usePortfolioApi } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface Portfolio {
   id: string;
@@ -13,15 +16,18 @@ interface Portfolio {
   numberOfAccounts: number;
 }
 
-interface ValidationErrors {
-  portfolios?: string;
-}
 
-const PortfolioForm: React.FC<{
-  data: any;
-  onChange: (data: any) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const PortfolioForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 3;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('1');
   const { databases, loading, error } = usePortfolioApi();

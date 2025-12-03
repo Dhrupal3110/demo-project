@@ -5,6 +5,9 @@ import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/common';
 import { useTreatyPerilCoverageApi } from '@/features/sidebarStepper/hooks';
 import { perils } from '@/services/mockData/treatyPerilCoverageMockData';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface PerilCoverage {
   [key: string]: boolean;
@@ -18,15 +21,18 @@ interface TreatyPeril {
   coverages: PerilCoverage;
 }
 
-interface ValidationErrors {
-  treatyPerilCoverage?: string;
-}
 
-const TreatyPerilCoverageForm: React.FC<{
-  data?: Record<string, any>;
-  onChange?: (data: Record<string, any>) => void;
-  errors?: ValidationErrors;
-}> = ({ data = {}, onChange = () => {}, errors = {} }) => {
+
+const TreatyPerilCoverageForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 8;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const { treatyPerils, loading, error } = useTreatyPerilCoverageApi();
 

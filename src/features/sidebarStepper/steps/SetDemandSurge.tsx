@@ -4,6 +4,9 @@ import { Search } from 'lucide-react';
 
 import { Checkbox, SectionTitle } from '@/components/common';
 import { useDemandSurgeApi } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface DemandSurgeItem {
   id: string;
@@ -13,15 +16,18 @@ interface DemandSurgeItem {
   justification: string;
 }
 
-interface ValidationErrors {
-  demandSurge?: string;
-}
 
-const DemandSurgeForm: React.FC<{
-  data: any;
-  onChange: (data: any) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const DemandSurgeForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 4;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [databaseSearch, setDatabaseSearch] = useState('');
   const [portfolioSearch, setPortfolioSearch] = useState('');
   const { items, loading, error } = useDemandSurgeApi();

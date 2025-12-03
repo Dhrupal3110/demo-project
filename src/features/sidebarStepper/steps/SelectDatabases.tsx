@@ -6,17 +6,23 @@ import {
   useAllDatabases,
   useSearchDatabases,
 } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 import type { Database } from '@/services/mockData/databaseMockData';
 
-interface ValidationErrors {
-  databases?: string;
-}
 
-const DatabaseForm: React.FC<{
-  data: Record<string, unknown>;
-  onChange: (data: Record<string, unknown>) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const DatabaseForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 2;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -179,11 +185,6 @@ const DatabaseForm: React.FC<{
             </tbody>
           </table>
         </div>
-      )}
-
-      {/* Validation Error */}
-      {errors.databases && (
-        <p className="text-(--color-error) text-sm mt-2">{errors.databases}</p>
       )}
     </div>
   );

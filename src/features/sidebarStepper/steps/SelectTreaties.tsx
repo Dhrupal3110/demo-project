@@ -4,6 +4,9 @@ import { Search } from 'lucide-react';
 
 import { Checkbox } from '@/components/common';
 import { useTreatiesApi } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface Treaty {
   id: string | number;
@@ -14,15 +17,18 @@ interface Treaty {
   cedant: string;
   lob: string;
 }
-interface ValidationErrors {
-  treaties?: string;
-}
 
-const TreatiesForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const TreatiesForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 7;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('1');
   const { databases, loading, error } = useTreatiesApi();

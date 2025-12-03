@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Search, Minus } from 'lucide-react';
 
 import { Checkbox } from '@/components/common';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface Portfolio {
   id: string;
@@ -24,9 +27,7 @@ interface LinkedItem {
   treaty: string;
 }
 
-interface ValidationErrors {
-  linkedItems?: string;
-}
+
 
 // interface FormData {
 //   portfolios?: Portfolio[];
@@ -35,11 +36,16 @@ interface ValidationErrors {
 //   selectedDatabase?: string;
 // }
 
-const LinkPortfoliosTreatiesForm: React.FC<{
-  data: any;
-  onChange: (data: any) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+const LinkPortfoliosTreatiesForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 10;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [portfolioSearch, setPortfolioSearch] = useState('');
   const [treatySearch, setTreatySearch] = useState('');
   // const [selectedDatabase, setSelectedDatabase] = useState('');

@@ -4,6 +4,9 @@ import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
 
 import { Checkbox } from '@/components/common';
 import { usePortfolioRegionCoverageApi } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface Region {
   id: string;
@@ -29,15 +32,18 @@ interface SelectedCoverage {
   includeExclude: 'Include' | 'Exclude';
 }
 
-interface ValidationErrors {
-  portfolioRegionCoverage?: string;
-}
 
-const PortfolioRegionCoverageForm: React.FC<{
-  data: Record<string, any>;
-  onChange: (data: Record<string, any>) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const PortfolioRegionCoverageForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 6;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [activePeril, setActivePeril] = useState<'EQ/FF' | 'IF'>('EQ/FF');
   const [expandedRegions, setExpandedRegions] = useState<Set<string>>(

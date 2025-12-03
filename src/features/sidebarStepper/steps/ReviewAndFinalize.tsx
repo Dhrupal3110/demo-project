@@ -3,16 +3,22 @@ import { Search, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 
 import { useReviewAnalysesApi } from '@/features/sidebarStepper/hooks';
 import type { Analysis } from '@/services/mockData/reviewAnalysesMockData';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
-interface ValidationErrors {
-  reviewAnalyses?: string;
-}
 
-const ReviewAnalyses: React.FC<{
-  data: Record<string, unknown>;
-  onChange: (data: Record<string, unknown>) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const ReviewAnalyses: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 11;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [context, setContext] = useState('');

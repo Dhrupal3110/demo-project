@@ -4,6 +4,9 @@ import { Search } from 'lucide-react';
 
 import { Checkbox } from '@/components/common';
 import { usePortfolioPerilCoverageApi } from '@/features/sidebarStepper/hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { setStepData } from '../stepperSlice';
 
 interface PerilCoverage {
   [key: string]: boolean | 'partial';
@@ -17,16 +20,19 @@ interface PortfolioPeril {
   coverages: PerilCoverage;
 }
 
-interface ValidationErrors {
-  portfolioPerilCoverage?: string;
-}
 
 
-const PortfolioPerilCoverageForm: React.FC<{
-  data: any;
-  onChange: (data: any) => void;
-  errors: ValidationErrors;
-}> = ({ data, onChange, errors }) => {
+
+const PortfolioPerilCoverageForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const step = 5;
+  const formData = useSelector((state: RootState) => state.stepper.formData);
+  const errors = useSelector((state: RootState) => state.stepper.errors);
+  const data: any = formData[step] || {};
+
+  const onChange = (newData: any) => {
+    dispatch(setStepData({ step, data: newData }));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [subPerils, setSubPerils] = useState(false);
   const { items, loading, error } = usePortfolioPerilCoverageApi();
