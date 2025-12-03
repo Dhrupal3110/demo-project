@@ -1,148 +1,100 @@
-import { useEffect, useState } from 'react';
-
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type {
-  SaveResponse,
   StepFormData,
-  SubmitResponse,
 } from '@/services/mockData/sidebarStepperMockData';
 import { mockStepperService } from '@/services/mocks/mockSidebarStepperService';
+import { queryKeys } from '@/utils/queryKeys';
 
 export const useSidebarStepperApi = () => {
-  const [formData, setFormData] = useState<StepFormData>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    loadAllFormData();
-  }, []);
+  const formDataQuery = useQuery({
+    queryKey: queryKeys.stepper.formData(),
+    queryFn: () => mockStepperService.fetchAllFormData(),
+  });
 
-  const loadAllFormData = async () => {
-    try {
-      setLoading(true);
-      const data = await mockStepperService.fetchAllFormData();
-      setFormData(data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load form data');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const loadStepData = async (stepId: number) => {
+    return queryClient.fetchQuery({
+      queryKey: queryKeys.stepper.step(stepId),
+      queryFn: () => mockStepperService.fetchStepData(stepId),
+    });
   };
 
-  const loadStepData = async (stepId: number): Promise<Record<string, unknown>> => {
-    try {
-      const data = await mockStepperService.fetchStepData(stepId);
-      setFormData((prev) => ({
-        ...prev,
-        [stepId]: data,
-      }));
-      return data;
-    } catch (err) {
-      setError('Failed to load step data');
-      console.error(err);
-      throw err;
-    }
-  };
-
-  const saveStepData = async (
-    stepId: number,
-    data: Record<string, unknown>
-  ): Promise<SaveResponse> => {
-    try {
-      setSaving(true);
-      const response = await mockStepperService.saveStepData(stepId, data);
-      setFormData((prev) => ({
-        ...prev,
+  const saveStepDataMutation = useMutation({
+    mutationFn: ({ stepId, data }: { stepId: number; data: Record<string, unknown> }) =>
+      mockStepperService.saveStepData(stepId, data),
+    onSuccess: (response, { stepId }) => {
+      queryClient.setQueryData(queryKeys.stepper.formData(), (old: StepFormData | undefined) => ({
+        ...old,
         [stepId]: {
-          ...data,
+          ...old?.[stepId],
           savedAt: response.savedAt,
         },
       }));
-      setError(null);
-      return response;
-    } catch (err) {
-      setError('Failed to save step data');
-      console.error(err);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  };
+      queryClient.invalidateQueries({ queryKey: queryKeys.stepper.formData() });
+    },
+  });
 
-  const updateStepData = async (
-    stepId: number,
-    updates: Partial<Record<string, unknown>>
-  ): Promise<SaveResponse> => {
-    try {
-      const response = await mockStepperService.updateStepData(stepId, updates);
-      setFormData((prev) => ({
-        ...prev,
+  const updateStepDataMutation = useMutation({
+    mutationFn: ({ stepId, updates }: { stepId: number; updates: Partial<Record<string, unknown>> }) =>
+      mockStepperService.updateStepData(stepId, updates),
+    onSuccess: (response, { stepId, updates }) => {
+      queryClient.setQueryData(queryKeys.stepper.formData(), (old: StepFormData | undefined) => ({
+        ...old,
         [stepId]: {
-          ...prev[stepId],
+          ...old?.[stepId],
           ...updates,
           updatedAt: response.savedAt,
         },
       }));
-      return response;
-    } catch (err) {
-      setError('Failed to update step data');
-      console.error(err);
-      throw err;
-    }
+      queryClient.invalidateQueries({ queryKey: queryKeys.stepper.formData() });
+    },
+  });
+
+  const submitAllDataMutation = useMutation({
+    mutationFn: (data: StepFormData) => mockStepperService.submitAllData(data),
+  });
+
+  const resetFormMutation = useMutation({
+    mutationFn: () => mockStepperService.resetFormData(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.stepper.all });
+    },
+  });
+
+  // Adapters to match original interface
+  const saveStepData = async (stepId: number, data: Record<string, unknown>) => {
+    return saveStepDataMutation.mutateAsync({ stepId, data });
   };
 
-  const validateStep = async (
-    stepId: number,
-    data: Record<string, unknown>
-  ): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+  const updateStepData = async (stepId: number, updates: Partial<Record<string, unknown>>) => {
+    return updateStepDataMutation.mutateAsync({ stepId, updates });
+  };
+
+  const validateStep = async (stepId: number, data: Record<string, unknown>) => {
     try {
-      // still calling service, but ignoring its response if you want
       await mockStepperService.validateStep(stepId, data);
-      
-      return { valid: true, errors: {} }; // ✅ always pass
+      return { valid: true, errors: {} };
     } catch (err) {
       console.error('Ignoring validation error:', err);
-      return { valid: true, errors: {} }; // ✅ still pass even on error
+      return { valid: true, errors: {} };
     }
   };
 
-  const submitAllData = async (data: StepFormData): Promise<SubmitResponse> => {
-    try {
-      setSubmitting(true);
-      const response = await mockStepperService.submitAllData(data);
-      if (response.success) {
-        setError(null);
-      }
-      return response;
-    } catch (err) {
-      setError('Failed to submit form');
-      console.error(err);
-      throw err;
-    } finally {
-      setSubmitting(false);
-    }
+  const submitAllData = async (data: StepFormData) => {
+    return submitAllDataMutation.mutateAsync(data);
   };
 
-  const resetForm = async (): Promise<void> => {
-    try {
-      await mockStepperService.resetFormData();
-      await loadAllFormData();
-    } catch (err) {
-      setError('Failed to reset form');
-      console.error(err);
-      throw err;
-    }
+  const resetForm = async () => {
+    return resetFormMutation.mutateAsync();
   };
 
   return {
-    formData,
-    loading,
-    error,
-    saving,
-    submitting,
+    formData: formDataQuery.data || {},
+    loading: formDataQuery.isLoading,
+    error: formDataQuery.error ? (formDataQuery.error as Error).message : null,
+    saving: saveStepDataMutation.isPending || updateStepDataMutation.isPending,
+    submitting: submitAllDataMutation.isPending,
     loadStepData,
     saveStepData,
     updateStepData,

@@ -1,70 +1,48 @@
 // useDemandSurgeApi.ts
-import { useState, useEffect } from 'react';
-
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { DemandSurgeItem } from '@/services/mockData/demandSurgeMockData';
 import { mockDemandSurgeService } from '@/services/mocks/mockDemandSurgeService';
+import { queryKeys } from '@/utils/queryKeys';
 
+export const useDemandSurgeItems = () => {
+  return useQuery({
+    queryKey: queryKeys.demandSurge.items(),
+    queryFn: () => mockDemandSurgeService.getDemandSurgeItems(),
+  });
+};
 
 export const useDemandSurgeApi = () => {
-  const [items, setItems] = useState<DemandSurgeItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const itemsQuery = useDemandSurgeItems();
 
-  useEffect(() => {
-    fetchDemandSurgeItems();
-  }, []);
+  const updateDemandSurgeItemMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<DemandSurgeItem> }) =>
+      mockDemandSurgeService.updateDemandSurgeItem(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.demandSurge.items() });
+    },
+  });
 
-  const fetchDemandSurgeItems = async () => {
+  const updateDemandSurgeItem = async (id: string, updates: Partial<DemandSurgeItem>) => {
     try {
-      setLoading(true);
-      setError(null);
-      const data = await mockDemandSurgeService.getDemandSurgeItems();
-      setItems(data);
+      return await updateDemandSurgeItemMutation.mutateAsync({ id, updates });
     } catch {
-      setError('Failed to fetch demand surge items');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateDemandSurgeItem = async (
-    id: string,
-    updates: Partial<DemandSurgeItem>
-  ): Promise<DemandSurgeItem | undefined> => {
-    try {
-      const updated = await mockDemandSurgeService.updateDemandSurgeItem(id, updates);
-      if (updated) {
-        setItems((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, ...updates } : item))
-        );
-      }
-      return updated;
-    } catch {
-      setError('Failed to update demand surge item');
       return undefined;
     }
   };
 
-  const searchDemandSurgeItems = async (
-    databaseQuery: string,
-    portfolioQuery: string
-  ): Promise<DemandSurgeItem[]> => {
-    try {
-      return await mockDemandSurgeService.searchDemandSurgeItems(
-        databaseQuery,
-        portfolioQuery
-      );
-    } catch {
-      setError('Failed to search demand surge items');
-      return [];
-    }
+  const searchDemandSurgeItems = async (databaseQuery: string, portfolioQuery: string) => {
+    return queryClient.fetchQuery({
+      queryKey: queryKeys.demandSurge.search(databaseQuery, portfolioQuery),
+      queryFn: () => mockDemandSurgeService.searchDemandSurgeItems(databaseQuery, portfolioQuery),
+    });
   };
 
   return {
-    items,
-    loading,
-    error,
-    fetchDemandSurgeItems,
+    items: itemsQuery.data || [],
+    loading: itemsQuery.isLoading,
+    error: itemsQuery.error ? (itemsQuery.error as Error).message : null,
+    fetchDemandSurgeItems: itemsQuery.refetch,
     updateDemandSurgeItem,
     searchDemandSurgeItems,
   };

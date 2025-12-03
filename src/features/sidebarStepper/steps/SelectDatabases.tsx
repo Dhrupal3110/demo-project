@@ -18,49 +18,36 @@ const DatabaseForm: React.FC<{
   errors: ValidationErrors;
 }> = ({ data, onChange, errors }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   // Use hooks for API calls
   const {
-    data: allDatabases,
-    loading: loadingAll,
+    data: allDatabasesResponse,
+    isLoading: loadingAll,
     error: errorAll,
-    fetchDatabases,
-  } = useAllDatabases();
+  } = useAllDatabases(true);
 
   const {
     data: searchResults,
-    loading: loadingSearch,
+    isLoading: loadingSearch,
     error: errorSearch,
-    searchDatabases,
-    clearSearch,
-  } = useSearchDatabases();
-
-  // Fetch all databases on mount
-  useEffect(() => {
-    fetchDatabases();
-  }, [fetchDatabases]);
+  } = useSearchDatabases(debouncedQuery);
 
   // Determine which databases to display
-  const displayDatabases = searchQuery.trim()
+  const displayDatabases = debouncedQuery.trim()
     ? searchResults || []
-    : allDatabases || [];
+    : allDatabasesResponse?.data || [];
 
   const isLoading = loadingAll || loadingSearch;
-  const error = errorAll || errorSearch;
-
-  // Handle search with debouncing
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      clearSearch();
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      searchDatabases(searchQuery);
-    }, 300); // 300ms debounce
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, searchDatabases, clearSearch]);
+  const error = errorAll ? (errorAll as Error).message : errorSearch ? (errorSearch as Error).message : null;
 
   const handleCheckboxChange = (database: Database) => {
     const current = (data.databases as Database[]) || [];

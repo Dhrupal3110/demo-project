@@ -10,61 +10,39 @@ import {
   SearchResults,
 } from '@/features/selectProgram/components';
 import { useNavigate } from 'react-router-dom';
-import { unifiedProgramService } from '@/services/services/unifiedProgramService';
 import { resetStepper } from '@/features/sidebarStepper/stepperSlice';
+import { useRecentPrograms, useSearchPrograms } from '@/features/selectProgram/api/useProgramApi';
 
 const SelectProgram: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Program[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [recentPrograms, setRecentPrograms] = useState<Program[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Fetch recent programs on component mount
+  // Debounce search query
   useEffect(() => {
-    fetchRecentPrograms();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  const fetchRecentPrograms = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const programs = await unifiedProgramService.getRecentPrograms(5);
-      setRecentPrograms(programs);
-    } catch (err) {
-      console.error('Error fetching recent programs:', err);
-      setError('Failed to load recent programs');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: recentPrograms,
+    isLoading: loadingRecent,
+    error: errorRecent,
+  } = useRecentPrograms(5);
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      setIsSearching(false);
-      setSearchResults([]);
-      return;
-    }
+  const {
+    data: searchResults,
+    isLoading: loadingSearch,
+    error: errorSearch,
+  } = useSearchPrograms(debouncedQuery);
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      setIsSearching(true);
-
-      const results = await unifiedProgramService.searchPrograms(searchQuery);
-      setSearchResults(results);
-    } catch (err) {
-      console.error('Error searching programs:', err);
-      setError('Failed to search programs');
-      setSearchResults([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const isSearching = !!debouncedQuery.trim();
+  const isLoading = loadingRecent || (isSearching && loadingSearch);
+  const error = errorRecent ? (errorRecent as Error).message : errorSearch ? (errorSearch as Error).message : null;
 
   const handleProgramSelect = async (program: Program) => {
     try {
@@ -72,19 +50,13 @@ const SelectProgram: React.FC = () => {
       await dispatch(setSelectedProgram(program));
       navigate(`/${program.id}/database`);
       setSearchQuery('');
-      setSearchResults([]);
-      setIsSearching(false);
     } catch (err) {
       console.error('Error selecting program:', err);
-      setError('Failed to select program');
     }
   };
 
   const handleClearSearch = () => {
     setSearchQuery('');
-    setSearchResults([]);
-    setIsSearching(false);
-    setError(null);
   };
 
   return (
@@ -94,7 +66,7 @@ const SelectProgram: React.FC = () => {
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          onSearch={handleSearch}
+          onSearch={() => {}} // Search is automatic now
           onClear={handleClearSearch}
         />
 
@@ -114,14 +86,14 @@ const SelectProgram: React.FC = () => {
           <>
             {isSearching ? (
               <SearchResults
-                results={searchResults}
+                results={searchResults || []}
                 searchQuery={searchQuery}
                 onSelect={handleProgramSelect}
                 onClear={handleClearSearch}
               />
             ) : (
               <ProgramList
-                programs={recentPrograms}
+                programs={recentPrograms || []}
                 onSelect={handleProgramSelect}
                 title="Or, select a recent program"
               />
@@ -134,3 +106,4 @@ const SelectProgram: React.FC = () => {
 };
 
 export default SelectProgram;
+

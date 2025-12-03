@@ -1,53 +1,56 @@
 // useTreatiesApi.ts
-import { useState, useEffect } from 'react';
-
-import type { Database } from '@/services/mockData/databaseMockData';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { mockTreatiesService } from '@/services/mocks/mockTreatiesService';
 import type { Treaty } from '@/services/mockData/treatiesMockData';
+import { queryKeys } from '@/utils/queryKeys';
+
+export const useTreatiesDatabases = () => {
+  return useQuery({
+    queryKey: queryKeys.treaties.databases(),
+    queryFn: () => mockTreatiesService.getDatabases(),
+  });
+};
+
+export const useTreatiesByDatabase = (databaseId: string) => {
+  return useQuery({
+    queryKey: queryKeys.treaties.byDatabase(databaseId),
+    queryFn: () => mockTreatiesService.getTreatiesByDatabase(databaseId),
+    enabled: !!databaseId,
+    initialData: [],
+  });
+};
+
+export const useSearchTreaties = (query: string) => {
+  return useQuery({
+    queryKey: queryKeys.treaties.search(query),
+    queryFn: () => mockTreatiesService.searchTreaties(query),
+    enabled: !!query.trim(),
+    initialData: [],
+  });
+};
 
 export const useTreatiesApi = () => {
-  const [databases, setDatabases] = useState<Database[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDatabases = async () => {
-      try {
-        setLoading(true);
-        const data = await mockTreatiesService.getDatabases();
-        setDatabases(data as any);
-      } catch {
-        setError('Failed to fetch databases');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDatabases();
-  }, []);
+  const queryClient = useQueryClient();
+  const databasesQuery = useTreatiesDatabases();
 
   const getTreatiesByDatabase = async (databaseId: string): Promise<Treaty[]> => {
-    try {
-      return await mockTreatiesService.getTreatiesByDatabase(databaseId);
-    } catch {
-      setError('Failed to fetch treaties');
-      return [];
-    }
+    return queryClient.fetchQuery({
+      queryKey: queryKeys.treaties.byDatabase(databaseId),
+      queryFn: () => mockTreatiesService.getTreatiesByDatabase(databaseId),
+    });
   };
 
   const searchTreaties = async (query: string): Promise<Treaty[]> => {
-    try {
-      return await mockTreatiesService.searchTreaties(query);
-    } catch {
-      setError('Failed to search treaties');
-      return [];
-    }
+    return queryClient.fetchQuery({
+      queryKey: queryKeys.treaties.search(query),
+      queryFn: () => mockTreatiesService.searchTreaties(query),
+    });
   };
 
   return {
-    databases,
-    loading,
-    error,
+    databases: databasesQuery.data || [],
+    loading: databasesQuery.isLoading,
+    error: databasesQuery.error ? (databasesQuery.error as Error).message : null,
     getTreatiesByDatabase,
     searchTreaties,
   };
