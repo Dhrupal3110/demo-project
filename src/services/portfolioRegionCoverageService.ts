@@ -7,6 +7,8 @@ import type { PortfolioItem, Region, SelectedCoverage } from './mockData/portfol
 import type { PortfolioRegionCoverageData } from './mocks/mockPortfolioRegionCoverageService';
 export type { PortfolioRegionCoverageData } from './mocks/mockPortfolioRegionCoverageService';
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const portfolioRegionCoverageService = {
     getData: async (): Promise<PortfolioRegionCoverageData> => {
         if (API_CONFIG.useDummyAPI) {
@@ -67,5 +69,21 @@ export const portfolioRegionCoverageService = {
             params: { peril, q: query }
         });
         return response.data;
+    },
+
+    saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.saveStepData(6, data);
+        }
+        const response = await apiClient.post('/portfolio-region-coverage/step/save', data);
+        return response;
+    },
+
+    validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.validateStep(6, data);
+        }
+        const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/portfolio-region-coverage/step/validate', data);
+        return response;
     },
 };

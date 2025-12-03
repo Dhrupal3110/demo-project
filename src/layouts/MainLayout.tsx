@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom';
 import {
@@ -63,6 +63,50 @@ const MainLayout: React.FC = () => {
     validateStep,
     submitAllData,
   } = useSidebarStepperApi();
+
+  // Route-based configuration for save and validate actions
+  const routeConfig = useMemo(() => ({
+    'database': {
+      save: (data: any) => saveStepData(2, data),
+      validate: (data: any) => validateStep(2, data),
+    },
+    'portfolio': {
+      save: (data: any) => saveStepData(3, data),
+      validate: (data: any) => validateStep(3, data),
+    },
+    'demand-surge': {
+      save: (data: any) => saveStepData(4, data),
+      validate: (data: any) => validateStep(4, data),
+    },
+    'portfolio-peril': {
+      save: (data: any) => saveStepData(5, data),
+      validate: (data: any) => validateStep(5, data),
+    },
+    'portfolio-region': {
+      save: (data: any) => saveStepData(6, data),
+      validate: (data: any) => validateStep(6, data),
+    },
+    'treaties': {
+      save: (data: any) => saveStepData(7, data),
+      validate: (data: any) => validateStep(7, data),
+    },
+    'treaty-peril': {
+      save: (data: any) => saveStepData(8, data),
+      validate: (data: any) => validateStep(8, data),
+    },
+    'treaty-region': {
+      save: (data: any) => saveStepData(9, data),
+      validate: (data: any) => validateStep(9, data),
+    },
+    'link-portfolios': {
+      save: (data: any) => saveStepData(10, data),
+      validate: (data: any) => validateStep(10, data),
+    },
+    'review': {
+      save: (data: any) => saveStepData(11, data),
+      validate: (data: any) => validateStep(11, data),
+    },
+  }), [saveStepData, validateStep]);
 
   // Sync Route with Active Step (URL -> State)
   useEffect(() => {
@@ -181,8 +225,16 @@ const MainLayout: React.FC = () => {
 
   const handleNext = async (): Promise<void> => {
     try {
+      const currentRoute = stepRoutes[activeStep];
+      const handlers = routeConfig[currentRoute as keyof typeof routeConfig];
+
+      if (!handlers) {
+        console.error(`No handlers found for route: ${currentRoute}`);
+        return;
+      }
+
       // Validate current step
-      const validation = await validateStep(activeStep, currentStepData);
+      const validation = await handlers.validate(currentStepData);
 
       if (!validation.valid) {
         dispatch(setErrors(validation.errors));
@@ -193,7 +245,7 @@ const MainLayout: React.FC = () => {
       dispatch(setErrors({}));
 
       // Save current step data
-      await saveStepData(activeStep, currentStepData);
+      await handlers.save(currentStepData);
 
       const finalStep = stepsData.length;
 
@@ -230,40 +282,70 @@ const MainLayout: React.FC = () => {
     }
   };
 
-  const handlePrevious = (): void => {
-    if (activeStep === 2) {
-      navigate('/');
-      return;
-    }
+  const handlePrevious = async (): Promise<void> => {
+    try {
+      const currentRoute = stepRoutes[activeStep];
+      const handlers = routeConfig[currentRoute as keyof typeof routeConfig];
 
-    // STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
-    if (activeStep === stepsData.length) {
-      const step7Data = localFormData[7] || {};
-      const treaties = (step7Data as any)?.treaties;
-      const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
+      if (handlers) {
+        await handlers.save(currentStepData);
+      }
 
-      if (!hasTreaties) {
-        dispatch(setErrors({}));
-        navigate(`/${programId}/${stepRoutes[7]}`);
+      if (activeStep === 2) {
+        navigate('/');
         return;
       }
-    }
 
-    if (activeStep > 2) {
-      dispatch(setErrors({}));
-      navigate(`/${programId}/${stepRoutes[activeStep - 1]}`);
+      // STEP FINAL → SPECIAL CASE: if NO treaties → jump back to STEP 7
+      if (activeStep === stepsData.length) {
+        const step7Data = localFormData[7] || {};
+        const treaties = (step7Data as any)?.treaties;
+        const hasTreaties = Array.isArray(treaties) && treaties.length > 0;
+
+        if (!hasTreaties) {
+          dispatch(setErrors({}));
+          navigate(`/${programId}/${stepRoutes[7]}`);
+          return;
+        }
+      }
+
+      if (activeStep > 2) {
+        dispatch(setErrors({}));
+        navigate(`/${programId}/${stepRoutes[activeStep - 1]}`);
+      }
+    } catch (err) {
+      console.error('Error in handlePrevious:', err);
+      toast.error('Failed to save data');
     }
   };
 
-  const handleSidebarClick = (stepId: number): void => {
+  const handleSidebarClick = async (stepId: number): Promise<void> => {
     if (activeStep === stepId) return;
-    if (stepId === 1) {
-      navigate('/');
-      return;
-    }
-    if (stepId <= maxVisitedStep) {
+
+    try {
+      // Check if we can navigate first, but save data regardless if we are about to navigate?
+      // Actually, we only save if we are going to navigate.
+      const canNavigate = stepId === 1 || stepId <= maxVisitedStep;
+      
+      if (!canNavigate) return;
+
+      const currentRoute = stepRoutes[activeStep];
+      const handlers = routeConfig[currentRoute as keyof typeof routeConfig];
+
+      if (handlers) {
+        await handlers.save(currentStepData);
+      }
+
+      if (stepId === 1) {
+        navigate('/');
+        return;
+      }
+      
       dispatch(setErrors({}));
       navigate(`/${programId}/${stepRoutes[stepId]}`);
+    } catch (err) {
+      console.error('Error in handleSidebarClick:', err);
+      toast.error('Failed to save data');
     }
   };
 

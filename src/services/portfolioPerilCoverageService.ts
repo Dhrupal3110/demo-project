@@ -4,6 +4,8 @@ import { API_CONFIG } from './config/apiConfig';
 import { mockPortfolioPerilCoverageService } from './mocks/mockPortfolioPerilCoverageService';
 import type { PortfolioPeril } from './mockData/portfolioPerilCoverageMockData';
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const portfolioPerilCoverageService = {
     getPortfolioPerils: async (): Promise<PortfolioPeril[]> => {
         if (API_CONFIG.useDummyAPI) {
@@ -42,5 +44,21 @@ export const portfolioPerilCoverageService = {
         }
         const response = await apiClient.post<{ data: PortfolioPeril[] }>('/portfolio-peril-coverage/bulk-update', { updates });
         return response.data;
+    },
+
+    saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.saveStepData(5, data);
+        }
+        const response = await apiClient.post('/portfolio-peril-coverage/step/save', data);
+        return response;
+    },
+
+    validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.validateStep(5, data);
+        }
+        const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/portfolio-peril-coverage/step/validate', data);
+        return response;
     },
 };

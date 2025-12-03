@@ -3,6 +3,16 @@ import type {
   StepFormData,
 } from '@/services/mockData/sidebarStepperMockData';
 import { sidebarStepperService } from '@/services/sidebarStepperService';
+import { databaseService } from '@/services/databaseService';
+import { portfolioService } from '@/services/portfolioService';
+import { demandSurgeService } from '@/services/demandSurgeService';
+import { portfolioPerilCoverageService } from '@/services/portfolioPerilCoverageService';
+import { portfolioRegionCoverageService } from '@/services/portfolioRegionCoverageService';
+import { treatiesService } from '@/services/treatiesService';
+import { treatyPerilCoverageService } from '@/services/treatyPerilCoverageService';
+import { treatyRegionCoverageService } from '@/services/treatyRegionCoverageService';
+import { linkPortfoliosTreatiesService } from '@/services/linkPortfoliosTreatiesService';
+import { reviewAnalysesService } from '@/services/reviewAnalysesService';
 import { queryKeys } from '@/utils/queryKeys';
 
 export const useSidebarStepperApi = () => {
@@ -20,9 +30,31 @@ export const useSidebarStepperApi = () => {
     });
   };
 
+  const getServiceForStep = (stepId: number) => {
+    switch (stepId) {
+      case 2: return databaseService;
+      case 3: return portfolioService;
+      case 4: return demandSurgeService;
+      case 5: return portfolioPerilCoverageService;
+      case 6: return portfolioRegionCoverageService;
+      case 7: return treatiesService;
+      case 8: return treatyPerilCoverageService;
+      case 9: return treatyRegionCoverageService;
+      case 10: return linkPortfoliosTreatiesService;
+      case 11: return reviewAnalysesService;
+      default: return null;
+    }
+  };
+
   const saveStepDataMutation = useMutation({
-    mutationFn: ({ stepId, data }: { stepId: number; data: Record<string, unknown> }) =>
-      sidebarStepperService.saveStepData(stepId, data),
+    mutationFn: async ({ stepId, data }: { stepId: number; data: Record<string, unknown> }) => {
+      const service = getServiceForStep(stepId);
+      if (service && 'saveStepData' in service) {
+        // @ts-ignore - we know saveStepData exists because we added it
+        return service.saveStepData(data);
+      }
+      return sidebarStepperService.saveStepData(stepId, data);
+    },
     onSuccess: (response, { stepId }) => {
       queryClient.setQueryData(queryKeys.stepper.formData(), (old: StepFormData | undefined) => ({
         ...old,
@@ -73,6 +105,11 @@ export const useSidebarStepperApi = () => {
 
   const validateStep = async (stepId: number, data: Record<string, unknown>) => {
     try {
+      const service = getServiceForStep(stepId);
+      if (service && 'validateStep' in service) {
+        // @ts-ignore
+        return await service.validateStep(data);
+      }
       return await sidebarStepperService.validateStep(stepId, data);
     } catch (err) {
       console.error('Ignoring validation error:', err);

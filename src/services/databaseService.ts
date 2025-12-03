@@ -18,6 +18,8 @@ export interface DatabaseResponse {
   pageSize: number;
 }
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const databaseService = {
   /**
    * Get all databases with optional filtering and pagination
@@ -118,6 +120,22 @@ export const databaseService = {
       return mockDatabaseService.getDatabaseStats();
     }
     const response = await apiClient.get('/databases/stats');
+    return response;
+  },
+
+  saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockStepperService.saveStepData(2, data);
+    }
+    const response = await apiClient.post('/databases/step/save', data);
+    return response;
+  },
+
+  validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockStepperService.validateStep(2, data);
+    }
+    const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/databases/step/validate', data);
     return response;
   },
 };

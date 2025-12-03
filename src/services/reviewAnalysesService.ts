@@ -4,6 +4,8 @@ import { API_CONFIG } from './config/apiConfig';
 import { mockReviewAnalysesService } from './mocks/mockReviewAnalysesService';
 import type { ReviewAnalysesData, Analysis } from './mockData/reviewAnalysesMockData';
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const reviewAnalysesService = {
     fetchReviewAnalysesData: async (): Promise<ReviewAnalysesData> => {
         if (API_CONFIG.useDummyAPI) {
@@ -35,5 +37,21 @@ export const reviewAnalysesService = {
         }
         const response = await apiClient.post<{ data: Analysis }>(`/review-analyses/${id}/toggle-expanded`);
         return response.data;
+    },
+
+    saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.saveStepData(11, data);
+        }
+        const response = await apiClient.post('/review-analyses/step/save', data);
+        return response;
+    },
+
+    validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.validateStep(11, data);
+        }
+        const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/review-analyses/step/validate', data);
+        return response;
     },
 };

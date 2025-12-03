@@ -4,6 +4,8 @@ import { API_CONFIG } from './config/apiConfig';
 import { mockDemandSurgeService } from './mocks/mockDemandSurgeService';
 import type { DemandSurgeItem } from './mockData/demandSurgeMockData';
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const demandSurgeService = {
     getDemandSurgeItems: async (): Promise<DemandSurgeItem[]> => {
         if (API_CONFIG.useDummyAPI) {
@@ -35,5 +37,21 @@ export const demandSurgeService = {
             params: { database: databaseQuery, portfolio: portfolioQuery }
         });
         return response.data;
+    },
+
+    saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.saveStepData(4, data);
+        }
+        const response = await apiClient.post('/demand-surge/step/save', data);
+        return response;
+    },
+
+    validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.validateStep(4, data);
+        }
+        const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/demand-surge/step/validate', data);
+        return response;
     },
 };

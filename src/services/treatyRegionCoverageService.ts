@@ -4,6 +4,8 @@ import { API_CONFIG } from './config/apiConfig';
 import { mockTreatyRegionCoverageService } from './mocks/mockTreatyRegionCoverageService';
 import type { TreatyItem, Region, SelectedRegion } from './mockData/treatyRegionCoverageMockData';
 
+import { mockStepperService } from './mocks/mockSidebarStepperService';
+
 export const treatyRegionCoverageService = {
     getTreatiesByPeril: async (peril: 'EQ/FF' | 'IF'): Promise<TreatyItem[]> => {
         if (API_CONFIG.useDummyAPI) {
@@ -57,5 +59,21 @@ export const treatyRegionCoverageService = {
             params: { q: query, peril }
         });
         return response.data;
+    },
+
+    saveStepData: async (data: Record<string, unknown>): Promise<any> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.saveStepData(9, data);
+        }
+        const response = await apiClient.post('/treaty-region-coverage/step/save', data);
+        return response;
+    },
+
+    validateStep: async (data: Record<string, unknown>): Promise<{ valid: boolean; errors: Record<string, string> }> => {
+        if (API_CONFIG.useDummyAPI) {
+            return mockStepperService.validateStep(9, data);
+        }
+        const response = await apiClient.post<{ valid: boolean; errors: Record<string, string> }>('/treaty-region-coverage/step/validate', data);
+        return response;
     },
 };
