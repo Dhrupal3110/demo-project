@@ -7,6 +7,8 @@ export const usePortfolioDatabases = () => {
   return useQuery({
     queryKey: queryKeys.portfolios.databases(),
     queryFn: () => portfolioService.getDatabases(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -15,6 +17,8 @@ export const usePortfolioById = (id: string) => {
     queryKey: queryKeys.portfolios.detail(id),
     queryFn: () => portfolioService.getDatabaseById(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
   });
 };
 

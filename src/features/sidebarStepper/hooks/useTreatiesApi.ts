@@ -8,6 +8,8 @@ export const useTreatiesDatabases = () => {
   return useQuery({
     queryKey: queryKeys.treaties.databases(),
     queryFn: () => treatiesService.getDatabases(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -17,6 +19,8 @@ export const useTreatiesByDatabase = (databaseId: string) => {
     queryFn: () => treatiesService.getTreatiesByDatabase(databaseId),
     enabled: !!databaseId,
     initialData: [],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
   });
 };
 

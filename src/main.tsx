@@ -2,17 +2,14 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from '@/App';
 import '@/index.css';
-import { ThemeProvider } from '@/app/providers/ThemeProvider';
+import { ThemeProvider, QueryProvider } from '@/app/providers';
 import { Toaster } from 'react-hot-toast';
-
-const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <ThemeProvider>
         <BrowserRouter>
           <App />
@@ -27,6 +24,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           />
         </BrowserRouter>
       </ThemeProvider>
-    </QueryClientProvider>
+    </QueryProvider>
   </Provider>
 );
