@@ -98,7 +98,7 @@ describe('Stepper skip treaties flow', () => {
   };
 
   it('skips treaty configuration steps when no treaties selected', () => {
-    cy.visit('/stepper?id=PRG001');
+    cy.visit('/PRG001/database');
 
     advanceToTreatiesStep();
 

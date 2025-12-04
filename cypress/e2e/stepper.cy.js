@@ -136,15 +136,15 @@ describe('Program search and stepper forms', () => {
     cy.visit('/');
     cy.get('input[placeholder*="107311"]').type('PRG001');
     cy.contains('button', 'Search').click();
-    cy.get('div.space-y-2 > div').first().click();
-    cy.location('pathname', { timeout: 10000 }).should('eq', '/stepper');
+    cy.get('div.space-y-2 > div').first().find('button').click();
+    cy.location('pathname', { timeout: 10000 }).should('include', '/database');
     cy.contains('h2, h1', 'Select databases', { matchCase: false, timeout: 10000 }).should(
       'be.visible'
     );
   });
 
   it('fills each form and navigates via header', () => {
-    cy.visit('/stepper?id=PRG001');
+    cy.visit('/PRG001/database');
 
     selectFirstDatabase();
     next();

@@ -90,7 +90,7 @@ describe('Stepper sidebar navigation', () => {
     cy.contains('li', `${stepNumber}. ${label}`, { matchCase: false });
 
   it('allows navigating to any previously visited step from the sidebar', () => {
-    cy.visit('/stepper?id=PRG001');
+    cy.visit('/PRG001/database');
 
     goToStepSix();
 

@@ -1,12 +1,12 @@
 describe('Smoke', () => {
   it('loads the homepage', () => {
     cy.visit('/');
-    cy.contains('CRM-UI').should('be.visible');
+    cy.contains('LYNX').should('be.visible');
   });
 
   it('shows the main header', () => {
     cy.visit('/');
-    cy.get('h1').contains('CRM-UI').should('be.visible');
+    cy.get('h1').contains('LYNX').should('be.visible');
   });
 
   it('navigates using an available link', () => {
@@ -20,6 +20,7 @@ describe('Smoke', () => {
           .parent()
           .find('div.space-y-2 > div')
           .first()
+          .find('button')
           .click();
       }
     });
