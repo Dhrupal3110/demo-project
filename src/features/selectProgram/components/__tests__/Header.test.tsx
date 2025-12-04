@@ -7,30 +7,26 @@ jest.mock('@/app/providers/ThemeProvider', () => ({
   useTheme: jest.fn(),
 }));
 
-jest.mock('@/components/ui', () => ({
-  ThemeToggler: () => <div data-testid="mock-theme-toggler">ThemeToggler</div>,
-}));
-
-// Mock images
-jest.mock('@/assets/logo-aspen.png', () => ({ default: 'logo-aspen.png' }));
-jest.mock('@/assets/logo-sompo.png', () => ({ default: 'logo-sompo.png' }));
 
 describe('Header Component', () => {
   it('renders correctly with default theme', () => {
-    (useTheme as jest.Mock).mockReturnValue({ name: 'default' });
+    (useTheme as jest.Mock).mockImplementation(() => ({ name: 'default', setName: jest.fn() }));
     render(<Header />);
 
     expect(screen.getByText('LYNX')).toBeInTheDocument();
     expect(screen.getByAltText('logo')).toHaveAttribute('src', 'logo-aspen.png');
-    expect(screen.getByTestId('mock-theme-toggler')).toBeInTheDocument();
+    // Check for ThemeToggler content
+    expect(screen.getByText('Aspen')).toBeInTheDocument();
+    expect(screen.getByText('Sompo')).toBeInTheDocument();
   });
 
   it('renders correctly with other theme', () => {
-    (useTheme as jest.Mock).mockReturnValue({ name: 'sompo' });
+    (useTheme as jest.Mock).mockImplementation(() => ({ name: 'sompo', setName: jest.fn() }));
     render(<Header />);
 
     expect(screen.getByText('LYNX')).toBeInTheDocument();
     expect(screen.getByAltText('logo')).toHaveAttribute('src', 'logo-sompo.png');
-    expect(screen.getByTestId('mock-theme-toggler')).toBeInTheDocument();
+    expect(screen.getByText('Aspen')).toBeInTheDocument();
+    expect(screen.getByText('Sompo')).toBeInTheDocument();
   });
 });

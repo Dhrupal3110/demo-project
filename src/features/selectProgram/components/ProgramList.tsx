@@ -20,13 +20,13 @@ const ProgramList: React.FC<ProgramListProps> = ({
         {title}
       </p>
 
-      <div className="space-y-2">
+      <div className="space-y-0">
         {programs.map((program, index) => (
           <div
             key={index}
-            className="w-full text-16 flex items-center justify-between px-4 py-3 border-b-2 border-(--color-border) transition-colors"
+            className="w-full text-16 flex items-center justify-between px-4 py-1 border-b-2 border-(--color-border) transition-colors"
           >
-            <span className="text-left text-(--color-text-secondary) text-sm font-medium">
+            <span className="text-left text-(--color-primary-dark) text-sm font-medium">
               {[
                 program.arrowId,
                 program.subscribeReference,

@@ -1,6 +1,7 @@
 // ============= api/client/apiClient.ts =============
 import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { API_CONFIG } from '../config/apiConfig';
+import { navigateTo } from '@/utils/navigation';
 
 const createAxiosInstance = () => {
   const instance = axios.create({
@@ -63,7 +64,7 @@ const createAxiosInstance = () => {
           case 401:
             // Handle unauthorized
             localStorage.removeItem('authToken');
-            window.location.href = '/login';
+            navigateTo('/login');
             break;
           case 403:
             console.error('Access forbidden');

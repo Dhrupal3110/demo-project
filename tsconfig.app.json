@@ -14,6 +14,7 @@
       "jest",
       "node"
     ],
+    "esModuleInterop": true,
     "skipLibCheck": true,
     /* Bundler mode */
     "moduleResolution": "bundler",

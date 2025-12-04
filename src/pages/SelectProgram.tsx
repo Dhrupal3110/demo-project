@@ -105,11 +105,11 @@ const SelectProgram: React.FC = () => {
   return (
     <div className="min-h-[calc(100vh-54px)] bg-white flex flex-col">
       <Header />
-      <div className="container mx-auto px-8 py-4 flex-1 flex flex-col justify-center">
+      <div className="container mx-auto px-8 mt-[-72px] py-4 flex-1 flex flex-col justify-center">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-10">
           {/* Left Column: Search Forms */}
-          <div className="space-y-10">
+          <div className="space-y-12">
             {/* Search by Subscribe Reference */}
             <div>
               <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Subscribe Reference</label>
