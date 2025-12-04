@@ -23,11 +23,6 @@ jest.mock('@/pages/SelectProgram', () => ({
   default: () => <div data-testid="select-program">SelectProgram Page</div>,
 }));
 
-jest.mock('@/pages/SubmissionSuccess', () => ({
-  __esModule: true,
-  default: () => <div data-testid="submission-success">SubmissionSuccess Page</div>,
-}));
-
 jest.mock('@/pages/NotFound', () => ({
   __esModule: true,
   default: () => <div data-testid="not-found">NotFound Page</div>,
@@ -70,14 +65,7 @@ describe('AppRoutes', () => {
     expect(screen.getByTestId('select-program')).toBeInTheDocument();
   });
 
-  test('renders SubmissionSuccess at /:programId/success', () => {
-    render(
-      <MemoryRouter initialEntries={['/123/success']}>
-        <AppRoutes />
-      </MemoryRouter>
-    );
-    expect(screen.getByTestId('submission-success')).toBeInTheDocument();
-  });
+
 
   test('redirects /:programId to /:programId/database', async () => {
     render(

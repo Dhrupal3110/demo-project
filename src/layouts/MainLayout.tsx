@@ -267,12 +267,11 @@ const MainLayout: React.FC = () => {
         // Final Submit
         const submitResponse = await submitAllData(localFormData);
 
-        if (submitResponse.success) {
-          dispatch(setSubmissionId(submitResponse.submissionId));
-          dispatch(setIsSubmitted(true));
-          navigate(`/${programId}/success`);
-          toast.success('Form submitted successfully!');
-        } else {
+          if (submitResponse.success) {
+            dispatch(setSubmissionId(submitResponse.submissionId));
+            dispatch(setIsSubmitted(true));
+            toast.success('Form submitted successfully!');
+          } else {
           toast.error(submitResponse.message || 'Submission failed');
         }
       }

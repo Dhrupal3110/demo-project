@@ -16,13 +16,12 @@ import {
   ReviewAndFinalize,
 } from '@/features/sidebarStepper';
 
-import SubmissionSuccess from '@/pages/SubmissionSuccess';
+
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<SelectProgram />} />
-      <Route path="/:programId/success" element={<SubmissionSuccess />} />
       <Route path="/:programId" element={<MainLayout />}>
         <Route index element={<Navigate to="database" replace />} />
         <Route
