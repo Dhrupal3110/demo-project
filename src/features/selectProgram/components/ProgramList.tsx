@@ -24,8 +24,7 @@ const ProgramList: React.FC<ProgramListProps> = ({
         {programs.map((program, index) => (
           <div
             key={index}
-            onClick={() => onSelect(program)}
-            className="w-full text-16 cursor-pointer flex items-center justify-between px-4 py-3 border-b-2 border-(--color-border) hover:bg-(--color-secondary) transition-colors group"
+            className="w-full text-16 flex items-center justify-between px-4 py-3 border-b-2 border-(--color-border) transition-colors"
           >
             <span className="text-left text-(--color-text-secondary) text-sm font-medium">
               {[
@@ -35,11 +34,16 @@ const ProgramList: React.FC<ProgramListProps> = ({
                 program.name
               ].filter(Boolean).join(', ')}
             </span>
-            <Play
-              size={24}
-              fill="currentColor"
-              className="w-5 h-5 text-(--color-primary) group-hover:translate-x-1 transition-transform"
-            />
+            <button
+              onClick={() => onSelect(program)}
+              className="cursor-pointer hover:scale-110 transition-transform p-1"
+            >
+              <Play
+                size={24}
+                fill="currentColor"
+                className="w-5 h-5 text-(--color-primary)"
+              />
+            </button>
           </div>
         ))}
       </div>

@@ -113,7 +113,7 @@ const SelectProgram: React.FC = () => {
             {/* Search by Subscribe Reference */}
             <div>
               <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Subscribe Reference</label>
-              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
                   placeholder="e.g. PoAoG41250PG"
@@ -134,7 +134,7 @@ const SelectProgram: React.FC = () => {
             {/* Search by Arrow ID */}
             <div>
               <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Arrow ID</label>
-              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
                   placeholder="e.g. 107311"
@@ -155,7 +155,7 @@ const SelectProgram: React.FC = () => {
             {/* Search by Cedant Name */}
             <div>
               <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Cedant Name</label>
-              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
                   placeholder="e.g. AUTO OWNERS"
