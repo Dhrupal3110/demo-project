@@ -8,7 +8,7 @@ import { useTheme } from '@/app/providers/ThemeProvider';
 const Header: React.FC = () => {
   const { name } = useTheme();
   return (
-    <div className="px-6 py-3 mb-8">
+    <div className="container mx-auto pt-6 px-6 py-3 mb-8">
       <div className=" flex items-center justify-between">
         <div className="flex items-center gap-3  ms-4">
           <img
@@ -17,7 +17,7 @@ const Header: React.FC = () => {
             className="w-8 h-8"
           />
           <h1 className="text-2xl font-semibold text-(--color-primary-dark)">
-            RMS-UI
+            LYNX
           </h1>
         </div>
         <ThemeToggler />

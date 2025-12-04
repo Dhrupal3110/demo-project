@@ -26,19 +26,56 @@ class MockApiService {
   /**
    * Search programs by query
    */
-  async searchPrograms(query: string): Promise<Program[]> {
+  searchPrograms(query: string): Promise<Program[]> {
+    return this.searchByCedantName(query); // Fallback to cedant name search for generic search
+  }
+
+  /**
+   * Search programs by Subscribe Reference
+   */
+  async searchBySubscribeReference(reference: string): Promise<Program[]> {
     await simulateDelay(500);
 
-    if (!query.trim()) {
+    if (!reference.trim()) {
       return [];
     }
 
-    const lowerQuery = query.toLowerCase();
-    return this.programs.filter(
-      (program) =>
-        program.id.toLowerCase().includes(lowerQuery) ||
-        program.name.toLowerCase().includes(lowerQuery) ||
-        program.description?.toLowerCase().includes(lowerQuery)
+    const lowerRef = reference.toLowerCase();
+    return this.programs.filter((program) =>
+      program.subscribeReference?.toLowerCase().includes(lowerRef)
+    );
+  }
+
+  /**
+   * Search programs by Arrow ID
+   */
+  async searchByArrowId(arrowId: string): Promise<Program[]> {
+    await simulateDelay(500);
+
+    if (!arrowId.trim()) {
+      return [];
+    }
+
+    const lowerId = arrowId.toLowerCase();
+    return this.programs.filter((program) =>
+      program.arrowId?.toLowerCase().includes(lowerId)
+    );
+  }
+
+  /**
+   * Search programs by Cedant Name
+   */
+  async searchByCedantName(name: string): Promise<Program[]> {
+    await simulateDelay(500);
+
+    if (!name.trim()) {
+      return [];
+    }
+
+    const lowerName = name.toLowerCase();
+    return this.programs.filter((program) =>
+      program.cedantName?.toLowerCase().includes(lowerName) ||
+      program.name.toLowerCase().includes(lowerName)
     );
   }
 

@@ -28,9 +28,12 @@ const ProgramList: React.FC<ProgramListProps> = ({
             className="w-full text-16 cursor-pointer flex items-center justify-between px-4 py-3 border-b-2 border-(--color-border) hover:bg-(--color-secondary) transition-colors group"
           >
             <span className="text-left text-(--color-text-secondary) text-sm font-medium">
-              <span className="font-medium">{program.id}</span>
-              {', '}
-              <span>{program.name}</span>
+              {[
+                program.arrowId,
+                program.subscribeReference,
+                program.cedantName,
+                program.name
+              ].filter(Boolean).join(', ')}
             </span>
             <Play
               size={24}

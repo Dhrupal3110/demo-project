@@ -26,6 +26,7 @@ const config: Config = {
             statements: 95,
         },
     },
+    coverageReporters: ['text', 'text-summary'],
 };
 
 export default config;

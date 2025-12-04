@@ -5,6 +5,9 @@ export interface Program {
   status?: string;
   createdAt?: string;
   updatedAt?: string;
+  subscribeReference?: string;
+  arrowId?: string;
+  cedantName?: string;
 }
 
 export interface ProgramState {

@@ -43,6 +43,45 @@ export const programService = {
   },
 
   /**
+   * Search programs by Subscribe Reference
+   */
+  searchBySubscribeReference: async (reference: string): Promise<Program[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.searchBySubscribeReference(reference);
+    }
+    const response = await apiClient.get<{ data: Program[] }>('/programs/search/subscribe-reference', {
+      params: { q: reference }
+    });
+    return response.data;
+  },
+
+  /**
+   * Search programs by Arrow ID
+   */
+  searchByArrowId: async (arrowId: string): Promise<Program[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.searchByArrowId(arrowId);
+    }
+    const response = await apiClient.get<{ data: Program[] }>('/programs/search/arrow-id', {
+      params: { q: arrowId }
+    });
+    return response.data;
+  },
+
+  /**
+   * Search programs by Cedant Name
+   */
+  searchByCedantName: async (name: string): Promise<Program[]> => {
+    if (API_CONFIG.useDummyAPI) {
+      return mockApiService.searchByCedantName(name);
+    }
+    const response = await apiClient.get<{ data: Program[] }>('/programs/search/cedant-name', {
+      params: { q: name }
+    });
+    return response.data;
+  },
+
+  /**
    * Get program by ID
    */
   getProgramById: async (id: string): Promise<Program> => {

@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
       <div className="px-6 mx-auto flex flex-col md:flex-row items-center justify-between py-4 text-sm text-(--color-primary-text)">
         {/* Left */}
         <p className="text-center md:text-left">
-          © {new Date().getFullYear()} RMS-UI. All rights reserved.
+          © {new Date().getFullYear()} LYNX. All rights reserved.
         </p>
 
         {/* Right links */}

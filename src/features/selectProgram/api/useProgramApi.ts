@@ -27,6 +27,39 @@ export const useSearchPrograms = (query: string) => {
 };
 
 /**
+ * Hook for searching programs by Subscribe Reference
+ */
+export const useSearchBySubscribeReference = (reference: string) => {
+  return useQuery({
+    queryKey: ['programs', 'search', 'subscribeReference', reference],
+    queryFn: () => programService.searchBySubscribeReference(reference),
+    enabled: !!reference.trim(),
+  });
+};
+
+/**
+ * Hook for searching programs by Arrow ID
+ */
+export const useSearchByArrowId = (arrowId: string) => {
+  return useQuery({
+    queryKey: ['programs', 'search', 'arrowId', arrowId],
+    queryFn: () => programService.searchByArrowId(arrowId),
+    enabled: !!arrowId.trim(),
+  });
+};
+
+/**
+ * Hook for searching programs by Cedant Name
+ */
+export const useSearchByCedantName = (name: string) => {
+  return useQuery({
+    queryKey: ['programs', 'search', 'cedantName', name],
+    queryFn: () => programService.searchByCedantName(name),
+    enabled: !!name.trim(),
+  });
+};
+
+/**
  * Hook for fetching recent programs
  */
 export const useRecentPrograms = (limit: number = 5) => {

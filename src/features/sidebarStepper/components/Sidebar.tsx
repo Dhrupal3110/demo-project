@@ -37,7 +37,7 @@ const Sidebar = ({
         <div className="px-6 py-1.5 flex items-center gap-2">
           <img src={logo} alt="logo" className="w-8 h-8" />
           <h1 className="text-lg font-semibold text-(--color-primary-dark)">
-            RMS-UI
+            LYNX
           </h1>
         </div>
       </div>
