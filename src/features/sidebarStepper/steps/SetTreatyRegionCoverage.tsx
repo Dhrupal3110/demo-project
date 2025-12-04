@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown, ChevronRight, Minus } from 'lucide-react';
 
-import { Checkbox } from '@/components/common';
+import { Checkbox } from '@/components/ui';
 import { useTreatyRegionCoverageApi } from '@/features/sidebarStepper/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/app/store';

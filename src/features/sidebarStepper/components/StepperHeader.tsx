@@ -1,6 +1,6 @@
 import { Play, Redo2, Undo2 } from 'lucide-react';
 import { stepsData } from '@/features/sidebarStepper/constants/stepsData';
-import { ThemeToggler } from '@/components/common';
+import { ThemeToggler } from '@/components/ui';
 
 interface StepperHeaderProps {
   handlePrevious: () => void;

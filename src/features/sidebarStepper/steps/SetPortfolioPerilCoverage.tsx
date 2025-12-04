@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-import { Checkbox } from '@/components/common';
+import { Checkbox } from '@/components/ui';
 import { usePortfolioPerilCoverageApi } from '@/features/sidebarStepper/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/app/store';

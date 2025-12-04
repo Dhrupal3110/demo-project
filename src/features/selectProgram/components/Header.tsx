@@ -2,7 +2,7 @@ import React from 'react';
 
 import logoAspen from '@/assets/logo-aspen.png';
 import logoSompo from '@/assets/logo-sompo.png';
-import { ThemeToggler } from '@/components/common';
+import { ThemeToggler } from '@/components/ui';
 import { useTheme } from '@/app/providers/ThemeProvider';
 
 const Header: React.FC = () => {

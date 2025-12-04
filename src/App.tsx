@@ -1,5 +1,5 @@
 import AppRoutes from '@/routes/AppRoutes';
-import { Footer } from './components/common';
+import { Footer } from '@/components/ui';
 
 export default function App() {
   return (

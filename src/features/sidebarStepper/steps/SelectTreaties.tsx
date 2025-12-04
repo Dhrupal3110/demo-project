@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
-import { Checkbox } from '@/components/common';
+import { Checkbox } from '@/components/ui';
 import { useTreatiesApi } from '@/features/sidebarStepper/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/app/store';

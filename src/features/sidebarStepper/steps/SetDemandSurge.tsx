@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-import { Checkbox, SectionTitle } from '@/components/common';
+import { Checkbox, SectionTitle } from '@/components/ui';
 import { useDemandSurgeApi } from '@/features/sidebarStepper/hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/app/store';

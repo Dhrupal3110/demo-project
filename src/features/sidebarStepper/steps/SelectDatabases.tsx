@@ -1,7 +1,7 @@
 // ============= components/DatabaseForm.tsx =============
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { Checkbox, SectionTitle } from '@/components/common';
+import { Checkbox, SectionTitle } from '@/components/ui';
 import {
   useAllDatabases,
   useSearchDatabases,

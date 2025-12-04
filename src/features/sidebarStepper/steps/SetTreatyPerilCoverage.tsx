@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
-import { Checkbox } from '@/components/common';
+import { Checkbox } from '@/components/ui';
 import { useTreatyPerilCoverageApi } from '@/features/sidebarStepper/hooks';
 import { perils } from '@/services/mockData/treatyPerilCoverageMockData';
 import { useSelector, useDispatch } from 'react-redux';
