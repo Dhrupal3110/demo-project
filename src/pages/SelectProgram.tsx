@@ -197,11 +197,18 @@ const SelectProgram: React.FC = () => {
                   />
                 ) : (
                   <div className="mt-8">
-                    <ProgramList
-                      programs={recentPrograms || []}
-                      onSelect={handleProgramSelect}
-                      title="Or, select a recent program"
-                    />
+                    {recentPrograms && recentPrograms.length > 10 ? (
+                      <ProgramList
+                        programs={recentPrograms || []}
+                        onSelect={handleProgramSelect}
+                        title="Or, select a recent program"
+                      />
+                    ) : (
+                      <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                        <p className="text-lg font-medium text-gray-600">No recent programs found</p>
+                        <p className="text-sm text-gray-500 mt-1">Search for a program using the filters on the left to get started</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </>

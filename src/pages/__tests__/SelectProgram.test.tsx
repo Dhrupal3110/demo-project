@@ -334,4 +334,18 @@ describe('SelectProgram Component', () => {
     expect(screen.getByTestId('mock-search-results')).toBeInTheDocument();
     expect(screen.getByText('No results found for "non-existent"')).toBeInTheDocument();
   });
+
+  it('shows no recent programs message when list is empty', () => {
+    (useRecentPrograms as jest.Mock).mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+
+    render(<SelectProgram />);
+
+    expect(screen.getByText('No recent programs found')).toBeInTheDocument();
+    expect(screen.getByText('Search for a program using the filters on the left to get started')).toBeInTheDocument();
+    expect(screen.queryByTestId('mock-program-list')).not.toBeInTheDocument();
+  });
 });
