@@ -105,14 +105,14 @@ const SelectProgram: React.FC = () => {
   return (
     <div className="min-h-[calc(100vh-54px)] bg-white flex flex-col">
       <Header />
-      <div className="container mx-auto px-8 mt-[-72px] py-4 flex-1 flex flex-col justify-center">
+      <div className="container mx-auto px-8 mt-[-36px] py-4 flex-1 flex flex-col justify-center">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-10">
           {/* Left Column: Search Forms */}
           <div className="space-y-12">
             {/* Search by Subscribe Reference */}
             <div>
-              <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Subscribe Reference</label>
+              <label className="block text-(--color-primary-dark) font-bold text-lg mb-3">Search by Subscribe Reference</label>
               <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
@@ -124,7 +124,7 @@ const SelectProgram: React.FC = () => {
                 />
                 <button
                   onClick={() => handleSearch('subscribe', subscribeRef)}
-                  className="bg-[#1B5E20] text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#144a18] transition-colors text-lg"
+                  className="bg-(--color-primary) text-white px-8 py-2.5 rounded-full font-medium hover:bg-(--color-primary-dark) transition-colors text-lg"
                 >
                   Search
                 </button>
@@ -133,7 +133,7 @@ const SelectProgram: React.FC = () => {
 
             {/* Search by Arrow ID */}
             <div>
-              <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Arrow ID</label>
+              <label className="block text-(--color-primary-dark) font-bold text-lg mb-3">Search by Arrow ID</label>
               <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
@@ -145,7 +145,7 @@ const SelectProgram: React.FC = () => {
                 />
                 <button
                   onClick={() => handleSearch('arrow', arrowId)}
-                  className="bg-[#1B5E20] text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#144a18] transition-colors text-lg"
+                  className="bg-(--color-primary) text-white px-8 py-2.5 rounded-full font-medium hover:bg-(--color-primary-dark) transition-colors text-lg"
                 >
                   Search
                 </button>
@@ -154,7 +154,7 @@ const SelectProgram: React.FC = () => {
 
             {/* Search by Cedant Name */}
             <div>
-              <label className="block text-[#004D40] font-bold text-lg mb-3">Search by Cedant Name</label>
+              <label className="block text-(--color-primary-dark) font-bold text-lg mb-3">Search by Cedant Name</label>
               <div className="flex items-center bg-white border border-gray-200 rounded-full p-1.5 shadow hover:shadow-md transition-shadow">
                 <input
                   type="text"
@@ -166,7 +166,7 @@ const SelectProgram: React.FC = () => {
                 />
                 <button
                   onClick={() => handleSearch('cedant', cedantName)}
-                  className="bg-[#1B5E20] text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#144a18] transition-colors text-lg"
+                  className="bg-(--color-primary) text-white px-8 py-2.5 rounded-full font-medium hover:bg-(--color-primary-dark) transition-colors text-lg"
                 >
                   Search
                 </button>
@@ -184,7 +184,7 @@ const SelectProgram: React.FC = () => {
 
             {isLoading ? (
               <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1B5E20]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--color-primary)"></div>
               </div>
             ) : (
               <>
@@ -197,7 +197,7 @@ const SelectProgram: React.FC = () => {
                   />
                 ) : (
                   <div className="mt-8">
-                    {recentPrograms && recentPrograms.length > 10 ? (
+                    {recentPrograms && recentPrograms.length > 0 ? (
                       <ProgramList
                         programs={recentPrograms || []}
                         onSelect={handleProgramSelect}

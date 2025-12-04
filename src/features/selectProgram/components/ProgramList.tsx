@@ -26,7 +26,7 @@ const ProgramList: React.FC<ProgramListProps> = ({
             key={index}
             className="w-full text-16 flex items-center justify-between px-4 py-1 border-b-2 border-(--color-border) transition-colors"
           >
-            <span className="text-left text-(--color-primary-dark) text-sm font-medium">
+            <span className="text-left text-(--color-primary-dark) text-sm font-semibold">
               {[
                 program.arrowId,
                 program.subscribeReference,

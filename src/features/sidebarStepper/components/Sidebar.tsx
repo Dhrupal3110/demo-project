@@ -35,7 +35,7 @@ const Sidebar = ({
       {/* Header */}
       <div className="px-6 py-2 flex items-center  border-b border-(--color-border) ">
         <div className="px-6 py-1.5 flex items-center gap-2">
-          <img src={logo} alt="logo" className="w-8 h-8" />
+          <img src={logo} alt="logo" className="w-12 h-10" />
           <h1 className="text-lg font-semibold text-(--color-primary-dark)">
             LYNX
           </h1>
