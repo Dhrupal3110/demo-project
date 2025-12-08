@@ -2,6 +2,8 @@
 import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { API_CONFIG } from '../config/apiConfig';
 import { navigateTo } from '@/utils/navigation';
+import { msalInstance } from '@/auth/msalInstance';
+import { apiConfig } from '@/auth/authConfig';
 
 const createAxiosInstance = () => {
   const instance = axios.create({
@@ -14,11 +16,20 @@ const createAxiosInstance = () => {
 
   // Request interceptor
   instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      // Add auth token if available
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    async (config: InternalAxiosRequestConfig) => {
+      const account = msalInstance.getActiveAccount();
+
+      if (account) {
+        try {
+          const response = await msalInstance.acquireTokenSilent({
+            account: account,
+            scopes: apiConfig.scopes
+          });
+          config.headers.Authorization = `Bearer ${response.accessToken}`;
+        } catch (error) {
+          console.error('Token acquisition failed', error);
+          // Provide no token, allow 401 response interceptor to handle it
+        }
       }
 
       // Log request in development
@@ -63,7 +74,8 @@ const createAxiosInstance = () => {
         switch (error.response.status) {
           case 401:
             // Handle unauthorized
-            localStorage.removeItem('authToken');
+            // MSAL handles storage, so we assume session is invalid or expired
+            // Optionally could trigger loginRedirect here if not handled elsewhere
             navigateTo('/login');
             break;
           case 403:

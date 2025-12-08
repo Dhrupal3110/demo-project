@@ -8,12 +8,9 @@ import { ThemeProvider, QueryProvider } from '@/app/providers';
 import { Toaster } from 'react-hot-toast';
 
 // MSAL Imports
-import { PublicClientApplication, EventType } from '@azure/msal-browser';
+import { EventType } from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
-import { msalConfig } from '@/auth/authConfig';
-
-// Initialize MSAL instance
-const msalInstance = new PublicClientApplication(msalConfig);
+import { msalInstance } from '@/auth/msalInstance';
 
 // Initialize application
 msalInstance.initialize().then(() => {
