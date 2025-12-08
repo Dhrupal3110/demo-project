@@ -21,10 +21,11 @@ import {
 
 
 export default function AppRoutes() {
-  return (
-    <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
-      <Routes>
-        <Route path="/" element={<SelectProgram />} />
+  const bypassAuth = import.meta.env.VITE_BYPASS_AUTH === 'true';
+
+  const Content = (
+    <Routes>
+      <Route path="/" element={<SelectProgram />} />
       <Route path="/:programId" element={<MainLayout />}>
         <Route index element={<Navigate to="database" replace />} />
         <Route
@@ -111,7 +112,16 @@ export default function AppRoutes() {
 
       {/* Catch all unmatched routes */}
       <Route path="*" element={<NotFound />} />
-      </Routes>
+    </Routes>
+  );
+
+  if (bypassAuth) {
+    return Content;
+  }
+
+  return (
+    <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
+      {Content}
     </MsalAuthenticationTemplate>
   );
 }
