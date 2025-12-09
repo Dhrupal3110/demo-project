@@ -18,7 +18,7 @@ export const useTreatiesByDatabase = (databaseId: string) => {
     queryKey: queryKeys.treaties.byDatabase(databaseId),
     queryFn: () => treatiesService.getTreatiesByDatabase(databaseId),
     enabled: !!databaseId,
-    initialData: [],
+    placeholderData: [],
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: true,
   });
@@ -29,7 +29,7 @@ export const useSearchTreaties = (query: string) => {
     queryKey: queryKeys.treaties.search(query),
     queryFn: () => treatiesService.searchTreaties(query),
     enabled: !!query.trim(),
-    initialData: [],
+    placeholderData: [],
   });
 };
 

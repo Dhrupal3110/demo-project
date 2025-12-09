@@ -7,7 +7,7 @@ export const API_CONFIG = {
   useDummyAPI: true, // Set to false when real API is ready
 
   // Base URL for real API
-  baseURL: getEnv('VITE_API_BASE_URL') || 'https://api.example.com/v1',
+  baseURL: getEnv('VITE_API_BASE') || 'https://api.example.com/v1',
 
   // Request timeout (ms)
   timeout: 30000,

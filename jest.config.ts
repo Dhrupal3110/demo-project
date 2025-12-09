@@ -30,6 +30,14 @@ const config: Config = {
             statements: 85,
         },
     },
+    collectCoverageFrom: [
+        'src/**/*.{ts,tsx}',
+        '!src/test/**/*',
+        '!src/**/mocks/**/*',
+        '!src/**/mockData/**/*',
+        '!src/main.tsx',
+        '!src/vite-env.d.ts',
+    ],
     coverageReporters: ['text', 'text-summary'],
 };
 
