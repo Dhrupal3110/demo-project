@@ -20,8 +20,10 @@ import {
 
 
 
+import { getEnv } from '@/utils/envWrapper';
+
 export default function AppRoutes() {
-  const bypassAuth = import.meta.env.VITE_BYPASS_AUTH === 'true';
+  const bypassAuth = getEnv('VITE_BYPASS_AUTH') === 'true';
 
   const Content = (
     <Routes>

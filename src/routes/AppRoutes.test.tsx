@@ -48,6 +48,17 @@ jest.mock('@/features/sidebarStepper', () => ({
 }));
 
 describe('AppRoutes', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    jest.resetModules();
+    process.env = { ...originalEnv, VITE_BYPASS_AUTH: 'true' };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
   // Coverage plan:
   // - AppRoutes primarily defines the routing structure.
   // - We test that each path renders the correct component.
@@ -76,7 +87,7 @@ describe('AppRoutes', () => {
     // Should render MainLayout and then redirect to database
     expect(screen.getByTestId('main-layout')).toBeInTheDocument();
     await waitFor(() => {
-        expect(screen.getByTestId('select-databases')).toBeInTheDocument();
+      expect(screen.getByTestId('select-databases')).toBeInTheDocument();
     });
   });
 

@@ -1,11 +1,13 @@
 import { LogLevel } from "@azure/msal-browser";
 import type { Configuration, PopupRequest } from "@azure/msal-browser";
 
+import { getEnv } from "@/utils/envWrapper";
+
 export const msalConfig: Configuration = {
     auth: {
-        clientId: import.meta.env.VITE_CLIENT_ID,
-        authority: `https://login.microsoftonline.com/${import.meta.env.VITE_TENANT_ID}`,
-        redirectUri: import.meta.env.VITE_REDIRECT_URI,
+        clientId: getEnv('VITE_CLIENT_ID'),
+        authority: `https://login.microsoftonline.com/${getEnv('VITE_TENANT_ID')}`,
+        redirectUri: getEnv('VITE_REDIRECT_URI'),
     },
     cache: {
         cacheLocation: "localStorage", // Store tokens in localStorage
@@ -37,10 +39,10 @@ export const msalConfig: Configuration = {
 };
 
 export const loginRequest: PopupRequest = {
-    scopes: ["User.Read", import.meta.env.VITE_API_SCOPE],
+    scopes: ["User.Read", getEnv('VITE_API_SCOPE')],
 };
 
 export const apiConfig = {
-    baseUrl: import.meta.env.VITE_API_BASE,
-    scopes: [import.meta.env.VITE_API_SCOPE],
+    baseUrl: getEnv('VITE_API_BASE'),
+    scopes: [getEnv('VITE_API_SCOPE')],
 };

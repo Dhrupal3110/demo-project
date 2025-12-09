@@ -1,18 +1,20 @@
 // ============= api/config/apiConfig.ts =============
 
+import { getEnv, isDev } from "@/utils/envWrapper";
+
 export const API_CONFIG = {
   // Switch between dummy and real API
   useDummyAPI: true, // Set to false when real API is ready
-  
+
   // Base URL for real API
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://api.example.com/v1',
-  
+  baseURL: getEnv('VITE_API_BASE_URL') || 'https://api.example.com/v1',
+
   // Request timeout (ms)
   timeout: 30000,
-  
+
   // Enable request/response logging
-  enableLogging: import.meta.env.DEV,
-  
+  enableLogging: isDev(),
+
   // API endpoints
   endpoints: {
     programs: '/programs',
@@ -20,7 +22,7 @@ export const API_CONFIG = {
     programsRecent: '/programs/recent',
     programById: (id: string) => `/programs/${id}`,
   },
-  
+
   // Retry configuration
   retry: {
     maxRetries: 3,
@@ -30,8 +32,8 @@ export const API_CONFIG = {
 
 // Environment-specific configuration
 export const getApiConfig = () => {
-  const env = import.meta.env.MODE;
-  
+  const env = getEnv('MODE');
+
   const configs = {
     development: {
       ...API_CONFIG,
@@ -49,6 +51,6 @@ export const getApiConfig = () => {
       enableLogging: false,
     },
   };
-  
+
   return configs[env as keyof typeof configs] || API_CONFIG;
 };

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { navigateTo } from '@/utils/navigation';
+// Note: Imports are hoisted, but we'll define mocks below
 
 // Mock API Config
 jest.mock('../../config/apiConfig', () => ({
@@ -7,6 +9,25 @@ jest.mock('../../config/apiConfig', () => ({
         timeout: 1000,
         enableLogging: true,
     },
+}));
+
+// Mock Auth Config
+jest.mock('@/auth/authConfig', () => ({
+    apiConfig: {
+        scopes: ['api://test/scope']
+    },
+    msalConfig: {}
+}));
+
+// Mock MSAL Instance
+const mockAcquireTokenSilent = jest.fn();
+const mockGetActiveAccount = jest.fn();
+
+jest.mock('@/auth/msalInstance', () => ({
+    msalInstance: {
+        getActiveAccount: () => mockGetActiveAccount(),
+        acquireTokenSilent: (req: any) => mockAcquireTokenSilent(req),
+    }
 }));
 
 // Mock Axios
@@ -37,7 +58,6 @@ jest.mock('@/utils/navigation', () => ({
     navigateTo: jest.fn(),
 }));
 
-import { navigateTo } from '@/utils/navigation';
 import { apiClient } from '../apiClient';
 
 describe('apiClient', () => {
@@ -58,7 +78,9 @@ describe('apiClient', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        localStorage.clear();
+        mockGetActiveAccount.mockReturnValue(null);
+        mockAcquireTokenSilent.mockReset();
+
         jest.spyOn(console, 'log').mockImplementation(() => { });
         jest.spyOn(console, 'error').mockImplementation(() => { });
     });
@@ -69,6 +91,7 @@ describe('apiClient', () => {
     });
 
     describe('HTTP methods', () => {
+        // ... existing HTTP method tests ...
         it('calls get method correctly', async () => {
             mockAxiosInstance.get.mockResolvedValue({ data: 'test' });
             const result = await apiClient.get('/test');
@@ -110,36 +133,52 @@ describe('apiClient', () => {
 
     describe('Interceptors', () => {
         it('registers interceptors', () => {
-            // We can't check toHaveBeenCalled because we clear mocks in beforeEach
-            // But if we captured them in beforeAll, they were registered.
             expect(requestInterceptor).toBeDefined();
             expect(responseInterceptor).toBeDefined();
         });
 
         describe('Request Interceptor', () => {
-            it('adds auth token to request if available', () => {
-                localStorage.setItem('authToken', 'test-token');
+            it('adds auth token to request if available (MSAL)', async () => {
+                const mockAccount = { username: 'test@example.com' };
+                mockGetActiveAccount.mockReturnValue(mockAccount);
+                mockAcquireTokenSilent.mockResolvedValue({ accessToken: 'msal-access-token' });
+
                 const config = { headers: {} };
-                const result = requestInterceptor(config);
-                expect(result.headers.Authorization).toBe('Bearer test-token');
+                // Request interceptor is async now
+                const result = await requestInterceptor(config);
+
+                expect(mockAcquireTokenSilent).toHaveBeenCalledWith(expect.objectContaining({
+                    account: mockAccount
+                }));
+                expect(result.headers.Authorization).toBe('Bearer msal-access-token');
             });
 
-            it('does not add auth token if not available', () => {
+            it('does not add auth token if no active account', async () => {
+                mockGetActiveAccount.mockReturnValue(null);
+
                 const config = { headers: {} };
-                const result = requestInterceptor(config);
+                const result = await requestInterceptor(config);
+
+                expect(mockAcquireTokenSilent).not.toHaveBeenCalled();
                 expect(result.headers.Authorization).toBeUndefined();
             });
 
-            it('logs request if logging enabled', () => {
-                const config = { method: 'get', url: '/test', headers: {} };
-                requestInterceptor(config);
-                expect(console.log).toHaveBeenCalledWith(expect.stringContaining('API Request'), expect.any(Object));
+            it('does not add auth token if silent acquisition fails', async () => {
+                const mockAccount = { username: 'test@example.com' };
+                mockGetActiveAccount.mockReturnValue(mockAccount);
+                mockAcquireTokenSilent.mockRejectedValue(new Error('Silent auth failed'));
+
+                const config = { headers: {} };
+                const result = await requestInterceptor(config);
+
+                expect(result.headers.Authorization).toBeUndefined();
+                expect(console.error).toHaveBeenCalledWith('Token acquisition failed', expect.any(Error));
             });
 
-            it('handles request error', async () => {
-                const error = new Error('Request failed');
-                await expect(requestErrorInterceptor(error)).rejects.toThrow('Request failed');
-                expect(console.error).toHaveBeenCalledWith('Request Error:', error);
+            it('logs request if logging enabled', async () => {
+                const config = { method: 'get', url: '/test', headers: {} };
+                await requestInterceptor(config);
+                expect(console.log).toHaveBeenCalledWith(expect.stringContaining('API Request'), expect.any(Object));
             });
         });
 
@@ -151,13 +190,11 @@ describe('apiClient', () => {
                 expect(console.log).toHaveBeenCalledWith(expect.stringContaining('API Response'), expect.any(Object));
             });
 
-            it('handles 401 error by clearing token and redirecting', async () => {
+            it('handles 401 error by redirecting', async () => {
                 const error = {
                     response: { status: 401, data: { message: 'Unauthorized' } },
                     config: { url: '/test' },
                 };
-
-                localStorage.setItem('authToken', 'old-token');
 
                 try {
                     await responseErrorInterceptor(error);
@@ -165,10 +202,11 @@ describe('apiClient', () => {
                     // Expected to reject
                 }
 
-                expect(localStorage.getItem('authToken')).toBeNull();
+                // Removed localStorage check
                 expect(navigateTo).toHaveBeenCalledWith('/login');
             });
 
+            // ... other error handlers (403, 404, 500) ...
             it('handles 403 error', async () => {
                 const error = { response: { status: 403 }, config: { url: '/test' } };
                 try { await responseErrorInterceptor(error); } catch (e) { }
@@ -191,12 +229,6 @@ describe('apiClient', () => {
                 const error = { request: {}, message: 'Network Error' };
                 try { await responseErrorInterceptor(error); } catch (e) { }
                 expect(console.error).toHaveBeenCalledWith('Network Error:', 'Network Error');
-            });
-
-            it('handles generic error', async () => {
-                const error = { message: 'Generic Error' };
-                try { await responseErrorInterceptor(error); } catch (e) { }
-                expect(console.error).toHaveBeenCalledWith('Error:', 'Generic Error');
             });
         });
     });

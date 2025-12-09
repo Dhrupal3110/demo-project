@@ -10,6 +10,7 @@ const config: Config = {
         '^@/assets/logo-aspen.png$': '<rootDir>/src/test/__mocks__/logoAspenMock.ts',
         '^@/assets/logo-sompo.png$': '<rootDir>/src/test/__mocks__/logoSompoMock.ts',
         '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/src/test/__mocks__/fileMock.ts',
+        '^@/utils/envWrapper$': '<rootDir>/src/test/__mocks__/envWrapperMock.ts',
         '^@/(.*)$': '<rootDir>/src/$1',
     },
     transform: {

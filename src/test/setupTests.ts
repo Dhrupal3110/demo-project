@@ -1,7 +1,16 @@
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
+import { webcrypto } from 'node:crypto';
+import { BroadcastChannel } from 'worker_threads';
 
 Object.assign(global, { TextEncoder, TextDecoder });
+Object.defineProperty(global, 'crypto', {
+    value: webcrypto,
+    writable: true
+});
+
+// Mock BroadcastChannel
+global.BroadcastChannel = BroadcastChannel as unknown as typeof global.BroadcastChannel;
 
 // Mock global fetch if needed
 if (!global.fetch) {
@@ -13,7 +22,8 @@ if (!global.fetch) {
             blob: () => Promise.resolve(new Blob()),
             arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
             headers: new Headers(),
-        } as Response)
+            clone: function () { return this; }
+        } as unknown as Response)
     );
 }
 
